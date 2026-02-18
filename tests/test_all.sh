@@ -15,11 +15,15 @@ echo "--- Special functions ---"
 pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_special.mojo"
 echo ""
 
-# Distribution tests (to be added)
-# pixi run mojo run -I src "$SCRIPT_DIR/test_distributions.mojo"
+# Distribution tests
+echo "--- Distributions ---"
+pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_distributions.mojo"
+echo ""
 
-# Stats tests (to be added)
-# pixi run mojo run -I src "$SCRIPT_DIR/test_stats.mojo"
+# Stats tests
+echo "--- Descriptive statistics ---"
+pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_stats.mojo"
+echo ""
 
 # Models tests (to be added)
 # pixi run mojo run -I src "$SCRIPT_DIR/test_models.mojo"

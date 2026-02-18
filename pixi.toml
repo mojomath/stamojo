@@ -28,8 +28,8 @@ format = "pixi run mojo format ./src && pixi run mojo format ./tests"
 
 # compile the package
 p = "clear && pixi run package"
-package = "pixi run format && pixi run package_stamo"
-package_stamo = "pixi run mojo package src/stamojo && cp stamojo.mojopkg tests/ && rm stamojo.mojopkg"
+package = "pixi run format && pixi run package_stamojo"
+package_stamojo = "pixi run mojo package src/stamojo && cp stamojo.mojopkg tests/ && rm stamojo.mojopkg"
 
 # clean the package files in tests folder
 c = "clear && pixi run clean"

@@ -8,3 +8,15 @@ This subpackage provides descriptive statistics (mean, variance, skewness,
 kurtosis, etc.) and hypothesis testing functions (t-test, chi-squared,
 Kolmogorov-Smirnov, etc.).
 """
+
+from .descriptive import (
+    mean,
+    variance,
+    std,
+    median,
+    quantile,
+    skewness,
+    kurtosis,
+    data_min,
+    data_max,
+)
