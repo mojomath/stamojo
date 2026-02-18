@@ -58,6 +58,11 @@ pixi run package
 src/stamojo/
 ├── __init__.mojo              # Package root
 ├── prelude.mojo               # Convenient re-exports
+├── special/                   # Special mathematical functions (cf. scipy.special)
+│   ├── __init__.mojo          # Re-exports all public functions
+│   ├── _gamma.mojo            # gammainc, gammaincc
+│   ├── _beta.mojo             # beta, lbeta, betainc
+│   └── _erf.mojo              # erfinv, ndtri
 ├── distributions/             # Probability distributions
 │   ├── __init__.mojo
 │   ├── normal.mojo            # Normal (Gaussian)

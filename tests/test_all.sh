@@ -12,7 +12,7 @@ echo ""
 
 # Special functions
 echo "--- Special functions ---"
-pixi run mojo run -I src "$SCRIPT_DIR/test_special.mojo"
+pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_special.mojo"
 echo ""
 
 # Distribution tests (to be added)

@@ -1,12 +1,14 @@
 # ===----------------------------------------------------------------------=== #
-# StaMojo - Internal special mathematical functions
+# StaMojo - Special mathematical functions
 # Licensed under Apache 2.0
 # ===----------------------------------------------------------------------=== #
-"""Internal special mathematical functions.
+"""Special mathematical functions.
 
 This subpackage provides special functions that are not available in the Mojo
-standard library but are required as building blocks for statistical
-distributions. These include:
+standard library but are needed for statistical distributions and may also be
+useful to end users directly.  It mirrors the scope of `scipy.special`.
+
+Functions provided:
 
 - Regularized incomplete gamma function (lower and upper)
 - Regularized incomplete beta function

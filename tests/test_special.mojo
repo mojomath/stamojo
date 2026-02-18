@@ -2,19 +2,25 @@
 # StaMojo - Tests for special mathematical functions
 # Licensed under Apache 2.0
 # ===----------------------------------------------------------------------=== #
-"""Tests for the _special subpackage.
+"""Tests for the special subpackage.
 
-Reference values are computed from independent formulas rather than
-hard-coded constants to avoid transcription errors:
-- For integer a, Q(a,x) = e^{-x} Σ_{k=0}^{a-1} x^k/k!  (Poisson CDF).
-- For a = 0.5, P(0.5, x) = erf(√x).
-- For a = 1, P(1, x) = 1 - e^{-x}.
+Two verification strategies are used:
+
+1. **Analytical identities** – boundary values, symmetry relations, and
+   closed-form cases (Poisson sum, exponential CDF, erf, etc.) that do not
+   depend on any external library.
+
+2. **scipy.special benchmarks** – when the test runs inside the ``test``
+   pixi environment (which includes scipy), each result is additionally
+   compared against scipy.special.  On failure the scipy reference value
+   is printed for easy diagnosis.
 """
 
 from math import exp, log, lgamma, erf, sqrt
+from python import Python, PythonObject
 from testing import assert_almost_equal, TestSuite
 
-from stamojo._special import gammainc, gammaincc, beta, lbeta, betainc, erfinv
+from stamojo.special import gammainc, gammaincc, beta, lbeta, betainc, erfinv
 
 
 # ===----------------------------------------------------------------------=== #
@@ -23,17 +29,51 @@ from stamojo._special import gammainc, gammaincc, beta, lbeta, betainc, erfinv
 
 
 fn _poisson_cdf(n: Int, x: Float64) -> Float64:
-    """Exact Q(n, x) = e^{-x} Σ_{k=0}^{n-1} x^k/k! for positive integer n.
-
-    This is an independent computation of the upper regularized incomplete
-    gamma function that does NOT use our gammainc/gammaincc code.
-    """
+    """Exact Q(n, x) = e^{-x} Σ_{k=0}^{n-1} x^k/k! for positive integer n."""
     var term = 1.0
     var s = 1.0
     for k in range(1, n):
         term *= x / Float64(k)
         s += term
     return exp(-x) * s
+
+
+fn _load_scipy() -> PythonObject:
+    """Try to import scipy.special. Returns Python None if unavailable."""
+    try:
+        return Python.import_module("scipy.special")
+    except:
+        return PythonObject(None)
+
+
+fn _py_f64(obj: PythonObject) -> Float64:
+    """Convert a PythonObject holding a numeric value to Float64."""
+    try:
+        return atof(String(obj))
+    except:
+        return 0.0
+
+
+fn _assert_with_scipy(
+    actual: Float64,
+    expected: Float64,
+    sp: PythonObject,
+    sp_val: Float64,
+    label: String,
+    atol: Float64 = 1e-12,
+) raises:
+    """Assert actual ≈ expected. On failure, print scipy reference if available."""
+    try:
+        assert_almost_equal(actual, expected, atol=atol)
+    except e:
+        if sp is not None:
+            print(
+                "  FAIL:", label,
+                "\n    got:     ", actual,
+                "\n    expected:", expected,
+                "\n    scipy:   ", sp_val,
+            )
+        raise e^
 
 
 # ===----------------------------------------------------------------------=== #
@@ -43,19 +83,16 @@ fn _poisson_cdf(n: Int, x: Float64) -> Float64:
 
 fn test_gammainc_boundary() raises:
     """Test boundary conditions."""
-    # P(a, 0) = 0 for any a > 0
     assert_almost_equal(gammainc(1.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(gammainc(5.0, 0.0), 0.0, atol=1e-15)
-
-    # Q(a, 0) = 1 for any a > 0
     assert_almost_equal(gammaincc(1.0, 0.0), 1.0, atol=1e-15)
     assert_almost_equal(gammaincc(5.0, 0.0), 1.0, atol=1e-15)
-
     print("✓ test_gammainc_boundary passed")
 
 
 fn test_gammainc_exponential() raises:
     """Test P(1, x) = 1 - e^{-x} (exponential distribution CDF)."""
+    var sp = _load_scipy()
     var test_x = List[Float64]()
     test_x.append(0.5)
     test_x.append(1.0)
@@ -66,13 +103,19 @@ fn test_gammainc_exponential() raises:
     for i in range(len(test_x)):
         var x = test_x[i]
         var expected = 1.0 - exp(-x)
-        assert_almost_equal(gammainc(1.0, x), expected, atol=1e-12)
+        var sp_val = _py_f64(sp.gammainc(1.0, x)) if sp is not None else 0.0
+        _assert_with_scipy(
+            gammainc(1.0, x), expected, sp, sp_val,
+            "gammainc(1, " + String(x) + ")",
+            atol=1e-12,
+        )
 
     print("✓ test_gammainc_exponential passed")
 
 
 fn test_gammainc_half() raises:
-    """Test P(0.5, x) = erf(sqrt(x)) for the half-integer case."""
+    """Test P(0.5, x) = erf(sqrt(x))."""
+    var sp = _load_scipy()
     var test_x = List[Float64]()
     test_x.append(0.25)
     test_x.append(0.5)
@@ -83,17 +126,20 @@ fn test_gammainc_half() raises:
     for i in range(len(test_x)):
         var x = test_x[i]
         var expected = erf(sqrt(x))
-        assert_almost_equal(gammainc(0.5, x), expected, atol=1e-10)
+        var sp_val = _py_f64(sp.gammainc(0.5, x)) if sp is not None else 0.0
+        _assert_with_scipy(
+            gammainc(0.5, x), expected, sp, sp_val,
+            "gammainc(0.5, " + String(x) + ")",
+            atol=1e-10,
+        )
 
     print("✓ test_gammainc_half passed")
 
 
 fn test_gammainc_integer_a() raises:
-    """Test against the Poisson sum formula for integer a.
+    """Test gammainc/gammaincc against the Poisson sum formula for integer a."""
+    var sp = _load_scipy()
 
-    P(n, x) = 1 - e^{-x} Σ_{k=0}^{n-1} x^k/k!
-    """
-    # (a, x) pairs where x covers both the series and CF regimes.
     var test_a = List[Int]()
     var test_x = List[Float64]()
     test_a.append(2);  test_x.append(3.0)
@@ -112,19 +158,61 @@ fn test_gammainc_integer_a() raises:
         var q_exact = _poisson_cdf(a_int, x)
         var p_exact = 1.0 - q_exact
 
-        # Our functions should match the Poisson sum to high precision.
-        assert_almost_equal(
-            gammainc(a, x), p_exact, atol=1e-12
+        var sp_p = _py_f64(sp.gammainc(a, x)) if sp is not None else 0.0
+        var sp_q = _py_f64(sp.gammaincc(a, x)) if sp is not None else 0.0
+
+        _assert_with_scipy(
+            gammainc(a, x), p_exact, sp, sp_p,
+            "gammainc(" + String(a_int) + ", " + String(x) + ")",
         )
-        assert_almost_equal(
-            gammaincc(a, x), q_exact, atol=1e-12
+        _assert_with_scipy(
+            gammaincc(a, x), q_exact, sp, sp_q,
+            "gammaincc(" + String(a_int) + ", " + String(x) + ")",
         )
 
     print("✓ test_gammainc_integer_a passed")
 
 
+fn test_gammainc_scipy() raises:
+    """Test gammainc/gammaincc against scipy for non-integer a values."""
+    var sp = _load_scipy()
+    if sp is None:
+        print("⊘ test_gammainc_scipy skipped (scipy not available)")
+        return
+
+    var test_a = List[Float64]()
+    var test_x = List[Float64]()
+    test_a.append(0.7);  test_x.append(0.3)
+    test_a.append(1.5);  test_x.append(2.0)
+    test_a.append(2.5);  test_x.append(4.0)
+    test_a.append(3.7);  test_x.append(1.2)
+    test_a.append(7.3);  test_x.append(12.0)
+    test_a.append(0.1);  test_x.append(0.01)
+    test_a.append(15.5); test_x.append(20.0)
+
+    for i in range(len(test_a)):
+        var a = test_a[i]
+        var x = test_x[i]
+
+        var sp_p = _py_f64(sp.gammainc(a, x))
+        var sp_q = _py_f64(sp.gammaincc(a, x))
+
+        _assert_with_scipy(
+            gammainc(a, x), sp_p, sp, sp_p,
+            "gammainc(" + String(a) + ", " + String(x) + ")",
+            atol=1e-10,
+        )
+        _assert_with_scipy(
+            gammaincc(a, x), sp_q, sp, sp_q,
+            "gammaincc(" + String(a) + ", " + String(x) + ")",
+            atol=1e-10,
+        )
+
+    print("✓ test_gammainc_scipy passed")
+
+
 fn test_gammainc_complementary() raises:
-    """Test that P(a,x) + Q(a,x) = 1 for various parameters."""
+    """Test P(a,x) + Q(a,x) = 1."""
     var test_cases = List[Tuple[Float64, Float64]]()
     test_cases.append((0.5, 0.5))
     test_cases.append((1.0, 2.0))
@@ -150,19 +238,11 @@ fn test_gammainc_complementary() raises:
 
 fn test_beta_basic() raises:
     """Test beta function against known exact values."""
-    # B(1, 1) = 1
     assert_almost_equal(beta(1.0, 1.0), 1.0, atol=1e-12)
-
-    # B(2, 2) = 1/6
     assert_almost_equal(beta(2.0, 2.0), 1.0 / 6.0, atol=1e-12)
-
-    # B(0.5, 0.5) = π
     assert_almost_equal(beta(0.5, 0.5), 3.141592653589793, atol=1e-10)
-
-    # B(3, 4) = 1/60
     assert_almost_equal(beta(3.0, 4.0), 1.0 / 60.0, atol=1e-12)
 
-    # B(a, b) = Gamma(a)*Gamma(b) / Gamma(a+b), verify with lgamma
     var a = 3.7
     var b = 2.3
     var expected = exp(lgamma(a) + lgamma(b) - lgamma(a + b))
@@ -173,18 +253,14 @@ fn test_beta_basic() raises:
 
 fn test_betainc_boundary() raises:
     """Test betainc boundary values."""
-    # I_0(a, b) = 0 and I_1(a, b) = 1 for any a, b > 0
     assert_almost_equal(betainc(2.0, 3.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(betainc(2.0, 3.0, 1.0), 1.0, atol=1e-15)
-
-    # I_{0.5}(1, 1) = 0.5 (uniform distribution)
     assert_almost_equal(betainc(1.0, 1.0, 0.5), 0.5, atol=1e-12)
-
     print("✓ test_betainc_boundary passed")
 
 
 fn test_betainc_symmetric() raises:
-    """Test betainc with symmetric parameters: I_{0.5}(a, a) = 0.5."""
+    """Test I_{0.5}(a, a) = 0.5."""
     var test_a = List[Float64]()
     test_a.append(1.0)
     test_a.append(2.0)
@@ -199,42 +275,59 @@ fn test_betainc_symmetric() raises:
 
 
 fn test_betainc_symmetry_identity() raises:
-    """Test betainc symmetry: I_x(a,b) = 1 - I_{1-x}(b,a)."""
-    var a = 3.0
-    var b = 5.0
-    var x = 0.4
-
-    var left = betainc(a, b, x)
-    var right = 1.0 - betainc(b, a, 1.0 - x)
-    assert_almost_equal(left, right, atol=1e-10)
-
-    # Another pair
+    """Test I_x(a,b) = 1 - I_{1-x}(b,a)."""
+    assert_almost_equal(
+        betainc(3.0, 5.0, 0.4),
+        1.0 - betainc(5.0, 3.0, 0.6),
+        atol=1e-10,
+    )
     assert_almost_equal(
         betainc(2.0, 7.0, 0.3),
         1.0 - betainc(7.0, 2.0, 0.7),
         atol=1e-10,
     )
-
     print("✓ test_betainc_symmetry_identity passed")
 
 
 fn test_betainc_known_values() raises:
-    """Test betainc against analytically known values.
-
-    For a=1, b=n (integer): I_x(1, n) = 1 - (1-x)^n
-    """
+    """Test I_x(1, n) = 1 - (1-x)^n for integer n."""
     var x = 0.3
-
-    # I_x(1, 1) = x
     assert_almost_equal(betainc(1.0, 1.0, x), x, atol=1e-12)
-
-    # I_x(1, 2) = 1 - (1-x)^2 = 2x - x^2
     assert_almost_equal(betainc(1.0, 2.0, x), 1.0 - (1.0 - x) ** 2, atol=1e-10)
-
-    # I_x(1, 5) = 1 - (1-x)^5
     assert_almost_equal(betainc(1.0, 5.0, x), 1.0 - (1.0 - x) ** 5, atol=1e-10)
-
     print("✓ test_betainc_known_values passed")
+
+
+fn test_betainc_scipy() raises:
+    """Test betainc against scipy.special for general parameters."""
+    var sp = _load_scipy()
+    if sp is None:
+        print("⊘ test_betainc_scipy skipped (scipy not available)")
+        return
+
+    var test_a = List[Float64]()
+    var test_b = List[Float64]()
+    var test_x = List[Float64]()
+    test_a.append(0.5); test_b.append(0.5); test_x.append(0.3)
+    test_a.append(2.0); test_b.append(5.0); test_x.append(0.4)
+    test_a.append(5.0); test_b.append(2.0); test_x.append(0.6)
+    test_a.append(0.1); test_b.append(0.1); test_x.append(0.5)
+    test_a.append(10.0); test_b.append(3.0); test_x.append(0.8)
+    test_a.append(3.0); test_b.append(10.0); test_x.append(0.2)
+
+    for i in range(len(test_a)):
+        var a = test_a[i]
+        var b = test_b[i]
+        var x = test_x[i]
+
+        var sp_val = _py_f64(sp.betainc(a, b, x))
+        _assert_with_scipy(
+            betainc(a, b, x), sp_val, sp, sp_val,
+            "betainc(" + String(a) + ", " + String(b) + ", " + String(x) + ")",
+            atol=1e-10,
+        )
+
+    print("✓ test_betainc_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -244,10 +337,8 @@ fn test_betainc_known_values() raises:
 
 fn test_erfinv_basic() raises:
     """Test erfinv by checking erf(erfinv(p)) ≈ p (round-trip)."""
-    # erfinv(0) = 0
     assert_almost_equal(erfinv(0.0), 0.0, atol=1e-15)
 
-    # Round-trip test: erf(erfinv(p)) should equal p.
     var test_vals = List[Float64]()
     test_vals.append(0.1)
     test_vals.append(0.3)
@@ -268,7 +359,7 @@ fn test_erfinv_basic() raises:
 
 
 fn test_erfinv_symmetry() raises:
-    """Test erfinv antisymmetry: erfinv(-p) = -erfinv(p)."""
+    """Test erfinv(-p) = -erfinv(p)."""
     var test_vals = List[Float64]()
     test_vals.append(0.1)
     test_vals.append(0.5)
@@ -279,6 +370,38 @@ fn test_erfinv_symmetry() raises:
         assert_almost_equal(erfinv(-p), -erfinv(p), atol=1e-12)
 
     print("✓ test_erfinv_symmetry passed")
+
+
+fn test_erfinv_scipy() raises:
+    """Test erfinv against scipy.special.erfinv."""
+    var sp = _load_scipy()
+    if sp is None:
+        print("⊘ test_erfinv_scipy skipped (scipy not available)")
+        return
+
+    var test_vals = List[Float64]()
+    test_vals.append(0.01)
+    test_vals.append(0.1)
+    test_vals.append(0.3)
+    test_vals.append(0.5)
+    test_vals.append(0.7)
+    test_vals.append(0.9)
+    test_vals.append(0.99)
+    test_vals.append(0.999)
+    test_vals.append(-0.3)
+    test_vals.append(-0.9)
+    test_vals.append(-0.999)
+
+    for i in range(len(test_vals)):
+        var p = test_vals[i]
+        var sp_val = _py_f64(sp.erfinv(p))
+        _assert_with_scipy(
+            erfinv(p), sp_val, sp, sp_val,
+            "erfinv(" + String(p) + ")",
+            atol=1e-10,
+        )
+
+    print("✓ test_erfinv_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #
