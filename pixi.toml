@@ -1,0 +1,32 @@
+[workspace]
+authors = ["ZHU Yuhao (朱宇浩) <dr.yuhao.zhu@outlook.com>"]
+channels = ["https://conda.modular.com/max-nightly", "https://conda.modular.com/max", "https://repo.prefix.dev/modular-community", "conda-forge"]
+description = "A statistical computing library for Mojo, inspired by scipy.stats and statsmodels"
+license = "Apache-2.0"
+name = "stamojo"
+platforms = ["osx-arm64", "linux-64"]
+readme = "README.md"
+version = "0.1.0"
+
+[dependencies]
+mojo = "==0.26.1"
+
+[tasks]
+# format the code
+format = "pixi run mojo format ./src && pixi run mojo format ./tests"
+
+# compile the package
+p = "clear && pixi run package"
+package = "pixi run format && pixi run package_stamo"
+package_stamo = "pixi run mojo package src/stamojo && cp stamojo.mojopkg tests/ && rm stamojo.mojopkg"
+
+# clean the package files in tests folder
+c = "clear && pixi run clean"
+clean = "rm -f tests/stamojo.mojopkg"
+
+# tests (use the mojo testing tool)
+t = "clear && pixi run package && bash ./tests/test_all.sh"
+test = "pixi run package && bash ./tests/test_all.sh"
+
+# doc
+doc = "clear && pixi run mojo doc -o docs/doc.json --diagnose-missing-doc-strings --validate-doc-strings src/stamojo"
