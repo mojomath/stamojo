@@ -7,14 +7,21 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "=== Running Stamojo tests ==="
+echo "=== Running StaMojo tests ==="
 echo ""
 
-# Add test commands here as they are developed
-# pixi run mojo test -I "$SCRIPT_DIR" "$SCRIPT_DIR/test_distributions.mojo"
-# pixi run mojo test -I "$SCRIPT_DIR" "$SCRIPT_DIR/test_stats.mojo"
-# pixi run mojo test -I "$SCRIPT_DIR" "$SCRIPT_DIR/test_models.mojo"
-
-echo "No tests yet. Tests will be added as modules are implemented."
+# Special functions
+echo "--- Special functions ---"
+pixi run mojo run -I src "$SCRIPT_DIR/test_special.mojo"
 echo ""
+
+# Distribution tests (to be added)
+# pixi run mojo run -I src "$SCRIPT_DIR/test_distributions.mojo"
+
+# Stats tests (to be added)
+# pixi run mojo run -I src "$SCRIPT_DIR/test_stats.mojo"
+
+# Models tests (to be added)
+# pixi run mojo run -I src "$SCRIPT_DIR/test_models.mojo"
+
 echo "=== All tests completed ==="
