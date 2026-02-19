@@ -144,8 +144,11 @@ fn _betainc_cf(
         h *= d * c
 
         # Odd step: d_{2m+1}
-        aa = -(a + fm) * (a + b + fm) * x / (
-            (a + 2.0 * fm) * (a + 2.0 * fm + 1.0)
+        aa = (
+            -(a + fm)
+            * (a + b + fm)
+            * x
+            / ((a + 2.0 * fm) * (a + 2.0 * fm + 1.0))
         )
         d = 1.0 + aa * d
         if abs(d) < _FPMIN:

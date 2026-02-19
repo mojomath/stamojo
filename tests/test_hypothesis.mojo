@@ -181,7 +181,9 @@ fn test_chi2_gof_fair_die() raises:
     assert_almost_equal(result[0], 22.0 / 15.0, atol=1e-10)
     # p should not be significant (fair die is plausible)
     if result[1] < 0.05:
-        raise Error("chi2_gof: expected non-significant, got p=" + String(result[1]))
+        raise Error(
+            "chi2_gof: expected non-significant, got p=" + String(result[1])
+        )
 
     print("✓ test_chi2_gof_fair_die passed")
 
@@ -218,9 +220,7 @@ fn test_chi2_ind_scipy() raises:
     table.append(row2^)
 
     var np = Python.import_module("numpy")
-    var py_table = np.array(
-        Python.evaluate("[[20, 15], [10, 30]]")
-    )
+    var py_table = np.array(Python.evaluate("[[20, 15], [10, 30]]"))
     var sp_result = sp.chi2_contingency(py_table, correction=False)
     var sp_chi2 = _py_f64(sp_result[0])
     var sp_p = _py_f64(sp_result[1])
@@ -240,12 +240,25 @@ fn test_chi2_ind_scipy() raises:
 fn test_ks_normal_data() raises:
     """Test KS test with data drawn from N(0,1) (should not reject)."""
     # Pre-computed standard normal quantiles (approx).
-    var data: List[Float64] = [-1.28, -0.84, -0.52, -0.25, 0.0, 0.25, 0.52, 0.84, 1.28]
+    var data: List[Float64] = [
+        -1.28,
+        -0.84,
+        -0.52,
+        -0.25,
+        0.0,
+        0.25,
+        0.52,
+        0.84,
+        1.28,
+    ]
 
     var result = ks_1samp(data)
     # D should be small, p should be large.
     if result[1] < 0.05:
-        raise Error("ks_1samp: expected p > 0.05 for normal data, got " + String(result[1]))
+        raise Error(
+            "ks_1samp: expected p > 0.05 for normal data, got "
+            + String(result[1])
+        )
 
     print("✓ test_ks_normal_data passed")
 

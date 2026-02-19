@@ -62,16 +62,21 @@ fn _assert_with_scipy(
     label: String,
     atol: Float64 = 1e-12,
 ) raises:
-    """Assert actual ≈ expected. On failure, print scipy reference if available."""
+    """Assert actual ≈ expected. On failure, print scipy reference if available.
+    """
     try:
         assert_almost_equal(actual, expected, atol=atol)
     except e:
         if sp is not None:
             print(
-                "  FAIL:", label,
-                "\n    got:     ", actual,
-                "\n    expected:", expected,
-                "\n    scipy:   ", sp_val,
+                "  FAIL:",
+                label,
+                "\n    got:     ",
+                actual,
+                "\n    expected:",
+                expected,
+                "\n    scipy:   ",
+                sp_val,
             )
         raise e^
 
@@ -100,7 +105,10 @@ fn test_gammainc_exponential() raises:
         var expected = 1.0 - exp(-x)
         var sp_val = _py_f64(sp.gammainc(1.0, x)) if sp is not None else 0.0
         _assert_with_scipy(
-            gammainc(1.0, x), expected, sp, sp_val,
+            gammainc(1.0, x),
+            expected,
+            sp,
+            sp_val,
             "gammainc(1, " + String(x) + ")",
             atol=1e-12,
         )
@@ -118,7 +126,10 @@ fn test_gammainc_half() raises:
         var expected = erf(sqrt(x))
         var sp_val = _py_f64(sp.gammainc(0.5, x)) if sp is not None else 0.0
         _assert_with_scipy(
-            gammainc(0.5, x), expected, sp, sp_val,
+            gammainc(0.5, x),
+            expected,
+            sp,
+            sp_val,
             "gammainc(0.5, " + String(x) + ")",
             atol=1e-10,
         )
@@ -145,11 +156,17 @@ fn test_gammainc_integer_a() raises:
         var sp_q = _py_f64(sp.gammaincc(a, x)) if sp is not None else 0.0
 
         _assert_with_scipy(
-            gammainc(a, x), p_exact, sp, sp_p,
+            gammainc(a, x),
+            p_exact,
+            sp,
+            sp_p,
             "gammainc(" + String(a_int) + ", " + String(x) + ")",
         )
         _assert_with_scipy(
-            gammaincc(a, x), q_exact, sp, sp_q,
+            gammaincc(a, x),
+            q_exact,
+            sp,
+            sp_q,
             "gammaincc(" + String(a_int) + ", " + String(x) + ")",
         )
 
@@ -174,12 +191,18 @@ fn test_gammainc_scipy() raises:
         var sp_q = _py_f64(sp.gammaincc(a, x))
 
         _assert_with_scipy(
-            gammainc(a, x), sp_p, sp, sp_p,
+            gammainc(a, x),
+            sp_p,
+            sp,
+            sp_p,
             "gammainc(" + String(a) + ", " + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
-            gammaincc(a, x), sp_q, sp, sp_q,
+            gammaincc(a, x),
+            sp_q,
+            sp,
+            sp_q,
             "gammaincc(" + String(a) + ", " + String(x) + ")",
             atol=1e-10,
         )
@@ -190,8 +213,14 @@ fn test_gammainc_scipy() raises:
 fn test_gammainc_complementary() raises:
     """Test P(a,x) + Q(a,x) = 1."""
     var test_cases: List[Tuple[Float64, Float64]] = [
-        (0.5, 0.5), (1.0, 2.0), (2.5, 3.5), (3.0, 1.0),
-        (5.0, 5.0), (5.0, 10.0), (10.0, 20.0), (0.1, 0.01),
+        (0.5, 0.5),
+        (1.0, 2.0),
+        (2.5, 3.5),
+        (3.0, 1.0),
+        (5.0, 5.0),
+        (5.0, 10.0),
+        (10.0, 20.0),
+        (0.1, 0.01),
     ]
 
     for i in range(len(test_cases)):
@@ -283,7 +312,10 @@ fn test_betainc_scipy() raises:
 
         var sp_val = _py_f64(sp.betainc(a, b, x))
         _assert_with_scipy(
-            betainc(a, b, x), sp_val, sp, sp_val,
+            betainc(a, b, x),
+            sp_val,
+            sp,
+            sp_val,
             "betainc(" + String(a) + ", " + String(b) + ", " + String(x) + ")",
             atol=1e-10,
         )
@@ -300,7 +332,17 @@ fn test_erfinv_basic() raises:
     """Test erfinv by checking erf(erfinv(p)) ≈ p (round-trip)."""
     assert_almost_equal(erfinv(0.0), 0.0, atol=1e-15)
 
-    var test_vals: List[Float64] = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 0.999, -0.5, -0.9]
+    var test_vals: List[Float64] = [
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9,
+        0.99,
+        0.999,
+        -0.5,
+        -0.9,
+    ]
 
     for i in range(len(test_vals)):
         var p = test_vals[i]
@@ -329,14 +371,27 @@ fn test_erfinv_scipy() raises:
         return
 
     var test_vals: List[Float64] = [
-        0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 0.999, -0.3, -0.9, -0.999,
+        0.01,
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9,
+        0.99,
+        0.999,
+        -0.3,
+        -0.9,
+        -0.999,
     ]
 
     for i in range(len(test_vals)):
         var p = test_vals[i]
         var sp_val = _py_f64(sp.erfinv(p))
         _assert_with_scipy(
-            erfinv(p), sp_val, sp, sp_val,
+            erfinv(p),
+            sp_val,
+            sp,
+            sp_val,
             "erfinv(" + String(p) + ")",
             atol=1e-10,
         )

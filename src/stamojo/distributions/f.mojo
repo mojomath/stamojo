@@ -160,7 +160,10 @@ struct FDist(Copyable, Movable):
             var d1 = self.dfn
             var d2 = self.dfd
             return (
-                2.0 * d2 * d2 * (d1 + d2 - 2.0)
+                2.0
+                * d2
+                * d2
+                * (d1 + d2 - 2.0)
                 / (d1 * (d2 - 2.0) * (d2 - 2.0) * (d2 - 4.0))
             )
         return nan[DType.float64]()

@@ -141,10 +141,9 @@ fn ttest_ind(
         t = (m1 - m2) / se
         # Welch-Satterthwaite degrees of freedom.
         var num = se2 * se2
-        var denom = (
-            (v1 / fn1) * (v1 / fn1) / (fn1 - 1.0)
-            + (v2 / fn2) * (v2 / fn2) / (fn2 - 1.0)
-        )
+        var denom = (v1 / fn1) * (v1 / fn1) / (fn1 - 1.0) + (v2 / fn2) * (
+            v2 / fn2
+        ) / (fn2 - 1.0)
         df = num / denom
 
     var tdist = StudentT(df)
@@ -153,9 +152,7 @@ fn ttest_ind(
     return (t, p)
 
 
-fn ttest_rel(
-    x: List[Float64], y: List[Float64]
-) -> Tuple[Float64, Float64]:
+fn ttest_rel(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Paired (related) samples t-test.
 
     Tests H₀: μ_d = 0 against H₁: μ_d ≠ 0, where d = x − y.

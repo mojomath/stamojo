@@ -155,8 +155,9 @@ fn test_scipy_comparison() raises:
         var py_data = Python.evaluate("[2.3, 5.1, 3.7, 8.4, 1.2, 6.8, 4.5]")
 
         var np_mean = _py_f64(np.mean(py_data))
-        var np_var = _py_f64(np.var(py_data, ddof=0))
-        var np_std = _py_f64(np.std(py_data, ddof=0))
+        var builtins = Python.import_module("builtins")
+        var np_var = _py_f64(builtins.getattr(np, "var")(py_data))
+        var np_std = _py_f64(np.std(py_data))
         var np_median = _py_f64(np.median(py_data))
 
         assert_almost_equal(mean(data), np_mean, atol=1e-10)

@@ -72,9 +72,7 @@ fn _rank_data(data: List[Float64]) -> List[Float64]:
 # ===----------------------------------------------------------------------=== #
 
 
-fn pearsonr(
-    x: List[Float64], y: List[Float64]
-) -> Tuple[Float64, Float64]:
+fn pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Pearson product-moment correlation coefficient and p-value.
 
     The p-value is two-sided and tests H₀: ρ = 0 using the t-distribution
@@ -124,9 +122,7 @@ fn pearsonr(
     return (r, p_value)
 
 
-fn spearmanr(
-    x: List[Float64], y: List[Float64]
-) -> Tuple[Float64, Float64]:
+fn spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Spearman rank-order correlation coefficient and p-value.
 
     Computes the Pearson correlation of the rank-transformed data.
@@ -149,9 +145,7 @@ fn spearmanr(
     return pearsonr(rx, ry)
 
 
-fn kendalltau(
-    x: List[Float64], y: List[Float64]
-) -> Tuple[Float64, Float64]:
+fn kendalltau(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Kendall's tau-b rank correlation coefficient and p-value.
 
     Tau-b adjusts for ties. The p-value is two-sided based on the
@@ -193,9 +187,7 @@ fn kendalltau(
                     ties_y += 1
 
     var n_pairs = n * (n - 1) // 2
-    var denom = sqrt(
-        Float64(n_pairs - ties_x) * Float64(n_pairs - ties_y)
-    )
+    var denom = sqrt(Float64(n_pairs - ties_x) * Float64(n_pairs - ties_y))
 
     if denom == 0.0:
         return (nan[DType.float64](), nan[DType.float64]())

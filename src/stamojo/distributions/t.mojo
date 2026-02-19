@@ -52,7 +52,8 @@ struct StudentT(Copyable, Movable):
         var v = self.df
         return (
             lgamma((v + 1.0) / 2.0)
-            - 0.5 * log(v) - 0.5 * _LN_PI
+            - 0.5 * log(v)
+            - 0.5 * _LN_PI
             - lgamma(v / 2.0)
             - ((v + 1.0) / 2.0) * log(1.0 + x * x / v)
         )
@@ -146,7 +147,8 @@ struct StudentT(Copyable, Movable):
         return nan[DType.float64]()
 
     fn variance(self) -> Float64:
-        """Distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2."""
+        """Distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2.
+        """
         if self.df > 2.0:
             return self.df / (self.df - 2.0)
         if self.df > 1.0:

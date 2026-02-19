@@ -92,24 +92,20 @@ fn ndtri(p: Float64) -> Float64:
         var q = p - 0.5
         var r = q * q
         x = (
-            ((((_A1 * r + _A2) * r + _A3) * r + _A4) * r + _A5) * r + _A6
-        ) * q / (
-            ((((_B1 * r + _B2) * r + _B3) * r + _B4) * r + _B5) * r + 1.0
+            (((((_A1 * r + _A2) * r + _A3) * r + _A4) * r + _A5) * r + _A6)
+            * q
+            / (((((_B1 * r + _B2) * r + _B3) * r + _B4) * r + _B5) * r + 1.0)
         )
     elif p < _P_LOW:
         # Lower tail.
         var q = sqrt(-2.0 * log(p))
-        x = (
-            ((((_C1 * q + _C2) * q + _C3) * q + _C4) * q + _C5) * q + _C6
-        ) / (
+        x = (((((_C1 * q + _C2) * q + _C3) * q + _C4) * q + _C5) * q + _C6) / (
             (((_D1 * q + _D2) * q + _D3) * q + _D4) * q + 1.0
         )
     else:
         # Upper tail.
         var q = sqrt(-2.0 * log(1.0 - p))
-        x = -(
-            ((((_C1 * q + _C2) * q + _C3) * q + _C4) * q + _C5) * q + _C6
-        ) / (
+        x = -(((((_C1 * q + _C2) * q + _C3) * q + _C4) * q + _C5) * q + _C6) / (
             (((_D1 * q + _D2) * q + _D3) * q + _D4) * q + 1.0
         )
 
