@@ -5,43 +5,55 @@ A statistical computing library for [Mojo](https://www.modular.com/mojo), inspir
 **[Repository on GitHub»](https://github.com/mojomath/stamojo)**　|　**[Discord channel»](https://discord.gg/3rGH87uZTk)**
 
 - [Overview](#overview)
-  - [Why a separate library?](#why-a-separate-library)
+- [Status](#status)
 - [Background](#background)
 - [Installation](#installation)
 - [Examples](#examples)
 - [Architecture](#architecture)
 - [Roadmap](#roadmap)
-  - [Phase 0 — Foundation ✓](#phase-0--foundation-)
-  - [Phase 1 — Core Distributions ✓](#phase-1--core-distributions-)
-  - [Phase 2 — Hypothesis Testing ✓](#phase-2--hypothesis-testing-)
-  - [Phase 3 — OLS Regression (current)](#phase-3--ols-regression-current)
-  - [Phase 4 — Generalized Linear Models](#phase-4--generalized-linear-models)
-  - [Phase 5 — Extended Distributions \& Models](#phase-5--extended-distributions--models)
-  - [Phase 6 — Advanced Topics](#phase-6--advanced-topics)
 - [License](#license)
 
 ## Overview
 
-StaMojo (Statistics + Mojo) brings comprehensive statistical computing to the Mojo ecosystem. The library covers three major areas:
+StaMojo (Statistics + Mojo) brings comprehensive statistical computing to the Mojo ecosystem. The library is organized into two parts:
 
-1. **Probability distributions** — PDF/PMF, CDF, quantile functions (PPF), and random variate generation for continuous and discrete distributions.
-2. **Statistical tests & descriptive statistics** — Hypothesis tests (t-test, chi-squared, K-S, etc.), summary statistics (mean, median, variance, skewness, kurtosis, correlation), and related utilities.
-3. **Statistical models** — OLS, WLS, GLS, logistic regression, GLM, and model diagnostics (R², AIC, BIC, residual analysis, etc.).
+| Part                                          | Scope                                                                                   | Dependencies                                                                                                            |
+| --------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Part I — Statistical Computing Foundation** | Special functions, distributions, descriptive statistics, hypothesis tests, correlation | Mojo stdlib only                                                                                                        |
+| **Part II — Statistical Modeling**            | OLS, GLM, logistic regression, and model diagnostics                                    | [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) + [MatMojo](https://github.com/mojomath/matmojo) |
 
-StaMojo builds on top of [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) for n-dimensional array and linear algebra support.
+Part I is **available now** with zero external dependencies. Part II will begin once the upstream linear-algebra ecosystem stabilizes on a compatible Mojo release.
 
-### Why a separate library?
+### Why a separate library? <!-- omit in toc -->
 
 In the Python ecosystem, `scipy` bundles statistics, optimization, signal processing, integration, interpolation, and more into one giant package. For Mojo, a modular approach is more appropriate:
 
-| Python package       | Mojo equivalent                     | Focus                             |
-| -------------------- | ----------------------------------- | --------------------------------- |
-| `numpy`              | **NuMojo**                          | N-dimensional arrays, basic math  |
-| `decimal` / `mpmath` | **DeciMojo**                        | Arbitrary-precision arithmetic    |
-| `scipy.stats`        | **StaMojo** (distributions + tests) | Statistical distributions & tests |
-| `statsmodels`        | **StaMojo** (models)                | Statistical models & econometrics |
+| Python package                  | Mojo equivalent                                                            | Focus                             |
+| ------------------------------- | -------------------------------------------------------------------------- | --------------------------------- |
+| `numpy`                         | [**NuMojo**](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) | N-dimensional arrays, basic math  |
+| `decimal` / `mpmath`            | [**DeciMojo**](https://github.com/mojomath/decimojo)                       | Arbitrary-precision arithmetic    |
+| `numpy.linalg` / `scipy.linalg` | [**MatMojo**](https://github.com/mojomath/matmojo)                         | Linear algebra                    |
+| `scipy.stats`                   | **StaMojo** (distributions + tests)                                        | Statistical distributions & tests |
+| `statsmodels`                   | **StaMojo** (models)                                                       | Statistical models & econometrics |
 
 Placing `scipy.stats`-like functionality and `statsmodels`-like regression in **one library** is intentional: regression models inherently depend on distribution functions (for p-values, confidence intervals, etc.), so co-locating them avoids circular dependencies, simplifies versioning, and provides a cohesive API.
+
+## Status
+
+**v0.1** — Part I is complete and ready for use. The current release provides:
+
+| Category          | Functions                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| Special functions | `gammainc`, `gammaincc`, `beta`, `lbeta`, `betainc`, `erfinv`, `ndtri`                          |
+| Distributions     | `Normal`, `StudentT`, `ChiSquared`, `FDist` — each with PDF, log-PDF, CDF, SF, PPF, `rvs`       |
+| Descriptive stats | `mean`, `variance`, `std`, `median`, `quantile`, `skewness`, `kurtosis`, `data_min`, `data_max` |
+| Correlation       | `pearsonr`, `spearmanr`, `kendalltau` (with p-values)                                           |
+| Hypothesis tests  | `ttest_1samp`, `ttest_ind`, `ttest_rel`, `chi2_gof`, `chi2_ind`, `ks_1samp`, `f_oneway`         |
+
+All 30 functions are self-contained (Mojo stdlib only) and covered by unit tests validated against SciPy reference values.
+
+> **What about Part II (statistical models)?**
+> OLS regression and GLMs require matrix operations that depend on [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) and [MatMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/MatMojo). These upstream libraries are still fast evolving. Part II will resume once the ecosystem catches up. See the [full roadmap](docs/roadmap.md) for details.
 
 ## Background
 
@@ -49,21 +61,45 @@ Due to my academic and professional background, I work extensively with hypothes
 
 The library is designed around two pillars:
 
-1. **Hard math foundations** — special functions, probability distributions, descriptive statistics, and hypothesis tests.
-2. **Regression models** — OLS, GLM, logistic regression, and related diagnostics.
+1. **Part I — Statistical computing foundation** (self-contained) — special functions, probability distributions, descriptive statistics, hypothesis tests, and correlation.
+2. **Part II — Statistical modeling** (depends on NuMojo) — OLS, GLM, logistic regression, and related diagnostics.
 
 At the moment I am still building out the project scaffolding and solidifying the core functionality. Because Mojo has not yet reached v1.0, breaking changes are frequent across compiler releases, so **pull requests are not accepted at this time**. If you have any suggestions, questions, or feedback, please feel free to open an [issue](https://github.com/mojomath/stamojo/issues), start a [discussion](https://github.com/mojomath/stamojo/discussions), or reach out on our [Discord channel](https://discord.gg/3rGH87uZTk). Thank you for your understanding!
 
 ## Installation
 
-Stamojo will be published to the `modular-community` channel once it reaches a functional first release. During development, clone the repo and build locally:
+StaMojo is available in the modular-community `https://repo.prefix.dev/modular-community` package repository. To access this repository, add it to your `channels` list in your `pixi.toml` file:
 
-```bash
-git clone https://github.com/mojomath/stamojo.git
-cd stamojo
-pixi install
-pixi run package
+```toml
+channels = ["https://conda.modular.com/max", "https://repo.prefix.dev/modular-community", "conda-forge"]
 ```
+
+Then, you can install StaMojo using any of these methods:
+
+1. From the `pixi` CLI, run the command ```pixi add stamojo```. This fetches the latest version and makes it immediately available for import.
+
+1. In the `mojoproject.toml` file of your project, add the following dependency:
+
+    ```toml
+    stamojo = "==0.1.0"
+    ```
+
+    Then run `pixi install` to download and install the package.
+
+1. For the latest development version in the `main` branch, clone [this GitHub repository](https://github.com/mojomath/stamojo) and build the package locally using the command `pixi run package`.
+
+    ```bash
+    git clone https://github.com/mojomath/stamojo.git
+    cd stamojo
+    pixi install
+    pixi run package
+    ```
+
+The following table summarizes the package versions and their corresponding Mojo versions:
+
+| `stamojo` | `mojo`   | package manager |
+| --------- | -------- | --------------- |
+| v0.1.0    | ==0.26.1 | pixi            |
 
 ## Examples
 
@@ -191,62 +227,19 @@ tests/
 
 ## Roadmap
 
-### Phase 0 — Foundation ✓
+The project is organized into **Part I** (scipy.stats-equivalent, no external dependencies) and **Part II** (statsmodels-equivalent, requires NuMojo + MatMojo). Phases 0–2 are complete; see the [full roadmap](docs/roadmap.md) for all planned phases.
 
-- Set up repository structure, pixi configuration, CI
-- Establish coding conventions and testing framework
-- Implement special mathematical functions needed as building blocks:
-  - Gamma function, log-gamma, regularized incomplete gamma (`gammainc`, `gammaincc`)
-  - Beta function, log-beta, regularized incomplete beta (`beta`, `lbeta`, `betainc`)
-  - Inverse error function, normal quantile (`erfinv`, `ndtri`)
-
-### Phase 1 — Core Distributions ✓
-
-- **Normal distribution**: PDF, log-PDF, CDF, SF, PPF, entropy, random sampling (Box-Muller)
-- **Student's t distribution**: PDF, log-PDF, CDF, SF, PPF (Newton-Raphson + bisection)
-- **Chi-squared distribution**: PDF, log-PDF, CDF, SF, PPF (Wilson-Hilferty + Newton-Raphson)
-- **F-distribution**: PDF, log-PDF, CDF, SF, PPF
-- Descriptive statistics: `mean`, `variance`, `std`, `median`, `quantile`, `skewness`, `kurtosis`, `data_min`, `data_max`
-
-### Phase 2 — Hypothesis Testing ✓
-
-- One-sample, two-sample (Welch's), and paired t-tests
-- Chi-squared goodness-of-fit and test of independence
-- Kolmogorov-Smirnov test (vs standard normal)
-- Pearson, Spearman, Kendall correlation with p-values
-- One-way ANOVA (F-test)
-
-### Phase 3 — OLS Regression (current)
-
-This phase relies on NuMojo and MatMojo for linear algebra operations.
-
-- OLS model fitting via normal equations and QR decomposition
-- Coefficient standard errors, t-statistics, p-values
-- R², adjusted R², F-statistic
-- `ModelResults` summary output (similar to `statsmodels.summary()`)
-- Prediction and confidence/prediction intervals
-
-### Phase 4 — Generalized Linear Models
-
-- GLM framework with link functions (identity, logit, log, probit)
-- Logistic regression (binomial family)
-- Poisson regression
-- IRLS (Iteratively Reweighted Least Squares) fitting algorithm
-- Deviance, AIC, BIC
-
-### Phase 5 — Extended Distributions & Models
-
-- More distributions: Beta, Gamma, Exponential, Uniform, Binomial, Poisson, Negative Binomial, Weibull, Log-normal, etc.
-- Weighted Least Squares (WLS), Generalized Least Squares (GLS)
-- Robust regression (M-estimators)
-- Regularized regression (Ridge, Lasso, Elastic Net)
-
-### Phase 6 — Advanced Topics
-
-- Time series basics (ACF, PACF, stationarity tests)
-- Survival analysis (Kaplan-Meier, Cox proportional hazards)
-- Nonparametric methods (kernel density estimation, Mann-Whitney U test)
-- Bootstrap and permutation tests
+|             | Phase                                            | Status                    |
+| ----------- | ------------------------------------------------ | ------------------------- |
+| **Part I**  | Phase 0 — Special Functions                      | ✓                         |
+|             | Phase 1 — Core Distributions & Descriptive Stats | ✓                         |
+|             | Phase 2 — Hypothesis Testing & Correlation       | ✓                         |
+|             | Phase 3 — Extended Distributions                 | planned                   |
+|             | Phase 4 — Extended Tests & Utilities             | planned                   |
+| **Part II** | Phase 5 — OLS Regression                         | awaiting NuMojo / MatMojo |
+|             | Phase 6 — Generalized Linear Models              | awaiting NuMojo / MatMojo |
+|             | Phase 7 — Extended Models                        | planned                   |
+|             | Phase 8 — Advanced Topics                        | planned                   |
 
 ## License
 

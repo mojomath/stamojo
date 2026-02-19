@@ -1,6 +1,6 @@
 [workspace]
 authors = ["Yuhao Zhu (朱宇浩) <dr.yuhao.zhu@outlook.com>"]
-channels = ["https://conda.modular.com/max-nightly", "https://conda.modular.com/max", "https://repo.prefix.dev/modular-community", "conda-forge"]
+channels = ["https://repo.prefix.dev/modular-community", "https://conda.modular.com/max-nightly", "https://conda.modular.com/max", "conda-forge"]
 description = "A statistical computing library for Mojo, inspired by scipy.stats and statsmodels"
 license = "Apache-2.0"
 name = "stamojo"
