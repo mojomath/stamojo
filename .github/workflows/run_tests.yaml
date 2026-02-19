@@ -1,6 +1,8 @@
 name: StaMojo Unit Tests
 
 on:
+  push:
+    branches: [main, dev]
   pull_request:
   workflow_dispatch:
 
