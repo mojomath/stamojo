@@ -45,16 +45,10 @@ fn _py_f64(obj: PythonObject) -> Float64:
 
 fn test_mean() raises:
     """Test arithmetic mean."""
-    var data = List[Float64]()
-    data.append(1.0)
-    data.append(2.0)
-    data.append(3.0)
-    data.append(4.0)
-    data.append(5.0)
+    var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
     assert_almost_equal(mean(data), 3.0, atol=1e-15)
 
-    var data2 = List[Float64]()
-    data2.append(10.0)
+    var data2: List[Float64] = [10.0]
     assert_almost_equal(mean(data2), 10.0, atol=1e-15)
 
     print("✓ test_mean passed")
@@ -62,15 +56,7 @@ fn test_mean() raises:
 
 fn test_variance() raises:
     """Test variance (population and sample)."""
-    var data = List[Float64]()
-    data.append(2.0)
-    data.append(4.0)
-    data.append(4.0)
-    data.append(4.0)
-    data.append(5.0)
-    data.append(5.0)
-    data.append(7.0)
-    data.append(9.0)
+    var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
     # Population variance = 4.0 (Wikipedia example)
     assert_almost_equal(variance(data, ddof=0), 4.0, atol=1e-12)
@@ -82,15 +68,7 @@ fn test_variance() raises:
 
 fn test_std() raises:
     """Test standard deviation."""
-    var data = List[Float64]()
-    data.append(2.0)
-    data.append(4.0)
-    data.append(4.0)
-    data.append(4.0)
-    data.append(5.0)
-    data.append(5.0)
-    data.append(7.0)
-    data.append(9.0)
+    var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
     assert_almost_equal(std(data, ddof=0), 2.0, atol=1e-12)
 
@@ -99,18 +77,10 @@ fn test_std() raises:
 
 fn test_median_odd() raises:
     """Test median with odd-length data."""
-    var data = List[Float64]()
-    data.append(3.0)
-    data.append(1.0)
-    data.append(2.0)
+    var data: List[Float64] = [3.0, 1.0, 2.0]
     assert_almost_equal(median(data), 2.0, atol=1e-15)
 
-    var data2 = List[Float64]()
-    data2.append(5.0)
-    data2.append(1.0)
-    data2.append(3.0)
-    data2.append(2.0)
-    data2.append(4.0)
+    var data2: List[Float64] = [5.0, 1.0, 3.0, 2.0, 4.0]
     assert_almost_equal(median(data2), 3.0, atol=1e-15)
 
     print("✓ test_median_odd passed")
@@ -118,11 +88,7 @@ fn test_median_odd() raises:
 
 fn test_median_even() raises:
     """Test median with even-length data."""
-    var data = List[Float64]()
-    data.append(3.0)
-    data.append(1.0)
-    data.append(2.0)
-    data.append(4.0)
+    var data: List[Float64] = [3.0, 1.0, 2.0, 4.0]
     assert_almost_equal(median(data), 2.5, atol=1e-15)
 
     print("✓ test_median_even passed")
@@ -147,12 +113,7 @@ fn test_quantile() raises:
 
 fn test_skewness_symmetric() raises:
     """Test skewness of perfectly symmetric data is 0."""
-    var data = List[Float64]()
-    data.append(1.0)
-    data.append(2.0)
-    data.append(3.0)
-    data.append(4.0)
-    data.append(5.0)
+    var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
     assert_almost_equal(skewness(data), 0.0, atol=1e-12)
 
     print("✓ test_skewness_symmetric passed")
@@ -176,13 +137,7 @@ fn test_kurtosis_uniform() raises:
 
 fn test_min_max() raises:
     """Test data_min and data_max."""
-    var data = List[Float64]()
-    data.append(3.0)
-    data.append(1.0)
-    data.append(4.0)
-    data.append(1.5)
-    data.append(9.0)
-    data.append(2.6)
+    var data: List[Float64] = [3.0, 1.0, 4.0, 1.5, 9.0, 2.6]
 
     assert_almost_equal(data_min(data), 1.0, atol=1e-15)
     assert_almost_equal(data_max(data), 9.0, atol=1e-15)
@@ -195,14 +150,7 @@ fn test_scipy_comparison() raises:
     try:
         var np = Python.import_module("numpy")
 
-        var data = List[Float64]()
-        data.append(2.3)
-        data.append(5.1)
-        data.append(3.7)
-        data.append(8.4)
-        data.append(1.2)
-        data.append(6.8)
-        data.append(4.5)
+        var data: List[Float64] = [2.3, 5.1, 3.7, 8.4, 1.2, 6.8, 4.5]
 
         var py_data = Python.evaluate("[2.3, 5.1, 3.7, 8.4, 1.2, 6.8, 4.5]")
 

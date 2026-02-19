@@ -25,6 +25,11 @@ echo "--- Descriptive statistics ---"
 pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_stats.mojo"
 echo ""
 
+# Hypothesis tests
+echo "--- Hypothesis tests ---"
+pixi run --environment test mojo run -I src "$SCRIPT_DIR/test_hypothesis.mojo"
+echo ""
+
 # Models tests (to be added)
 # pixi run mojo run -I src "$SCRIPT_DIR/test_models.mojo"
 

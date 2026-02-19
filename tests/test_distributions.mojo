@@ -88,16 +88,7 @@ fn test_normal_ppf() raises:
 fn test_normal_cdf_ppf_roundtrip() raises:
     """Test CDF(PPF(p)) ≈ p for many probability values."""
     var n = Normal(0.0, 1.0)
-    var ps = List[Float64]()
-    ps.append(0.01)
-    ps.append(0.05)
-    ps.append(0.1)
-    ps.append(0.25)
-    ps.append(0.5)
-    ps.append(0.75)
-    ps.append(0.9)
-    ps.append(0.95)
-    ps.append(0.99)
+    var ps: List[Float64] = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99]
 
     for i in range(len(ps)):
         var p = ps[i]
@@ -131,12 +122,7 @@ fn test_normal_scipy() raises:
         return
 
     var n = Normal(0.0, 1.0)
-    var xs = List[Float64]()
-    xs.append(-3.0)
-    xs.append(-1.0)
-    xs.append(0.0)
-    xs.append(1.0)
-    xs.append(3.0)
+    var xs: List[Float64] = [-3.0, -1.0, 0.0, 1.0, 3.0]
 
     for i in range(len(xs)):
         var x = xs[i]
@@ -201,20 +187,12 @@ fn test_t_scipy() raises:
         print("⊘ test_t_scipy skipped (scipy not available)")
         return
 
-    var dfs = List[Float64]()
-    dfs.append(1.0)
-    dfs.append(3.0)
-    dfs.append(5.0)
-    dfs.append(10.0)
-    dfs.append(30.0)
+    var dfs: List[Float64] = [1.0, 3.0, 5.0, 10.0, 30.0]
 
     for i in range(len(dfs)):
         var df = dfs[i]
         var t = StudentT(df)
-        var xs = List[Float64]()
-        xs.append(-2.0)
-        xs.append(0.0)
-        xs.append(1.5)
+        var xs: List[Float64] = [-2.0, 0.0, 1.5]
 
         for j in range(len(xs)):
             var x = xs[j]
@@ -267,19 +245,12 @@ fn test_chi2_scipy() raises:
         print("⊘ test_chi2_scipy skipped (scipy not available)")
         return
 
-    var dfs = List[Float64]()
-    dfs.append(1.0)
-    dfs.append(3.0)
-    dfs.append(5.0)
-    dfs.append(10.0)
+    var dfs: List[Float64] = [1.0, 3.0, 5.0, 10.0]
 
     for i in range(len(dfs)):
         var df = dfs[i]
         var c = ChiSquared(df)
-        var xs = List[Float64]()
-        xs.append(1.0)
-        xs.append(3.0)
-        xs.append(7.0)
+        var xs: List[Float64] = [1.0, 3.0, 7.0]
 
         for j in range(len(xs)):
             var x = xs[j]
@@ -332,11 +303,7 @@ fn test_f_scipy() raises:
         return
 
     var f = FDist(5.0, 10.0)
-    var xs = List[Float64]()
-    xs.append(0.5)
-    xs.append(1.0)
-    xs.append(2.0)
-    xs.append(5.0)
+    var xs: List[Float64] = [0.5, 1.0, 2.0, 5.0]
 
     for i in range(len(xs)):
         var x = xs[i]

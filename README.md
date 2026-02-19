@@ -6,13 +6,14 @@ A statistical computing library for [Mojo](https://www.modular.com/mojo), inspir
 
 - [Overview](#overview)
   - [Why a separate library?](#why-a-separate-library)
+- [Background](#background)
 - [Installation](#installation)
 - [Architecture](#architecture)
 - [Roadmap](#roadmap)
-  - [Phase 0 — Foundation (current)](#phase-0--foundation-current)
-  - [Phase 1 — Core Distributions](#phase-1--core-distributions)
-  - [Phase 2 — Hypothesis Testing](#phase-2--hypothesis-testing)
-  - [Phase 3 — OLS Regression](#phase-3--ols-regression)
+  - [Phase 0 — Foundation ✓](#phase-0--foundation-)
+  - [Phase 1 — Core Distributions ✓](#phase-1--core-distributions-)
+  - [Phase 2 — Hypothesis Testing ✓](#phase-2--hypothesis-testing-)
+  - [Phase 3 — OLS Regression (current)](#phase-3--ols-regression-current)
   - [Phase 4 — Generalized Linear Models](#phase-4--generalized-linear-models)
   - [Phase 5 — Extended Distributions \& Models](#phase-5--extended-distributions--models)
   - [Phase 6 — Advanced Topics](#phase-6--advanced-topics)
@@ -41,6 +42,17 @@ In the Python ecosystem, `scipy` bundles statistics, optimization, signal proces
 
 Placing `scipy.stats`-like functionality and `statsmodels`-like regression in **one library** is intentional: regression models inherently depend on distribution functions (for p-values, confidence intervals, etc.), so co-locating them avoids circular dependencies, simplifies versioning, and provides a cohesive API.
 
+## Background
+
+Due to my academic and professional background, I work extensively with hypothesis testing and regression models on a daily basis, and have been a long-time user of Stata and `statsmodels`. It has been two years since Mojo first appeared, and [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) now has its core functionality in place. Driven by my enthusiasm for Mojo, I felt it was time to start migrating some of my personal research projects to the Mojo ecosystem — and that is precisely how StaMojo was born.
+
+The library is designed around two pillars:
+
+1. **Hard math foundations** — special functions, probability distributions, descriptive statistics, and hypothesis tests.
+2. **Regression models** — OLS, GLM, logistic regression, and related diagnostics.
+
+At the moment I am still building out the project scaffolding and solidifying the core functionality. Because Mojo has not yet reached v1.0, breaking changes are frequent across compiler releases, so **pull requests are not accepted at this time**. If you have any suggestions, questions, or feedback, please feel free to open an [issue](https://github.com/mojomath/stamojo/issues), start a [discussion](https://github.com/mojomath/stamojo/discussions), or reach out on our [Discord channel](https://discord.gg/3rGH87uZTk). Thank you for your understanding!
+
 ## Installation
 
 Stamojo will be published to the `modular-community` channel once it reaches a functional first release. During development, clone the repo and build locally:
@@ -56,73 +68,63 @@ pixi run package
 
 ```txt
 src/stamojo/
-├── __init__.mojo              # Package root
+├── __init__.mojo              # Package root (re-exports distributions & stats)
 ├── prelude.mojo               # Convenient re-exports
 ├── special/                   # Special mathematical functions (cf. scipy.special)
-│   ├── __init__.mojo          # Re-exports all public functions
+│   ├── __init__.mojo
 │   ├── _gamma.mojo            # gammainc, gammaincc
 │   ├── _beta.mojo             # beta, lbeta, betainc
 │   └── _erf.mojo              # erfinv, ndtri
 ├── distributions/             # Probability distributions
 │   ├── __init__.mojo
-│   ├── normal.mojo            # Normal (Gaussian)
+│   ├── normal.mojo            # Normal (Gaussian) — PDF, logPDF, CDF, SF, PPF, rvs
 │   ├── t.mojo                 # Student's t
 │   ├── chi2.mojo              # Chi-squared
-│   ├── f.mojo                 # F-distribution
-│   ├── beta.mojo              # Beta
-│   ├── gamma.mojo             # Gamma
-│   ├── binomial.mojo          # Binomial
-│   ├── poisson.mojo           # Poisson
-│   └── ...
+│   └── f.mojo                 # F-distribution
 ├── stats/                     # Descriptive stats & hypothesis tests
 │   ├── __init__.mojo
-│   ├── descriptive.mojo       # mean, var, std, skewness, kurtosis, quantile
-│   ├── correlation.mojo       # Pearson, Spearman, Kendall
-│   ├── tests.mojo             # t-test, chi2-test, K-S test, etc.
-│   └── ...
-├── models/                    # Statistical models
-│   ├── __init__.mojo
-│   ├── ols.mojo               # Ordinary Least Squares
-│   ├── gls.mojo               # Generalized Least Squares
-│   ├── glm.mojo               # Generalized Linear Models
-│   ├── logistic.mojo          # Logistic regression
-│   ├── results.mojo           # ModelResults container
-│   └── ...
+│   ├── descriptive.mojo       # mean, variance, std, median, quantile, skewness, kurtosis
+│   ├── correlation.mojo       # pearsonr, spearmanr, kendalltau
+│   └── tests.mojo             # ttest_1samp, ttest_ind, ttest_rel, chi2_gof, chi2_ind, ks_1samp, f_oneway
+└── models/                    # Statistical models (planned)
+    ├── __init__.mojo
+    └── ols.mojo               # Ordinary Least Squares (stub)
 tests/
-├── test_all.sh
-├── test_distributions.mojo
-├── test_stats.mojo
-└── test_models.mojo
+├── test_all.sh                # Run all test suites
+├── test_special.mojo          # 15 tests — special functions
+├── test_distributions.mojo    # 20 tests — Normal, t, χ², F
+├── test_stats.mojo            # 10 tests — descriptive statistics
+└── test_hypothesis.mojo       # 22 tests — hypothesis tests, correlation, ANOVA
 ```
 
 ## Roadmap
 
-### Phase 0 — Foundation (current)
+### Phase 0 — Foundation ✓
 
 - Set up repository structure, pixi configuration, CI
 - Establish coding conventions and testing framework
 - Implement special mathematical functions needed as building blocks:
-  - Gamma function, log-gamma, incomplete gamma
-  - Beta function, incomplete beta (regularized)
-  - Error function (erf, erfc)
+  - Gamma function, log-gamma, regularized incomplete gamma (`gammainc`, `gammaincc`)
+  - Beta function, log-beta, regularized incomplete beta (`beta`, `lbeta`, `betainc`)
+  - Inverse error function, normal quantile (`erfinv`, `ndtri`)
 
-### Phase 1 — Core Distributions
+### Phase 1 — Core Distributions ✓
 
-- **Normal distribution**: PDF, CDF, PPF, random sampling
-- **Student's t distribution**: PDF, CDF, PPF
-- **Chi-squared distribution**: PDF, CDF, PPF
-- **F-distribution**: PDF, CDF, PPF
-- Descriptive statistics: mean, variance, std, median, quantiles, skewness, kurtosis
+- **Normal distribution**: PDF, log-PDF, CDF, SF, PPF, entropy, random sampling (Box-Muller)
+- **Student's t distribution**: PDF, log-PDF, CDF, SF, PPF (Newton-Raphson + bisection)
+- **Chi-squared distribution**: PDF, log-PDF, CDF, SF, PPF (Wilson-Hilferty + Newton-Raphson)
+- **F-distribution**: PDF, log-PDF, CDF, SF, PPF
+- Descriptive statistics: `mean`, `variance`, `std`, `median`, `quantile`, `skewness`, `kurtosis`, `data_min`, `data_max`
 
-### Phase 2 — Hypothesis Testing
+### Phase 2 — Hypothesis Testing ✓
 
-- One-sample, two-sample, paired t-tests
-- Chi-squared goodness-of-fit and independence tests
-- Kolmogorov-Smirnov test
+- One-sample, two-sample (Welch's), and paired t-tests
+- Chi-squared goodness-of-fit and test of independence
+- Kolmogorov-Smirnov test (vs standard normal)
 - Pearson, Spearman, Kendall correlation with p-values
-- ANOVA (one-way)
+- One-way ANOVA (F-test)
 
-### Phase 3 — OLS Regression
+### Phase 3 — OLS Regression (current)
 
 - OLS model fitting via normal equations and QR decomposition
 - Coefficient standard errors, t-statistics, p-values

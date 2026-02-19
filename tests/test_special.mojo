@@ -93,12 +93,7 @@ fn test_gammainc_boundary() raises:
 fn test_gammainc_exponential() raises:
     """Test P(1, x) = 1 - e^{-x} (exponential distribution CDF)."""
     var sp = _load_scipy()
-    var test_x = List[Float64]()
-    test_x.append(0.5)
-    test_x.append(1.0)
-    test_x.append(2.0)
-    test_x.append(5.0)
-    test_x.append(10.0)
+    var test_x: List[Float64] = [0.5, 1.0, 2.0, 5.0, 10.0]
 
     for i in range(len(test_x)):
         var x = test_x[i]
@@ -116,12 +111,7 @@ fn test_gammainc_exponential() raises:
 fn test_gammainc_half() raises:
     """Test P(0.5, x) = erf(sqrt(x))."""
     var sp = _load_scipy()
-    var test_x = List[Float64]()
-    test_x.append(0.25)
-    test_x.append(0.5)
-    test_x.append(1.0)
-    test_x.append(2.0)
-    test_x.append(4.0)
+    var test_x: List[Float64] = [0.25, 0.5, 1.0, 2.0, 4.0]
 
     for i in range(len(test_x)):
         var x = test_x[i]
@@ -140,15 +130,8 @@ fn test_gammainc_integer_a() raises:
     """Test gammainc/gammaincc against the Poisson sum formula for integer a."""
     var sp = _load_scipy()
 
-    var test_a = List[Int]()
-    var test_x = List[Float64]()
-    test_a.append(2);  test_x.append(3.0)
-    test_a.append(3);  test_x.append(2.0)
-    test_a.append(5);  test_x.append(3.0)
-    test_a.append(5);  test_x.append(10.0)
-    test_a.append(10); test_x.append(5.0)
-    test_a.append(10); test_x.append(15.0)
-    test_a.append(20); test_x.append(25.0)
+    var test_a: List[Int] = [2, 3, 5, 5, 10, 10, 20]
+    var test_x: List[Float64] = [3.0, 2.0, 3.0, 10.0, 5.0, 15.0, 25.0]
 
     for i in range(len(test_a)):
         var a_int = test_a[i]
@@ -180,15 +163,8 @@ fn test_gammainc_scipy() raises:
         print("⊘ test_gammainc_scipy skipped (scipy not available)")
         return
 
-    var test_a = List[Float64]()
-    var test_x = List[Float64]()
-    test_a.append(0.7);  test_x.append(0.3)
-    test_a.append(1.5);  test_x.append(2.0)
-    test_a.append(2.5);  test_x.append(4.0)
-    test_a.append(3.7);  test_x.append(1.2)
-    test_a.append(7.3);  test_x.append(12.0)
-    test_a.append(0.1);  test_x.append(0.01)
-    test_a.append(15.5); test_x.append(20.0)
+    var test_a: List[Float64] = [0.7, 1.5, 2.5, 3.7, 7.3, 0.1, 15.5]
+    var test_x: List[Float64] = [0.3, 2.0, 4.0, 1.2, 12.0, 0.01, 20.0]
 
     for i in range(len(test_a)):
         var a = test_a[i]
@@ -213,15 +189,10 @@ fn test_gammainc_scipy() raises:
 
 fn test_gammainc_complementary() raises:
     """Test P(a,x) + Q(a,x) = 1."""
-    var test_cases = List[Tuple[Float64, Float64]]()
-    test_cases.append((0.5, 0.5))
-    test_cases.append((1.0, 2.0))
-    test_cases.append((2.5, 3.5))
-    test_cases.append((3.0, 1.0))
-    test_cases.append((5.0, 5.0))
-    test_cases.append((5.0, 10.0))
-    test_cases.append((10.0, 20.0))
-    test_cases.append((0.1, 0.01))
+    var test_cases: List[Tuple[Float64, Float64]] = [
+        (0.5, 0.5), (1.0, 2.0), (2.5, 3.5), (3.0, 1.0),
+        (5.0, 5.0), (5.0, 10.0), (10.0, 20.0), (0.1, 0.01),
+    ]
 
     for i in range(len(test_cases)):
         var a = test_cases[i][0]
@@ -261,11 +232,7 @@ fn test_betainc_boundary() raises:
 
 fn test_betainc_symmetric() raises:
     """Test I_{0.5}(a, a) = 0.5."""
-    var test_a = List[Float64]()
-    test_a.append(1.0)
-    test_a.append(2.0)
-    test_a.append(5.0)
-    test_a.append(10.0)
+    var test_a: List[Float64] = [1.0, 2.0, 5.0, 10.0]
 
     for i in range(len(test_a)):
         var a = test_a[i]
@@ -305,15 +272,9 @@ fn test_betainc_scipy() raises:
         print("⊘ test_betainc_scipy skipped (scipy not available)")
         return
 
-    var test_a = List[Float64]()
-    var test_b = List[Float64]()
-    var test_x = List[Float64]()
-    test_a.append(0.5); test_b.append(0.5); test_x.append(0.3)
-    test_a.append(2.0); test_b.append(5.0); test_x.append(0.4)
-    test_a.append(5.0); test_b.append(2.0); test_x.append(0.6)
-    test_a.append(0.1); test_b.append(0.1); test_x.append(0.5)
-    test_a.append(10.0); test_b.append(3.0); test_x.append(0.8)
-    test_a.append(3.0); test_b.append(10.0); test_x.append(0.2)
+    var test_a: List[Float64] = [0.5, 2.0, 5.0, 0.1, 10.0, 3.0]
+    var test_b: List[Float64] = [0.5, 5.0, 2.0, 0.1, 3.0, 10.0]
+    var test_x: List[Float64] = [0.3, 0.4, 0.6, 0.5, 0.8, 0.2]
 
     for i in range(len(test_a)):
         var a = test_a[i]
@@ -339,16 +300,7 @@ fn test_erfinv_basic() raises:
     """Test erfinv by checking erf(erfinv(p)) ≈ p (round-trip)."""
     assert_almost_equal(erfinv(0.0), 0.0, atol=1e-15)
 
-    var test_vals = List[Float64]()
-    test_vals.append(0.1)
-    test_vals.append(0.3)
-    test_vals.append(0.5)
-    test_vals.append(0.7)
-    test_vals.append(0.9)
-    test_vals.append(0.99)
-    test_vals.append(0.999)
-    test_vals.append(-0.5)
-    test_vals.append(-0.9)
+    var test_vals: List[Float64] = [0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 0.999, -0.5, -0.9]
 
     for i in range(len(test_vals)):
         var p = test_vals[i]
@@ -360,10 +312,7 @@ fn test_erfinv_basic() raises:
 
 fn test_erfinv_symmetry() raises:
     """Test erfinv(-p) = -erfinv(p)."""
-    var test_vals = List[Float64]()
-    test_vals.append(0.1)
-    test_vals.append(0.5)
-    test_vals.append(0.9)
+    var test_vals: List[Float64] = [0.1, 0.5, 0.9]
 
     for i in range(len(test_vals)):
         var p = test_vals[i]
@@ -379,18 +328,9 @@ fn test_erfinv_scipy() raises:
         print("⊘ test_erfinv_scipy skipped (scipy not available)")
         return
 
-    var test_vals = List[Float64]()
-    test_vals.append(0.01)
-    test_vals.append(0.1)
-    test_vals.append(0.3)
-    test_vals.append(0.5)
-    test_vals.append(0.7)
-    test_vals.append(0.9)
-    test_vals.append(0.99)
-    test_vals.append(0.999)
-    test_vals.append(-0.3)
-    test_vals.append(-0.9)
-    test_vals.append(-0.999)
+    var test_vals: List[Float64] = [
+        0.01, 0.1, 0.3, 0.5, 0.7, 0.9, 0.99, 0.999, -0.3, -0.9, -0.999,
+    ]
 
     for i in range(len(test_vals)):
         var p = test_vals[i]
