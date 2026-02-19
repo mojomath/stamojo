@@ -18,6 +18,9 @@ Functions provided:
 
 The Mojo standard library already provides erf, erfc, gamma, and lgamma,
 so we do not reimplement those here.
+
+The modules of the subpackages are named with a leading underscore 
+(e.g., `_gamma`) to avoid conflicts with the standard library functions.
 """
 
 from ._gamma import gammainc, gammaincc

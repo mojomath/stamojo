@@ -92,7 +92,7 @@ Additional descriptive utilities:
 
 *Corresponds to `statsmodels` in the Python ecosystem.*
 
-Part II requires n-dimensional array and linear algebra support from [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) and [MatMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/MatMojo) (or equivalent). Development will begin once these upstream dependencies stabilize on a compatible Mojo release.
+Part II requires n-dimensional array and linear algebra support from [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) and [MatMojo](https://github.com/mojomath/matmojo) (or equivalent). Development will begin once these upstream dependencies stabilize on a compatible Mojo release.
 
 ### Phase 5 — OLS Regression
 

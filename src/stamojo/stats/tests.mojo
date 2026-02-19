@@ -17,7 +17,7 @@ Each function returns a ``Tuple[Float64, Float64]`` of (test statistic, p-value)
 unless otherwise noted.
 """
 
-from math import sqrt, nan, inf
+from math import sqrt, exp, nan, inf
 
 from stamojo.distributions import Normal, StudentT, ChiSquared, FDist
 from stamojo.stats.descriptive import mean, variance
@@ -56,13 +56,13 @@ fn ttest_1samp(
 
     Args:
         data: Sample data.
-        mu0: Hypothesized population mean.  Default is 0.
+        mu0: Hypothesized population mean. Default is 0.
 
     Returns:
         A tuple (t-statistic, p-value).
     """
     var n = len(data)
-    if n < 2:
+    if n < 2:  # Need n >= 2 for n-1 degrees of freedom.
         return (nan[DType.float64](), nan[DType.float64]())
 
     var m = mean(data)
@@ -357,8 +357,6 @@ fn _exp_safe(x: Float64) -> Float64:
     """Safe exponential that avoids underflow."""
     if x < -700.0:
         return 0.0
-    from math import exp
-
     return exp(x)
 
 

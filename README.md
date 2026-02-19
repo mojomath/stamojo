@@ -20,7 +20,7 @@ StaMojo (Statistics + Mojo) brings comprehensive statistical computing to the Mo
 | Part                                          | Scope                                                                                   | Dependencies                                                                                                            |
 | --------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Part I — Statistical Computing Foundation** | Special functions, distributions, descriptive statistics, hypothesis tests, correlation | Mojo stdlib only                                                                                                        |
-| **Part II — Statistical Modeling**            | OLS, GLM, logistic regression, and model diagnostics                                    | [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) + [MatMojo](https://github.com/mojomath/matmojo) |
+| **Part II — Statistical Modeling**            | OLS, GLM, logistic regression, and model diagnostics                                    | [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) + [MatMojo](https://github.com/mojomath/matmojo)  |
 
 Part I is **available now** with zero external dependencies. Part II will begin once the upstream linear-algebra ecosystem stabilizes on a compatible Mojo release.
 
@@ -53,7 +53,7 @@ Placing `scipy.stats`-like functionality and `statsmodels`-like regression in **
 All 30 functions are self-contained (Mojo stdlib only) and covered by unit tests validated against SciPy reference values.
 
 > **What about Part II (statistical models)?**
-> OLS regression and GLMs require matrix operations that depend on [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) and [MatMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/MatMojo). These upstream libraries are still fast evolving. Part II will resume once the ecosystem catches up. See the [full roadmap](docs/roadmap.md) for details.
+> OLS regression and GLMs require matrix operations that depend on [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) and [MatMojo](https://github.com/mojomath/matmojo). These upstream libraries are still fast evolving. Part II will resume once the ecosystem catches up. See the [full roadmap](docs/roadmap.md) for details.
 
 ## Background
 
@@ -62,9 +62,9 @@ Due to my academic and professional background, I work extensively with hypothes
 The library is designed around two pillars:
 
 1. **Part I — Statistical computing foundation** (self-contained) — special functions, probability distributions, descriptive statistics, hypothesis tests, and correlation.
-2. **Part II — Statistical modeling** (depends on NuMojo) — OLS, GLM, logistic regression, and related diagnostics.
+2. **Part II — Statistical modeling** (depends on NuMojo and MatMojo) — OLS, GLM, logistic regression, and related diagnostics.
 
-At the moment I am still building out the project scaffolding and solidifying the core functionality. Because Mojo has not yet reached v1.0, breaking changes are frequent across compiler releases, so **pull requests are not accepted at this time**. If you have any suggestions, questions, or feedback, please feel free to open an [issue](https://github.com/mojomath/stamojo/issues), start a [discussion](https://github.com/mojomath/stamojo/discussions), or reach out on our [Discord channel](https://discord.gg/3rGH87uZTk). Thank you for your understanding!
+At the moment I am still building out the project scaffolding and solidifying the core functionality. Because Mojo has not yet reached v1.0, breaking changes are frequent across compiler releases, so **pull requests are not preferred at this time**. If you have any suggestions, questions, or feedback, please feel free to open an [issue](https://github.com/mojomath/stamojo/issues), start a [discussion](https://github.com/mojomath/stamojo/discussions), or reach out on our [Discord channel](https://discord.gg/3rGH87uZTk). Thank you for your understanding!
 
 ## Installation
 
@@ -103,7 +103,7 @@ The following table summarizes the package versions and their corresponding Mojo
 
 ## Examples
 
-The file [`examples/examples.mojo`](examples/examples.mojo) demonstrates every function implemented so far (Phases 0–2). Run it with:
+The file [`examples/examples.mojo`](examples/examples.mojo) demonstrates the key APIs available in Part I. Run it with:
 
 ```bash
 mojo run -I src examples/examples.mojo
@@ -219,10 +219,10 @@ src/stamojo/
     └── ols.mojo               # Ordinary Least Squares (stub)
 tests/
 ├── test_all.sh                # Run all test suites
-├── test_special.mojo          # 15 tests — special functions
-├── test_distributions.mojo    # 20 tests — Normal, t, χ², F
-├── test_stats.mojo            # 10 tests — descriptive statistics
-└── test_hypothesis.mojo       # 22 tests — hypothesis tests, correlation, ANOVA
+├── test_special.mojo          # tests — special functions
+├── test_distributions.mojo    # tests — Normal, t, χ², F
+├── test_stats.mojo            # tests — descriptive statistics
+└── test_hypothesis.mojo       # tests — hypothesis tests, correlation, ANOVA
 ```
 
 ## Roadmap

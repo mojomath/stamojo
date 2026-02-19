@@ -12,7 +12,7 @@ Each distribution is tested for:
   - Comparison against scipy.stats (when available)
 """
 
-from math import exp, log, sqrt, erf, erfc
+from math import exp
 from python import Python, PythonObject
 from testing import assert_almost_equal
 

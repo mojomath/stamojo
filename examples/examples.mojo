@@ -1,5 +1,5 @@
 # ===----------------------------------------------------------------------=== #
-# StaMojo — Usage examples (Phases 0–2)
+# StaMojo — Usage examples (Part I)
 # ===----------------------------------------------------------------------=== #
 """Run with:  mojo run -I src examples/examples.mojo"""
 
