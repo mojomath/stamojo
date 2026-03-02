@@ -2,16 +2,11 @@
 
 A statistical computing library for [Mojo](https://www.modular.com/mojo), inspired by `scipy.stats` and `statsmodels` in Python.
 
-**[Repository on GitHub»](https://github.com/mojomath/stamojo)**　|　**[Discord channel»](https://discord.gg/3rGH87uZTk)**
-
-- [Overview](#overview)
-- [Status](#status)
-- [Background](#background)
-- [Installation](#installation)
-- [Examples](#examples)
-- [Architecture](#architecture)
-- [Roadmap](#roadmap)
-- [License](#license)
+[![Version](https://img.shields.io/github/v/tag/forfudan/argmojo?label=version&color=blue)](https://github.com/forfudan/argmojo/releases)
+[![Mojo](https://img.shields.io/badge/mojo-0.26.1-orange)](https://docs.modular.com/mojo/manual/)
+[![pixi](https://img.shields.io/badge/pixi%20add-argmojo-brightgreen)](https://prefix.dev/channels/modular-community/packages/argmojo)
+[![Rrepo](https://img.shields.io/badge/Repo-red)](https://github.com/forfudan/decimo)
+[![Discord](https://img.shields.io/badge/Discord-darkblue)](https://discord.gg/z7VZUTn3)
 
 ## Overview
 
@@ -20,7 +15,7 @@ StaMojo (Statistics + Mojo) brings comprehensive statistical computing to the Mo
 | Part                                          | Scope                                                                                   | Dependencies                                                                                                            |
 | --------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **Part I — Statistical Computing Foundation** | Special functions, distributions, descriptive statistics, hypothesis tests, correlation | Mojo stdlib only                                                                                                        |
-| **Part II — Statistical Modeling**            | OLS, GLM, logistic regression, and model diagnostics                                    | [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) + [MatMojo](https://github.com/mojomath/matmojo)  |
+| **Part II — Statistical Modeling**            | OLS, GLM, logistic regression, and model diagnostics                                    | [NuMojo](https://github.com/Mojo-Numerics-and-Algorithms-group/NuMojo) + [MatMojo](https://github.com/mojomath/matmojo) |
 
 Part I is **available now** with zero external dependencies. Part II will begin once the upstream linear-algebra ecosystem stabilizes on a compatible Mojo release.
 
