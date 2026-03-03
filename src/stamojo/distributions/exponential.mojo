@@ -37,10 +37,10 @@ struct Expon(Copyable, Movable, RVContinuousLike):
     """
 
     var loc: Float64
-    """Location (shift) parameter. Specifies the minimum value of the distribution; all random variates are greater than or equal to `loc`."""
+    """Location (shift) parameter. Deaults to 0.0. The distribution is supported for x >= loc."""
 
     var scale: Float64
-    """Scale parameter (must be > 0). Controls the spread of the distribution; larger values result in a slower rate of decay."""
+    """Scale parameter (must be > 0). Defaults to 1.0."""
 
     # --- Initialization -------------------------------------------------------
 
