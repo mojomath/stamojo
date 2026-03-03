@@ -330,11 +330,13 @@ fn test_expon_pdf() raises:
     # pdf(x < 0) = 0
     assert_almost_equal(e.pdf(-1.0), 0.0, atol=1e-15)
     # With scale=2: pdf(x) = (1/2)*exp(-x/2)
-    assert_almost_equal(e.pdf(0.0, scale=2.0), 0.5, atol=1e-15)
-    assert_almost_equal(e.pdf(2.0, scale=2.0), 0.5 * exp(-1.0), atol=1e-15)
+    var e2 = Expon(scale=2.0)
+    assert_almost_equal(e2.pdf(0.0), 0.5, atol=1e-15)
+    assert_almost_equal(e2.pdf(2.0), 0.5 * exp(-1.0), atol=1e-15)
     # With loc=1: pdf(1) = 1.0, pdf(0) = 0.0
-    assert_almost_equal(e.pdf(1.0, loc=1.0), 1.0, atol=1e-15)
-    assert_almost_equal(e.pdf(0.5, loc=1.0), 0.0, atol=1e-15)
+    var e3 = Expon(loc=1.0)
+    assert_almost_equal(e3.pdf(1.0), 1.0, atol=1e-15)
+    assert_almost_equal(e3.pdf(0.5), 0.0, atol=1e-15)
     print("✓ test_expon_pdf passed")
 
 
@@ -348,7 +350,8 @@ fn test_expon_logpdf() raises:
     # logpdf(x) = log(pdf(x))
     assert_almost_equal(e.logpdf(2.0), log(e.pdf(2.0)), atol=1e-15)
     # With scale=3: logpdf(x) = -x/3 - log(3)
-    assert_almost_equal(e.logpdf(3.0, scale=3.0), -1.0 - log(3.0), atol=1e-15)
+    var e2 = Expon(scale=3.0)
+    assert_almost_equal(e2.logpdf(3.0), -1.0 - log(3.0), atol=1e-15)
     print("✓ test_expon_logpdf passed")
 
 
@@ -368,7 +371,8 @@ fn test_expon_cdf() raises:
     if not (c1 < c2 and c2 < c3):
         raise Error("Expon CDF not monotonically increasing")
     # With scale=0.5 (rate=2): CDF(x) = 1 - exp(-2x)
-    assert_almost_equal(e.cdf(1.0, scale=0.5), 1.0 - exp(-2.0), atol=1e-15)
+    var e2 = Expon(scale=0.5)
+    assert_almost_equal(e2.cdf(1.0), 1.0 - exp(-2.0), atol=1e-15)
     print("✓ test_expon_cdf passed")
 
 
@@ -396,9 +400,8 @@ fn test_expon_ppf() raises:
     # PPF(0.5) = ln(2) (median of standard exponential)
     assert_almost_equal(e.ppf(0.5), log(2.0), atol=1e-12)
     # With loc and scale
-    assert_almost_equal(
-        e.ppf(0.5, loc=1.0, scale=2.0), 1.0 + 2.0 * log(2.0), atol=1e-12
-    )
+    var e2 = Expon(loc=1.0, scale=2.0)
+    assert_almost_equal(e2.ppf(0.5), 1.0 + 2.0 * log(2.0), atol=1e-12)
     print("✓ test_expon_ppf passed")
 
 
@@ -410,13 +413,10 @@ fn test_expon_cdf_ppf_roundtrip() raises:
         var p = ps[i]
         assert_almost_equal(e.cdf(e.ppf(p)), p, atol=1e-12)
     # Also test with loc and scale
-    var loc = 2.0
-    var scale = 3.0
+    var e2 = Expon(loc=2.0, scale=3.0)
     for i in range(len(ps)):
         var p = ps[i]
-        assert_almost_equal(
-            e.cdf(e.ppf(p, loc, scale), loc, scale), p, atol=1e-12
-        )
+        assert_almost_equal(e2.cdf(e2.ppf(p)), p, atol=1e-12)
     print("✓ test_expon_cdf_ppf_roundtrip passed")
 
 
@@ -455,30 +455,27 @@ fn test_expon_stats() raises:
     assert_almost_equal(e.std(), 1.0, atol=1e-15)
     assert_almost_equal(e.median(), log(2.0), atol=1e-15)
     # With loc=2, scale=3: mean=5, var=9, std=3, median=2+3*ln(2)
-    assert_almost_equal(e.mean(loc=2.0, scale=3.0), 5.0, atol=1e-15)
-    assert_almost_equal(e.variance(loc=2.0, scale=3.0), 9.0, atol=1e-15)
-    assert_almost_equal(e.std(loc=2.0, scale=3.0), 3.0, atol=1e-15)
-    assert_almost_equal(
-        e.median(loc=2.0, scale=3.0), 2.0 + 3.0 * log(2.0), atol=1e-15
-    )
+    var e2 = Expon(loc=2.0, scale=3.0)
+    assert_almost_equal(e2.mean(), 5.0, atol=1e-15)
+    assert_almost_equal(e2.variance(), 9.0, atol=1e-15)
+    assert_almost_equal(e2.std(), 3.0, atol=1e-15)
+    assert_almost_equal(e2.median(), 2.0 + 3.0 * log(2.0), atol=1e-15)
     print("✓ test_expon_stats passed")
 
 
 fn test_expon_loc_scale() raises:
     """Test Exponential with non-default loc and scale across all functions."""
-    var e = Expon()
     var loc = 5.0
     var scale = 2.0
+    var e = Expon(loc, scale)
     # PDF at loc should be 1/scale
-    assert_almost_equal(e.pdf(loc, loc, scale), 1.0 / scale, atol=1e-15)
+    assert_almost_equal(e.pdf(loc), 1.0 / scale, atol=1e-15)
     # CDF at loc should be 0
-    assert_almost_equal(e.cdf(loc, loc, scale), 0.0, atol=1e-15)
+    assert_almost_equal(e.cdf(loc), 0.0, atol=1e-15)
     # SF at loc should be 1
-    assert_almost_equal(e.sf(loc, loc, scale), 1.0, atol=1e-15)
+    assert_almost_equal(e.sf(loc), 1.0, atol=1e-15)
     # CDF(loc + scale) = 1 - exp(-1)
-    assert_almost_equal(
-        e.cdf(loc + scale, loc, scale), 1.0 - exp(-1.0), atol=1e-15
-    )
+    assert_almost_equal(e.cdf(loc + scale), 1.0 - exp(-1.0), atol=1e-15)
     print("✓ test_expon_loc_scale passed")
 
 
@@ -511,12 +508,13 @@ fn test_expon_scipy() raises:
     # Test with loc and scale
     var loc = 2.0
     var scale = 3.0
+    var e2 = Expon(loc, scale)
     for i in range(len(xs)):
         var x = xs[i] + loc
         var sp_pdf2 = _py_f64(sp.expon.pdf(x, loc, scale))
         var sp_cdf2 = _py_f64(sp.expon.cdf(x, loc, scale))
-        assert_almost_equal(e.pdf(x, loc, scale), sp_pdf2, atol=1e-12)
-        assert_almost_equal(e.cdf(x, loc, scale), sp_cdf2, atol=1e-12)
+        assert_almost_equal(e2.pdf(x), sp_pdf2, atol=1e-12)
+        assert_almost_equal(e2.cdf(x), sp_cdf2, atol=1e-12)
 
     print("✓ test_expon_scipy passed")
 
