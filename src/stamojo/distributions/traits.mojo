@@ -46,7 +46,7 @@ trait RVContinuousLike(Copyable, Movable):
         """Mean of the distribution."""
         ...
 
-    fn var(self, loc: Float64, scale: Float64) -> Float64:
+    fn variance(self, loc: Float64, scale: Float64) -> Float64:
         """Variance of the distribution."""
         ...
 

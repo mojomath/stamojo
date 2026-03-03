@@ -16,6 +16,7 @@ from math import sqrt, log, lgamma, exp, nan, inf, log1p, expm1
 
 from stamojo.distributions.traits import RVContinuousLike
 
+
 struct Expon(Copyable, Movable, RVContinuousLike):
     """Exponential distribution.
 
@@ -37,7 +38,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn pdf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Probability density function at x for Expon(loc, scale).
 
         Args:
@@ -53,7 +56,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
             return 0.0
         return exp(-y) / scale
 
-    fn logpdf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn logpdf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Natural logarithm of the PDF at x for Expon(loc, scale).
 
         Args:
@@ -70,7 +75,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         return -y - log(scale)
 
     # --- Distribution functions ----------------------------------------------
-    fn cdf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn cdf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Cumulative distribution function P(X <= x) for Expon(loc, scale).
 
         Args:
@@ -86,7 +93,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         var y = (x - loc) / scale
         return -expm1(-y)
 
-    fn logcdf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn logcdf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Natural logarithm of the CDF P(X <= x) for Expon(loc, scale).
 
         Args:
@@ -102,7 +111,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         var y = (x - loc) / scale
         return log1p(-exp(-y))
 
-    fn sf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn sf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Survival function P(X > x) for Expon(loc, scale).
 
         Args:
@@ -118,7 +129,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         var y = (x - loc) / scale
         return exp(-y)
 
-    fn logsf(self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn logsf(
+        self, x: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Natural logarithm of the survival function for Expon(loc, scale).
 
         Args:
@@ -134,7 +147,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         var y = (x - loc) / scale
         return -y
 
-    fn ppf(self, q: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn ppf(
+        self, q: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Percent-point (quantile) function for Expon(loc, scale).
 
         For 0 <= q < 1: PPF(q) = loc - scale * log(1 - q).
@@ -154,7 +169,9 @@ struct Expon(Copyable, Movable, RVContinuousLike):
             return inf[DType.float64]()
         return loc - scale * log1p(-q)
 
-    fn isf(self, q: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn isf(
+        self, q: Float64, loc: Float64 = 0.0, scale: Float64 = 1.0
+    ) -> Float64:
         """Inverse survival function for Expon(loc, scale).
 
         For 0 < q <= 1: ISF(q) = loc - scale * log(q).
@@ -201,7 +218,7 @@ struct Expon(Copyable, Movable, RVContinuousLike):
         """
         return loc + scale
 
-    fn var(self, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
+    fn variance(self, loc: Float64 = 0.0, scale: Float64 = 1.0) -> Float64:
         """
         Variance of the Expon distribution.
 
