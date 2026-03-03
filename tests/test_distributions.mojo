@@ -396,7 +396,9 @@ fn test_expon_ppf() raises:
     # PPF(0.5) = ln(2) (median of standard exponential)
     assert_almost_equal(e.ppf(0.5), log(2.0), atol=1e-12)
     # With loc and scale
-    assert_almost_equal(e.ppf(0.5, loc=1.0, scale=2.0), 1.0 + 2.0 * log(2.0), atol=1e-12)
+    assert_almost_equal(
+        e.ppf(0.5, loc=1.0, scale=2.0), 1.0 + 2.0 * log(2.0), atol=1e-12
+    )
     print("✓ test_expon_ppf passed")
 
 
@@ -412,7 +414,9 @@ fn test_expon_cdf_ppf_roundtrip() raises:
     var scale = 3.0
     for i in range(len(ps)):
         var p = ps[i]
-        assert_almost_equal(e.cdf(e.ppf(p, loc, scale), loc, scale), p, atol=1e-12)
+        assert_almost_equal(
+            e.cdf(e.ppf(p, loc, scale), loc, scale), p, atol=1e-12
+        )
     print("✓ test_expon_cdf_ppf_roundtrip passed")
 
 
@@ -454,7 +458,9 @@ fn test_expon_stats() raises:
     assert_almost_equal(e.mean(loc=2.0, scale=3.0), 5.0, atol=1e-15)
     assert_almost_equal(e.variance(loc=2.0, scale=3.0), 9.0, atol=1e-15)
     assert_almost_equal(e.std(loc=2.0, scale=3.0), 3.0, atol=1e-15)
-    assert_almost_equal(e.median(loc=2.0, scale=3.0), 2.0 + 3.0 * log(2.0), atol=1e-15)
+    assert_almost_equal(
+        e.median(loc=2.0, scale=3.0), 2.0 + 3.0 * log(2.0), atol=1e-15
+    )
     print("✓ test_expon_stats passed")
 
 
@@ -470,7 +476,9 @@ fn test_expon_loc_scale() raises:
     # SF at loc should be 1
     assert_almost_equal(e.sf(loc, loc, scale), 1.0, atol=1e-15)
     # CDF(loc + scale) = 1 - exp(-1)
-    assert_almost_equal(e.cdf(loc + scale, loc, scale), 1.0 - exp(-1.0), atol=1e-15)
+    assert_almost_equal(
+        e.cdf(loc + scale, loc, scale), 1.0 - exp(-1.0), atol=1e-15
+    )
     print("✓ test_expon_loc_scale passed")
 
 
