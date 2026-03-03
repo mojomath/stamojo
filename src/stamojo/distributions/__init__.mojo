@@ -18,3 +18,4 @@ from .normal import Normal
 from .t import StudentT
 from .chi2 import ChiSquared
 from .f import FDist
+from .exponential import Expon

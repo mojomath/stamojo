@@ -36,6 +36,11 @@ struct Expon(Copyable, Movable, RVContinuousLike):
     This is achieved by setting scale = 1/λ and loc = 0.
     """
 
+    # --- Initialization -------------------------------------------------------
+
+    fn __init__(out self):
+        pass
+
     # --- Density functions ---------------------------------------------------
 
     fn pdf(
