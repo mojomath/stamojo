@@ -71,8 +71,6 @@ fn test_ttest_1samp_basic() raises:
     if p_val > 0.05:
         raise Error("ttest_1samp: expected p < 0.05, got " + String(p_val))
 
-    print("✓ test_ttest_1samp_basic passed")
-
 
 fn test_ttest_1samp_no_effect() raises:
     """Test one-sample t-test when data mean ≈ mu0."""
@@ -82,8 +80,6 @@ fn test_ttest_1samp_no_effect() raises:
     assert_almost_equal(result[0], 0.0, atol=1e-12)
     # p-value should be 1.0 (no evidence against H0)
     assert_almost_equal(result[1], 1.0, atol=1e-6)
-
-    print("✓ test_ttest_1samp_no_effect passed")
 
 
 fn test_ttest_1samp_scipy() raises:
@@ -104,8 +100,6 @@ fn test_ttest_1samp_scipy() raises:
     assert_almost_equal(result[0], sp_t, atol=1e-6)
     assert_almost_equal(result[1], sp_p, atol=1e-4)
 
-    print("✓ test_ttest_1samp_scipy passed")
-
 
 fn test_ttest_ind_welch() raises:
     """Test Welch's two-sample t-test."""
@@ -119,8 +113,6 @@ fn test_ttest_ind_welch() raises:
         raise Error(
             "ttest_ind Welch: expected p < 0.05, got " + String(result[1])
         )
-
-    print("✓ test_ttest_ind_welch passed")
 
 
 fn test_ttest_ind_scipy() raises:
@@ -144,8 +136,6 @@ fn test_ttest_ind_scipy() raises:
     assert_almost_equal(result[0], sp_t, atol=1e-4)
     assert_almost_equal(result[1], sp_p, atol=1e-3)
 
-    print("✓ test_ttest_ind_scipy passed")
-
 
 fn test_ttest_rel() raises:
     """Test paired t-test."""
@@ -161,8 +151,6 @@ fn test_ttest_rel() raises:
     var result_1samp = ttest_1samp(diffs, 0.0)
     assert_almost_equal(result[0], result_1samp[0], atol=1e-12)
     assert_almost_equal(result[1], result_1samp[1], atol=1e-12)
-
-    print("✓ test_ttest_rel passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -185,8 +173,6 @@ fn test_chi2_gof_fair_die() raises:
             "chi2_gof: expected non-significant, got p=" + String(result[1])
         )
 
-    print("✓ test_chi2_gof_fair_die passed")
-
 
 fn test_chi2_ind_basic() raises:
     """Test chi-squared independence test with 2×2 table."""
@@ -201,8 +187,6 @@ fn test_chi2_ind_basic() raises:
     var result = chi2_ind(table)
     assert_almost_equal(result[0], 0.0, atol=1e-10)
     assert_almost_equal(result[1], 1.0, atol=1e-4)
-
-    print("✓ test_chi2_ind_basic passed")
 
 
 fn test_chi2_ind_scipy() raises:
@@ -228,8 +212,6 @@ fn test_chi2_ind_scipy() raises:
     var result = chi2_ind(table)
     assert_almost_equal(result[0], sp_chi2, atol=1e-4)
     assert_almost_equal(result[1], sp_p, atol=1e-3)
-
-    print("✓ test_chi2_ind_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -260,8 +242,6 @@ fn test_ks_normal_data() raises:
             + String(result[1])
         )
 
-    print("✓ test_ks_normal_data passed")
-
 
 fn test_ks_uniform_data() raises:
     """Test KS test with uniform data (should reject N(0,1))."""
@@ -277,8 +257,6 @@ fn test_ks_uniform_data() raises:
             "ks_1samp: expected p < 0.05 for uniform data, got "
             + String(result[1])
         )
-
-    print("✓ test_ks_uniform_data passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -300,8 +278,6 @@ fn test_pearsonr_perfect() raises:
     if result[1] > 0.001:
         raise Error("pearsonr: expected p ≈ 0 for perfect correlation")
 
-    print("✓ test_pearsonr_perfect passed")
-
 
 fn test_pearsonr_negative() raises:
     """Test Pearson correlation for negative correlation."""
@@ -313,8 +289,6 @@ fn test_pearsonr_negative() raises:
 
     var result = pearsonr(x, y)
     assert_almost_equal(result[0], -1.0, atol=1e-10)
-
-    print("✓ test_pearsonr_negative passed")
 
 
 fn test_pearsonr_scipy() raises:
@@ -338,8 +312,6 @@ fn test_pearsonr_scipy() raises:
     assert_almost_equal(result[0], sp_r, atol=1e-6)
     assert_almost_equal(result[1], sp_p, atol=1e-3)
 
-    print("✓ test_pearsonr_scipy passed")
-
 
 fn test_spearmanr_perfect_monotone() raises:
     """Test Spearman correlation with perfect monotone data."""
@@ -351,8 +323,6 @@ fn test_spearmanr_perfect_monotone() raises:
 
     var result = spearmanr(x, y)
     assert_almost_equal(result[0], 1.0, atol=1e-10)
-
-    print("✓ test_spearmanr_perfect_monotone passed")
 
 
 fn test_spearmanr_scipy() raises:
@@ -374,8 +344,6 @@ fn test_spearmanr_scipy() raises:
     var result = spearmanr(x, y)
     assert_almost_equal(result[0], sp_rho, atol=1e-4)
 
-    print("✓ test_spearmanr_scipy passed")
-
 
 fn test_kendalltau_concordant() raises:
     """Test Kendall's tau with perfectly concordant data."""
@@ -388,8 +356,6 @@ fn test_kendalltau_concordant() raises:
     var result = kendalltau(x, y)
     assert_almost_equal(result[0], 1.0, atol=1e-10)
 
-    print("✓ test_kendalltau_concordant passed")
-
 
 fn test_kendalltau_discordant() raises:
     """Test Kendall's tau with perfectly discordant data."""
@@ -401,8 +367,6 @@ fn test_kendalltau_discordant() raises:
 
     var result = kendalltau(x, y)
     assert_almost_equal(result[0], -1.0, atol=1e-10)
-
-    print("✓ test_kendalltau_discordant passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -425,8 +389,6 @@ fn test_f_oneway_identical() raises:
     assert_almost_equal(result[0], 0.0, atol=1e-10)
     assert_almost_equal(result[1], 1.0, atol=1e-4)
 
-    print("✓ test_f_oneway_identical passed")
-
 
 fn test_f_oneway_different() raises:
     """Test ANOVA with clearly different group means."""
@@ -446,8 +408,6 @@ fn test_f_oneway_different() raises:
             "f_oneway: expected p < 0.001 for different means, got "
             + String(result[1])
         )
-
-    print("✓ test_f_oneway_different passed")
 
 
 fn test_f_oneway_scipy() raises:
@@ -476,8 +436,6 @@ fn test_f_oneway_scipy() raises:
     var result = f_oneway(groups)
     assert_almost_equal(result[0], sp_f, atol=1e-4)
     assert_almost_equal(result[1], sp_p, atol=1e-3)
-
-    print("✓ test_f_oneway_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #

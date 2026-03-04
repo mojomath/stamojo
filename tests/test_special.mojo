@@ -108,7 +108,6 @@ fn test_gammainc_boundary() raises:
     assert_almost_equal(gammainc(5.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(gammaincc(1.0, 0.0), 1.0, atol=1e-15)
     assert_almost_equal(gammaincc(5.0, 0.0), 1.0, atol=1e-15)
-    print("✓ test_gammainc_boundary passed")
 
 
 fn test_gammainc_exponential() raises:
@@ -129,8 +128,6 @@ fn test_gammainc_exponential() raises:
             atol=1e-12,
         )
 
-    print("✓ test_gammainc_exponential passed")
-
 
 fn test_gammainc_half() raises:
     """Test P(0.5, x) = erf(sqrt(x))."""
@@ -149,8 +146,6 @@ fn test_gammainc_half() raises:
             "gammainc(0.5, " + String(x) + ")",
             atol=1e-10,
         )
-
-    print("✓ test_gammainc_half passed")
 
 
 fn test_gammainc_integer_a() raises:
@@ -185,8 +180,6 @@ fn test_gammainc_integer_a() raises:
             sp_q,
             "gammaincc(" + String(a_int) + ", " + String(x) + ")",
         )
-
-    print("✓ test_gammainc_integer_a passed")
 
 
 fn test_gammainc_scipy() raises:
@@ -223,8 +216,6 @@ fn test_gammainc_scipy() raises:
             atol=1e-10,
         )
 
-    print("✓ test_gammainc_scipy passed")
-
 
 fn test_gammainc_complementary() raises:
     """Test P(a,x) + Q(a,x) = 1."""
@@ -244,8 +235,6 @@ fn test_gammainc_complementary() raises:
         var x = test_cases[i][1]
         assert_almost_equal(gammainc(a, x) + gammaincc(a, x), 1.0, atol=1e-12)
 
-    print("✓ test_gammainc_complementary passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # Tests for beta and incomplete beta
@@ -264,15 +253,12 @@ fn test_beta_basic() raises:
     var expected = exp(lgamma(a) + lgamma(b) - lgamma(a + b))
     assert_almost_equal(beta(a, b), expected, atol=1e-12)
 
-    print("✓ test_beta_basic passed")
-
 
 fn test_betainc_boundary() raises:
     """Test betainc boundary values."""
     assert_almost_equal(betainc(2.0, 3.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(betainc(2.0, 3.0, 1.0), 1.0, atol=1e-15)
     assert_almost_equal(betainc(1.0, 1.0, 0.5), 0.5, atol=1e-12)
-    print("✓ test_betainc_boundary passed")
 
 
 fn test_betainc_symmetric() raises:
@@ -282,8 +268,6 @@ fn test_betainc_symmetric() raises:
     for i in range(len(test_a)):
         var a = test_a[i]
         assert_almost_equal(betainc(a, a, 0.5), 0.5, atol=1e-10)
-
-    print("✓ test_betainc_symmetric passed")
 
 
 fn test_betainc_symmetry_identity() raises:
@@ -298,7 +282,6 @@ fn test_betainc_symmetry_identity() raises:
         1.0 - betainc(7.0, 2.0, 0.7),
         atol=1e-10,
     )
-    print("✓ test_betainc_symmetry_identity passed")
 
 
 fn test_betainc_known_values() raises:
@@ -307,7 +290,6 @@ fn test_betainc_known_values() raises:
     assert_almost_equal(betainc(1.0, 1.0, x), x, atol=1e-12)
     assert_almost_equal(betainc(1.0, 2.0, x), 1.0 - (1.0 - x) ** 2, atol=1e-10)
     assert_almost_equal(betainc(1.0, 5.0, x), 1.0 - (1.0 - x) ** 5, atol=1e-10)
-    print("✓ test_betainc_known_values passed")
 
 
 fn test_betainc_scipy() raises:
@@ -336,8 +318,6 @@ fn test_betainc_scipy() raises:
             atol=1e-10,
         )
 
-    print("✓ test_betainc_scipy passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # Tests for inverse error function
@@ -365,8 +345,6 @@ fn test_erfinv_basic() raises:
         var x = erfinv(p)
         assert_almost_equal(erf(x), p, atol=1e-8)
 
-    print("✓ test_erfinv_basic passed")
-
 
 fn test_erfinv_symmetry() raises:
     """Test erfinv(-p) = -erfinv(p)."""
@@ -375,8 +353,6 @@ fn test_erfinv_symmetry() raises:
     for i in range(len(test_vals)):
         var p = test_vals[i]
         assert_almost_equal(erfinv(-p), -erfinv(p), atol=1e-12)
-
-    print("✓ test_erfinv_symmetry passed")
 
 
 fn test_erfinv_scipy() raises:
@@ -412,8 +388,6 @@ fn test_erfinv_scipy() raises:
             atol=1e-10,
         )
 
-    print("✓ test_erfinv_scipy passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # Tests for Bessel functions
@@ -430,7 +404,6 @@ fn test_bessel_basic_values() raises:
     assert_almost_equal(i1(0.0), 0.0, atol=1e-15)
     assert_almost_equal(y0(1.0), 0.08825696421567697, atol=1e-12)
     assert_almost_equal(y1(1.0), -0.7812128213002887, atol=1e-12)
-    print("✓ test_bessel_basic_values passed")
 
 
 fn test_bessel_symmetry() raises:
@@ -446,7 +419,6 @@ fn test_bessel_scaled() raises:
     var x = 2.0
     assert_almost_equal(i0e(x), i0(x) * exp(-x), atol=1e-12)
     assert_almost_equal(i1e(x), i1(x) * exp(-x), atol=1e-12)
-    print("✓ test_bessel_scaled passed")
 
 
 fn test_bessel_scipy() raises:
@@ -460,72 +432,78 @@ fn test_bessel_scipy() raises:
 
     for i in range(len(xs)):
         var x = xs[i]
+        var sp_j0 = _py_f64(sp.j0(x))
+        var sp_j1 = _py_f64(sp.j1(x))
+        var sp_i0 = _py_f64(sp.i0(x))
+        var sp_i1 = _py_f64(sp.i1(x))
+        var sp_i0e = _py_f64(sp.i0e(x))
+        var sp_i1e = _py_f64(sp.i1e(x))
+        var sp_y0 = _py_f64(sp.y0(x))
+        var sp_y1 = _py_f64(sp.y1(x))
         _assert_with_scipy(
             j0(x),
-            _py_f64(sp.j0(x)),
+            sp_j0,
             sp,
-            _py_f64(sp.j0(x)),
+            sp_j0,
             "j0(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             j1(x),
-            _py_f64(sp.j1(x)),
+            sp_j1,
             sp,
-            _py_f64(sp.j1(x)),
+            sp_j1,
             "j1(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             i0(x),
-            _py_f64(sp.i0(x)),
+            sp_i0,
             sp,
-            _py_f64(sp.i0(x)),
+            sp_i0,
             "i0(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             i1(x),
-            _py_f64(sp.i1(x)),
+            sp_i1,
             sp,
-            _py_f64(sp.i1(x)),
+            sp_i1,
             "i1(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             i0e(x),
-            _py_f64(sp.i0e(x)),
+            sp_i0e,
             sp,
-            _py_f64(sp.i0e(x)),
+            sp_i0e,
             "i0e(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             i1e(x),
-            _py_f64(sp.i1e(x)),
+            sp_i1e,
             sp,
-            _py_f64(sp.i1e(x)),
+            sp_i1e,
             "i1e(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             y0(x),
-            _py_f64(sp.y0(x)),
+            sp_y0,
             sp,
-            _py_f64(sp.y0(x)),
+            sp_y0,
             "y0(" + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(
             y1(x),
-            _py_f64(sp.y1(x)),
+            sp_y1,
             sp,
-            _py_f64(sp.y1(x)),
+            sp_y1,
             "y1(" + String(x) + ")",
             atol=1e-10,
         )
-
-    print("✓ test_bessel_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #

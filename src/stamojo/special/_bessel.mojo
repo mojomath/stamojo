@@ -1,25 +1,30 @@
 # ===----------------------------------------------------------------------=== #
-# StaMojo - Bessel
+# Stamojo - Special - Bessel functions
 # Licensed under Apache 2.0
 # ===----------------------------------------------------------------------=== #
-"""Bessel functions for StaMojo
+"""Bessel functions.
 
-This module provides implementations of Bessel functions of the first and second kind,
-as well as modified Bessel functions and their exponentially scaled variants.
+This module provides implementations of Bessel functions of the first and
+second kind, as well as modified Bessel functions and their exponentially
+scaled variants.
 
 Functions:
     - j0, j1, jn: Bessel functions of the first kind (orders 0, 1, n)
-    - i0, i1, i0e, i1e: Modified Bessel functions of the first kind and their scaled forms
+    - i0, i1, i0e, i1e: Modified Bessel functions of the first kind
     - y0, y1: Bessel functions of the second kind (orders 0, 1)
 
 References:
     - https://en.wikipedia.org/wiki/Bessel_function
 """
 
-from math import cos, exp, log, nan, sin, sqrt
-from utils.numerics import inf
+from math import cos, exp, inf, log, nan, sin, sqrt
 
-# TODO: Asymptotic expansions need to be implemented for large arguments to ensure accuracy and efficiency. The threshold for switching to asymptotic expansions should be determined empirically based on accuracy requirements.
+# === --------------------------------------------------------------------=== #
+# General notes:
+# TODO: Asymptotic expansions need to be implemented for large arguments to
+# ensure accuracy and efficiency. The threshold for switching to asymptotic
+# expansions should be determined empirically based on accuracy requirements.
+# === ----------------------------------------------------------------------=== #
 
 # ===----------------------------------------------------------------------=== #
 # Constants
@@ -47,87 +52,88 @@ fn _factorial(n: Int) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn j0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
+fn j0(x: Float64) -> Float64:
     """Bessel function of the first kind of order 0.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Bessel function of the first kind of order 0 evaluated at `x`
+        J₀(x).
 
     Examples:
         ```mojo
         from stamojo.special import j0
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = j0(x)
-            assert_equal(res, 0.7651976865579666)
+            assert_almost_equal(j0(1.0), 0.7651976865579666, atol=1e-12)
         ```
     """
-    # TODO: For large x, we use the asymptotic form. Need to determine the threshold empirically.
-    if x > 10.0:
-        var t = x - _PI * 0.25
-        return sqrt(2.0 * _PI_INV / (x)) * cos(t)
+    # J₀ is even: J₀(-x) = J₀(x).
+    var ax = abs(x)
 
-    var term: SIMD[DType.float64, width] = 1.0
-    var res: SIMD[DType.float64, width] = term
-    var x2 = x * x * 0.25
+    # TODO: Determine asymptotic threshold empirically.
+    if ax > 10.0:
+        var t = ax - _PI * 0.25
+        return sqrt(2.0 * _PI_INV / ax) * cos(t)
+
+    var term = 1.0
+    var res = term
+    var x2 = ax * ax * 0.25
     for k in range(1, _MAX_SERIES_ITER):
         term *= -x2 / (Float64(k) * Float64(k))
         res += term
     return res
 
 
-fn j1[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
+fn j1(x: Float64) -> Float64:
     """Bessel function of the first kind of order 1.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Bessel function of the first kind of order 1 evaluated at `x`.
+        J₁(x).
 
     Examples:
         ```mojo
         from stamojo.special import j1
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = j1(x)
-            assert_equal(res, 0.44005058574493355)
+            assert_almost_equal(j1(1.0), 0.44005058574493355, atol=1e-12)
         ```
     """
-    if x > 10.0:
-        var t = x - 3.0 * _PI * 0.25
-        return sqrt(2.0 * _PI_INV / (x)) * cos(t)
+    # J₁ is odd: J₁(-x) = -J₁(x).
+    var ax = abs(x)
+    var sign: Float64 = 1.0 if x >= 0.0 else -1.0
 
-    var term: SIMD[DType.float64, width] = x * 0.5
-    var res: SIMD[DType.float64, width] = term
-    var x2 = x * x * 0.25
+    # TODO: Determine asymptotic threshold empirically.
+    if ax > 10.0:
+        var t = ax - 3.0 * _PI * 0.25
+        return sign * sqrt(2.0 * _PI_INV / ax) * cos(t)
+
+    var term = ax * 0.5
+    var res = term
+    var x2 = ax * ax * 0.25
     for k in range(1, _MAX_SERIES_ITER):
         term *= -x2 / (Float64(k) * Float64(k + 1))
         res += term
-    return res
+    return sign * res
 
 
-fn jn[
-    width: Int, //, n: Int
-](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
-    """Bessel function of the first kind of order `n`.
+fn jn[n: Int](x: Float64) -> Float64:
+    """Bessel function of the first kind of order *n*.
 
     Parameters:
-        width: SIMD width for the input and output vectors.
         n: Order of the Bessel function (integer).
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Bessel function of the first kind of order `n` evaluated at `x`.
+        Jₙ(x).
     """
 
     @parameter
@@ -143,9 +149,9 @@ fn jn[
 
     var ax = abs(x)
 
-    # For m <= ax, we use the recurrence relations using j0 and j1.
+    # For m <= ax, use the forward recurrence:
     # J_{k+1}(x) = (2k/x) J_k(x) - J_{k-1}(x)
-    if SIMD[DType.float64, width](m) <= ax:
+    if Float64(m) <= ax:
         var jm1 = j0(x)  # J_0
         var jcur = j1(x)  # J_1
         for k in range(1, m):
@@ -154,14 +160,14 @@ fn jn[
             jcur = jnext
         return sign * jcur
 
-    # For m > ax, we use power series.
+    # For m > ax, use power series.
     var fact = _factorial(m)
-    var term: SIMD[DType.float64, width] = 1.0
+    var term = 1.0
     for _ in range(m):
         term *= x * 0.5
     term /= fact
 
-    var res: SIMD[DType.float64, width] = term
+    var res = term
     var x2 = x * x * 0.25
     for k in range(1, _MAX_SERIES_ITER):
         term *= -x2 / (Float64(k) * Float64(k + m))
@@ -174,28 +180,26 @@ fn jn[
 # ===----------------------------------------------------------------------=== #
 
 
-fn i0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
+fn i0(x: Float64) -> Float64:
     """Modified Bessel function of the first kind of order 0.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Modified Bessel function of the first kind of order 0 evaluated at `x`.
+        I₀(x).
 
     Examples:
         ```mojo
         from stamojo.special import i0
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = i0(x)
-            assert_equal(res, 1.2660658777520082)
+            assert_almost_equal(i0(1.0), 1.2660658777520082, atol=1e-12)
         ```
     """
-    var term: SIMD[DType.float64, width] = 1.0
-    var res: SIMD[DType.float64, width] = term
+    var term = 1.0
+    var res = term
     var x2 = x * x * 0.25
     for k in range(1, _MAX_SERIES_ITER):
         term *= x2 / (Float64(k) * Float64(k))
@@ -203,28 +207,26 @@ fn i0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
     return res
 
 
-fn i1[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
+fn i1(x: Float64) -> Float64:
     """Modified Bessel function of the first kind of order 1.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Modified Bessel function of the first kind of order 1 evaluated at `x`.
+        I₁(x).
 
     Examples:
         ```mojo
         from stamojo.special import i1
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = i1(x)
-            assert_equal(res, 0.565159103992485)
+            assert_almost_equal(i1(1.0), 0.5651591039924851, atol=1e-12)
         ```
     """
-    var term: SIMD[DType.float64, width] = x * 0.5
-    var res: SIMD[DType.float64, width] = term
+    var term = x * 0.5
+    var res = term
     var x2 = x * x * 0.25
     for k in range(1, _MAX_SERIES_ITER):
         term *= x2 / (Float64(k) * Float64(k + 1))
@@ -232,47 +234,45 @@ fn i1[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
     return res
 
 
-fn i0e[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
-    """Exponentially scaled modified Bessel function of the first kind of order 0.
+fn i0e(x: Float64) -> Float64:
+    """Exponentially scaled modified Bessel function of the first kind
+    of order 0: ``i0e(x) = exp(-|x|) * i0(x)``.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Exponentially scaled modified Bessel function of the first kind of order 0 evaluated at `x`.
+        Value of exp(-|x|) * I₀(x).
 
     Examples:
         ```mojo
         from stamojo.special import i0e
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = i0e(x)
-            assert_equal(res, 0.4660648777520082)
+            assert_almost_equal(i0e(1.0), 0.4657596075936405, atol=1e-12)
         ```
     """
     return i0(x) * exp(-abs(x))
 
 
-fn i1e[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
-    """Exponentially scaled modified Bessel function of the first kind of order 1.
+fn i1e(x: Float64) -> Float64:
+    """Exponentially scaled modified Bessel function of the first kind
+    of order 1: ``i1e(x) = exp(-|x|) * i1(x)``.
 
     Args:
-        x: Input scalar.
+        x: Input value.
 
     Returns:
-        Exponentially scaled modified Bessel function of the first kind of order 1 evaluated at `x`.
+        Value of exp(-|x|) * I₁(x).
 
     Examples:
         ```mojo
         from stamojo.special import i1e
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = i1e(x)
-            assert_equal(res, 0.208159103992485)
+            assert_almost_equal(i1e(1.0), 0.2079104153497085, atol=1e-12)
         ```
     """
     return i1(x) * exp(-abs(x))
@@ -283,24 +283,24 @@ fn i1e[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
 # ===----------------------------------------------------------------------=== #
 
 
-fn y0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
+fn y0(x: Float64) -> Float64:
     """Bessel function of the second kind of order 0.
 
+    Defined for x > 0.  Returns -∞ at x = 0 and NaN for x < 0.
+
     Args:
-        x: Input scalar.
+        x: Input value (must be positive).
 
     Returns:
-        Bessel function of the second kind of order 0 evaluated at `x`.
+        Y₀(x).
 
     Examples:
         ```mojo
         from stamojo.special import y0
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = y0(x)
-            assert_equal(res, 0.08825696421567697)
+            assert_almost_equal(y0(1.0), 0.08825696421567697, atol=1e-12)
         ```
     """
     if x == 0.0:
@@ -308,11 +308,11 @@ fn y0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
     if x < 0.0:
         return nan[DType.float64]()
 
-    if abs(x) < 8.0:
+    if x < 8.0:
         var j0x = j0(x)
         var x2 = x * x * 0.25
-        var term: SIMD[DType.float64, width] = x2
-        var sum: SIMD[DType.float64, width] = 0.0
+        var term = x2
+        var sum = 0.0
         var h = 1.0
         for k in range(1, _MAX_SERIES_ITER):
             if k > 1:
@@ -325,25 +325,24 @@ fn y0[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
     return sqrt(2.0 / (_PI * x)) * sin(t)
 
 
-fn y1[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
-    """
-    Bessel function of the second kind of order 1.
+fn y1(x: Float64) -> Float64:
+    """Bessel function of the second kind of order 1.
+
+    Defined for x > 0.  Returns -∞ at x = 0 and NaN for x < 0.
 
     Args:
-        x: Input scalar.
+        x: Input value (must be positive).
 
     Returns:
-        Bessel function of the second kind of order 1 evaluated at `x`.
+        Y₁(x).
 
     Examples:
         ```mojo
         from stamojo.special import y1
-        from testing import assert_equal
+        from testing import assert_almost_equal
 
         fn main() raises:
-            var x: Float64 = 1.0
-            var res: Float64 = y1(x)
-            assert_equal(res, -0.7812128213002887)
+            assert_almost_equal(y1(1.0), -0.7812128213002887, atol=1e-12)
         ```
     """
     if x == 0.0:
@@ -351,11 +350,11 @@ fn y1[width: Int](x: SIMD[DType.float64, width]) -> SIMD[DType.float64, width]:
     if x < 0.0:
         return nan[DType.float64]()
 
-    if abs(x) < 8.0:
+    if x < 8.0:
         var j1x = j1(x)
         var x2 = x * x * 0.25
-        var term: SIMD[DType.float64, width] = x * 0.5
-        var sum: SIMD[DType.float64, width] = 0.0
+        var term = x * 0.5
+        var sum = 0.0
         var hk = 0.0
 
         for k in range(_MAX_SERIES_ITER):

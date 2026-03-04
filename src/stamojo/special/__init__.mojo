@@ -15,6 +15,8 @@ Functions provided:
 - Inverse error function (erfinv)
 - Log-beta function
 - Beta function
+- Bessel functions of the first and second kind (j0, j1, jn, y0, y1)
+- Modified Bessel functions and scaled variants (i0, i1, i0e, i1e)
 
 The Mojo standard library already provides erf, erfc, gamma, and lgamma,
 so we do not reimplement those here.

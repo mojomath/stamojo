@@ -51,8 +51,6 @@ fn test_mean() raises:
     var data2: List[Float64] = [10.0]
     assert_almost_equal(mean(data2), 10.0, atol=1e-15)
 
-    print("✓ test_mean passed")
-
 
 fn test_variance() raises:
     """Test variance (population and sample)."""
@@ -63,16 +61,12 @@ fn test_variance() raises:
     # Sample variance = 32/7
     assert_almost_equal(variance(data, ddof=1), 32.0 / 7.0, atol=1e-12)
 
-    print("✓ test_variance passed")
-
 
 fn test_std() raises:
     """Test standard deviation."""
     var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
     assert_almost_equal(std(data, ddof=0), 2.0, atol=1e-12)
-
-    print("✓ test_std passed")
 
 
 fn test_median_odd() raises:
@@ -83,15 +77,11 @@ fn test_median_odd() raises:
     var data2: List[Float64] = [5.0, 1.0, 3.0, 2.0, 4.0]
     assert_almost_equal(median(data2), 3.0, atol=1e-15)
 
-    print("✓ test_median_odd passed")
-
 
 fn test_median_even() raises:
     """Test median with even-length data."""
     var data: List[Float64] = [3.0, 1.0, 2.0, 4.0]
     assert_almost_equal(median(data), 2.5, atol=1e-15)
-
-    print("✓ test_median_even passed")
 
 
 fn test_quantile() raises:
@@ -108,15 +98,11 @@ fn test_quantile() raises:
     # q=0.25
     assert_almost_equal(quantile(data, 0.25), 3.25, atol=1e-12)
 
-    print("✓ test_quantile passed")
-
 
 fn test_skewness_symmetric() raises:
     """Test skewness of perfectly symmetric data is 0."""
     var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
     assert_almost_equal(skewness(data), 0.0, atol=1e-12)
-
-    print("✓ test_skewness_symmetric passed")
 
 
 fn test_kurtosis_uniform() raises:
@@ -132,8 +118,6 @@ fn test_kurtosis_uniform() raises:
             "Kurtosis of uniform data out of expected range: " + String(k)
         )
 
-    print("✓ test_kurtosis_uniform passed")
-
 
 fn test_min_max() raises:
     """Test data_min and data_max."""
@@ -141,8 +125,6 @@ fn test_min_max() raises:
 
     assert_almost_equal(data_min(data), 1.0, atol=1e-15)
     assert_almost_equal(data_max(data), 9.0, atol=1e-15)
-
-    print("✓ test_min_max passed")
 
 
 fn test_scipy_comparison() raises:
