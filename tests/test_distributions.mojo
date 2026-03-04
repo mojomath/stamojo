@@ -14,9 +14,15 @@ Each distribution is tested for:
 
 from math import exp, log
 from python import Python, PythonObject
-from testing import assert_almost_equal
+from testing import assert_almost_equal, TestSuite
 
-from stamojo.distributions import Normal, StudentT, ChiSquared, FDist, Expon
+from stamojo.distributions import (
+    Normal,
+    StudentT,
+    ChiSquared,
+    FDist,
+    Exponential,
+)
 
 
 # ===----------------------------------------------------------------------=== #
@@ -320,7 +326,7 @@ fn test_f_scipy() raises:
 
 fn test_expon_pdf() raises:
     """Test Exponential PDF at known values."""
-    var e = Expon()
+    var e = Exponential()
     # Standard exponential: pdf(0) = 1.0
     assert_almost_equal(e.pdf(0.0), 1.0, atol=1e-15)
     # pdf(1) = exp(-1)
@@ -330,11 +336,11 @@ fn test_expon_pdf() raises:
     # pdf(x < 0) = 0
     assert_almost_equal(e.pdf(-1.0), 0.0, atol=1e-15)
     # With scale=2: pdf(x) = (1/2)*exp(-x/2)
-    var e2 = Expon(scale=2.0)
+    var e2 = Exponential(scale=2.0)
     assert_almost_equal(e2.pdf(0.0), 0.5, atol=1e-15)
     assert_almost_equal(e2.pdf(2.0), 0.5 * exp(-1.0), atol=1e-15)
     # With loc=1: pdf(1) = 1.0, pdf(0) = 0.0
-    var e3 = Expon(loc=1.0)
+    var e3 = Exponential(loc=1.0)
     assert_almost_equal(e3.pdf(1.0), 1.0, atol=1e-15)
     assert_almost_equal(e3.pdf(0.5), 0.0, atol=1e-15)
     print("✓ test_expon_pdf passed")
@@ -342,7 +348,7 @@ fn test_expon_pdf() raises:
 
 fn test_expon_logpdf() raises:
     """Test Exponential log-PDF at known values."""
-    var e = Expon()
+    var e = Exponential()
     # logpdf(0) = 0.0 for standard exponential
     assert_almost_equal(e.logpdf(0.0), 0.0, atol=1e-15)
     # logpdf(1) = -1.0
@@ -350,14 +356,14 @@ fn test_expon_logpdf() raises:
     # logpdf(x) = log(pdf(x))
     assert_almost_equal(e.logpdf(2.0), log(e.pdf(2.0)), atol=1e-15)
     # With scale=3: logpdf(x) = -x/3 - log(3)
-    var e2 = Expon(scale=3.0)
+    var e2 = Exponential(scale=3.0)
     assert_almost_equal(e2.logpdf(3.0), -1.0 - log(3.0), atol=1e-15)
     print("✓ test_expon_logpdf passed")
 
 
 fn test_expon_cdf() raises:
     """Test Exponential CDF at known values."""
-    var e = Expon()
+    var e = Exponential()
     # CDF(0) = 0
     assert_almost_equal(e.cdf(0.0), 0.0, atol=1e-15)
     # CDF(1) = 1 - exp(-1)
@@ -369,16 +375,16 @@ fn test_expon_cdf() raises:
     var c2 = e.cdf(1.0)
     var c3 = e.cdf(5.0)
     if not (c1 < c2 and c2 < c3):
-        raise Error("Expon CDF not monotonically increasing")
+        raise Error("Exponential CDF not monotonically increasing")
     # With scale=0.5 (rate=2): CDF(x) = 1 - exp(-2x)
-    var e2 = Expon(scale=0.5)
+    var e2 = Exponential(scale=0.5)
     assert_almost_equal(e2.cdf(1.0), 1.0 - exp(-2.0), atol=1e-15)
     print("✓ test_expon_cdf passed")
 
 
 fn test_expon_sf() raises:
     """Test Exponential survival function: SF(x) = 1 - CDF(x)."""
-    var e = Expon()
+    var e = Exponential()
     assert_almost_equal(e.sf(0.0), 1.0, atol=1e-15)
     assert_almost_equal(e.sf(1.0), exp(-1.0), atol=1e-15)
     # CDF + SF = 1
@@ -392,7 +398,7 @@ fn test_expon_sf() raises:
 
 fn test_expon_ppf() raises:
     """Test Exponential PPF (inverse CDF)."""
-    var e = Expon()
+    var e = Exponential()
     # PPF(0) = 0 (loc)
     assert_almost_equal(e.ppf(0.0), 0.0, atol=1e-15)
     # PPF(1 - exp(-1)) = 1 (since CDF(1) = 1 - exp(-1))
@@ -400,20 +406,20 @@ fn test_expon_ppf() raises:
     # PPF(0.5) = ln(2) (median of standard exponential)
     assert_almost_equal(e.ppf(0.5), log(2.0), atol=1e-12)
     # With loc and scale
-    var e2 = Expon(loc=1.0, scale=2.0)
+    var e2 = Exponential(loc=1.0, scale=2.0)
     assert_almost_equal(e2.ppf(0.5), 1.0 + 2.0 * log(2.0), atol=1e-12)
     print("✓ test_expon_ppf passed")
 
 
 fn test_expon_cdf_ppf_roundtrip() raises:
     """Test CDF(PPF(p)) ≈ p for many probability values."""
-    var e = Expon()
+    var e = Exponential()
     var ps: List[Float64] = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99]
     for i in range(len(ps)):
         var p = ps[i]
         assert_almost_equal(e.cdf(e.ppf(p)), p, atol=1e-12)
     # Also test with loc and scale
-    var e2 = Expon(loc=2.0, scale=3.0)
+    var e2 = Exponential(loc=2.0, scale=3.0)
     for i in range(len(ps)):
         var p = ps[i]
         assert_almost_equal(e2.cdf(e2.ppf(p)), p, atol=1e-12)
@@ -422,7 +428,7 @@ fn test_expon_cdf_ppf_roundtrip() raises:
 
 fn test_expon_isf() raises:
     """Test Exponential ISF (inverse survival function)."""
-    var e = Expon()
+    var e = Exponential()
     # ISF(1) = loc = 0
     assert_almost_equal(e.isf(1.0), 0.0, atol=1e-15)
     # ISF(exp(-1)) = 1 (since SF(1) = exp(-1))
@@ -437,7 +443,7 @@ fn test_expon_isf() raises:
 
 fn test_expon_logcdf_logsf() raises:
     """Test log-CDF and log-SF against log of CDF and SF."""
-    var e = Expon()
+    var e = Exponential()
     var xs: List[Float64] = [0.01, 0.1, 0.5, 1.0, 2.0, 5.0]
     for i in range(len(xs)):
         var x = xs[i]
@@ -448,14 +454,14 @@ fn test_expon_logcdf_logsf() raises:
 
 fn test_expon_stats() raises:
     """Test Exponential distribution summary statistics."""
-    var e = Expon()
+    var e = Exponential()
     # Standard exponential: mean=1, var=1, std=1, median=ln(2)
     assert_almost_equal(e.mean(), 1.0, atol=1e-15)
     assert_almost_equal(e.variance(), 1.0, atol=1e-15)
     assert_almost_equal(e.std(), 1.0, atol=1e-15)
     assert_almost_equal(e.median(), log(2.0), atol=1e-15)
     # With loc=2, scale=3: mean=5, var=9, std=3, median=2+3*ln(2)
-    var e2 = Expon(loc=2.0, scale=3.0)
+    var e2 = Exponential(loc=2.0, scale=3.0)
     assert_almost_equal(e2.mean(), 5.0, atol=1e-15)
     assert_almost_equal(e2.variance(), 9.0, atol=1e-15)
     assert_almost_equal(e2.std(), 3.0, atol=1e-15)
@@ -467,7 +473,7 @@ fn test_expon_loc_scale() raises:
     """Test Exponential with non-default loc and scale across all functions."""
     var loc = 5.0
     var scale = 2.0
-    var e = Expon(loc, scale)
+    var e = Exponential(loc, scale)
     # PDF at loc should be 1/scale
     assert_almost_equal(e.pdf(loc), 1.0 / scale, atol=1e-15)
     # CDF at loc should be 0
@@ -486,7 +492,7 @@ fn test_expon_scipy() raises:
         print("test_expon_scipy skipped (scipy not available)")
         return
 
-    var e = Expon()
+    var e = Exponential()
     var xs: List[Float64] = [0.0, 0.5, 1.0, 2.0, 5.0, 10.0]
 
     for i in range(len(xs)):
@@ -508,7 +514,7 @@ fn test_expon_scipy() raises:
     # Test with loc and scale
     var loc = 2.0
     var scale = 3.0
-    var e2 = Expon(loc, scale)
+    var e2 = Exponential(loc, scale)
     for i in range(len(xs)):
         var x = xs[i] + loc
         var sp_pdf2 = _py_f64(sp.expon.pdf(x, loc, scale))
@@ -525,53 +531,4 @@ fn test_expon_scipy() raises:
 
 
 fn main() raises:
-    print("=== StaMojo: Testing distributions ===")
-    print()
-
-    # Normal
-    test_normal_pdf()
-    test_normal_cdf()
-    test_normal_ppf()
-    test_normal_cdf_ppf_roundtrip()
-    test_normal_sf()
-    test_normal_stats()
-    test_normal_scipy()
-    print()
-
-    # Student's t
-    test_t_pdf_symmetry()
-    test_t_cdf()
-    test_t_ppf()
-    test_t_stats()
-    test_t_scipy()
-    print()
-
-    # Chi-squared
-    test_chi2_cdf()
-    test_chi2_ppf()
-    test_chi2_stats()
-    test_chi2_scipy()
-    print()
-
-    # F-distribution
-    test_f_cdf_boundary()
-    test_f_ppf()
-    test_f_stats()
-    test_f_scipy()
-    print()
-
-    # Exponential
-    test_expon_pdf()
-    test_expon_logpdf()
-    test_expon_cdf()
-    test_expon_sf()
-    test_expon_ppf()
-    test_expon_cdf_ppf_roundtrip()
-    test_expon_isf()
-    test_expon_logcdf_logsf()
-    test_expon_stats()
-    test_expon_loc_scale()
-    test_expon_scipy()
-
-    print()
-    print("=== All distribution tests passed ===")
+    TestSuite.discover_tests[__functions_in_module()]().run()

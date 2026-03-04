@@ -14,7 +14,7 @@ Covers:
 
 from math import sqrt
 from python import Python, PythonObject
-from testing import assert_almost_equal
+from testing import assert_almost_equal, TestSuite
 
 from stamojo.stats import (
     ttest_1samp,
@@ -486,43 +486,4 @@ fn test_f_oneway_scipy() raises:
 
 
 fn main() raises:
-    print("=== StaMojo: Testing hypothesis tests & correlation ===")
-    print()
-
-    # t-tests
-    test_ttest_1samp_basic()
-    test_ttest_1samp_no_effect()
-    test_ttest_1samp_scipy()
-    test_ttest_ind_welch()
-    test_ttest_ind_scipy()
-    test_ttest_rel()
-    print()
-
-    # Chi-squared tests
-    test_chi2_gof_fair_die()
-    test_chi2_ind_basic()
-    test_chi2_ind_scipy()
-    print()
-
-    # KS test
-    test_ks_normal_data()
-    test_ks_uniform_data()
-    print()
-
-    # Correlation
-    test_pearsonr_perfect()
-    test_pearsonr_negative()
-    test_pearsonr_scipy()
-    test_spearmanr_perfect_monotone()
-    test_spearmanr_scipy()
-    test_kendalltau_concordant()
-    test_kendalltau_discordant()
-    print()
-
-    # ANOVA
-    test_f_oneway_identical()
-    test_f_oneway_different()
-    test_f_oneway_scipy()
-
-    print()
-    print("=== All hypothesis test & correlation tests passed ===")
+    TestSuite.discover_tests[__functions_in_module()]().run()
