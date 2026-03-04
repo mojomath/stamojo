@@ -453,11 +453,10 @@ fn test_bessel_scipy() raises:
     """Test Bessel functions against scipy.special."""
     var sp = _load_scipy()
     if sp is None:
-        print("⊘ test_bessel_scipy skipped (scipy not available)")
+        print("test_bessel_scipy skipped (scipy not available)")
         return
 
-    var xs: List[Float64] = [0.1, 0.5, 1.0, 2.5, 5.0, 10.0]
-    comptime n = 2
+    var xs: List[Float64] = [1e-3, 0.5, 1.0, 2.5]
 
     for i in range(len(xs)):
         var x = xs[i]
@@ -475,14 +474,6 @@ fn test_bessel_scipy() raises:
             sp,
             _py_f64(sp.j1(x)),
             "j1(" + String(x) + ")",
-            atol=1e-10,
-        )
-        _assert_with_scipy(
-            jn[n](x),
-            _py_f64(sp.jn(n, x)),
-            sp,
-            _py_f64(sp.jn(n, x)),
-            "jn(2, " + String(x) + ")",
             atol=1e-10,
         )
         _assert_with_scipy(

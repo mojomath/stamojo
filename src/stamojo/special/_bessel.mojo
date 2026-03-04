@@ -19,6 +19,8 @@ References:
 from math import cos, exp, log, nan, sin, sqrt
 from utils.numerics import inf
 
+# TODO: Asymptotic expansions need to be implemented for large arguments to ensure accuracy and efficiency. The threshold for switching to asymptotic expansions should be determined empirically based on accuracy requirements.
+
 # ===----------------------------------------------------------------------=== #
 # Constants
 # ===----------------------------------------------------------------------=== #
