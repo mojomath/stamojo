@@ -405,10 +405,4 @@ fn test_erfinv_scipy() raises:
 
 
 fn main() raises:
-    print("=== StaMojo: Testing special functions ===")
-    print()
-
     TestSuite.discover_tests[__functions_in_module()]().run()
-
-    print()
-    print("=== All special function tests passed ===")

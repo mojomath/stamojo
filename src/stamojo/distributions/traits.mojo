@@ -1,5 +1,12 @@
-trait RVContinuousLike(Copyable, Movable):
-    """Trait for continuous random variable distributions."""
+# ===----------------------------------------------------------------------=== #
+# Stamojo - Distributions - Distribution traits
+# Licensed under Apache 2.0
+# ===----------------------------------------------------------------------=== #
+"""Traits for probability distributions."""
+
+
+trait ContinuouslyDistributed(Copyable, Movable):
+    """Trait for continuous probability distributions."""
 
     # --- Density functions ---------------------------------------------------
 
@@ -37,7 +44,8 @@ trait RVContinuousLike(Copyable, Movable):
         """Inverse survival function (inverse of SF) at *q*."""
         ...
 
-    # --- Statistical properties ------------------------------------------------
+    # --- Statistical properties ----------------------------------------------
+
     fn median(self) -> Float64:
         """Median of the distribution."""
         ...
