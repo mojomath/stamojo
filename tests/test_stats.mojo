@@ -10,7 +10,7 @@ with both analytical checks and scipy/numpy comparisons.
 
 from math import sqrt
 from python import Python, PythonObject
-from testing import assert_almost_equal
+from testing import assert_almost_equal, TestSuite
 
 from stamojo.stats import (
     mean,
@@ -176,19 +176,4 @@ fn test_scipy_comparison() raises:
 
 
 fn main() raises:
-    print("=== StaMojo: Testing descriptive statistics ===")
-    print()
-
-    test_mean()
-    test_variance()
-    test_std()
-    test_median_odd()
-    test_median_even()
-    test_quantile()
-    test_skewness_symmetric()
-    test_kurtosis_uniform()
-    test_min_max()
-    test_scipy_comparison()
-
-    print()
-    print("=== All descriptive statistics tests passed ===")
+    TestSuite.discover_tests[__functions_in_module()]().run()
