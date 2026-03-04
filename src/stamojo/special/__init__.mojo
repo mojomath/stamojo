@@ -26,4 +26,4 @@ The modules of the subpackages are named with a leading underscore
 from ._gamma import gammainc, gammaincc
 from ._beta import beta, lbeta, betainc
 from ._erf import erfinv, ndtri
-from ._bessel import j0, j1
+from ._bessel import j0, j1, jn, i0, i1, i0e, i1e, y0, y1
