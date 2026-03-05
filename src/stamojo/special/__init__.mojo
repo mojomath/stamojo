@@ -15,14 +15,17 @@ Functions provided:
 - Inverse error function (erfinv)
 - Log-beta function
 - Beta function
+- Bessel functions of the first and second kind (j0, j1, jn, y0, y1)
+- Modified Bessel functions and scaled variants (i0, i1, i0e, i1e)
 
 The Mojo standard library already provides erf, erfc, gamma, and lgamma,
 so we do not reimplement those here.
 
-The modules of the subpackages are named with a leading underscore 
+The modules of the subpackages are named with a leading underscore
 (e.g., `_gamma`) to avoid conflicts with the standard library functions.
 """
 
 from ._gamma import gammainc, gammaincc
 from ._beta import beta, lbeta, betainc
 from ._erf import erfinv, ndtri
+from ._bessel import j0, j1, jn, i0, i1, i0e, i1e, y0, y1

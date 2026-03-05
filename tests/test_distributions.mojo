@@ -62,7 +62,6 @@ fn test_normal_pdf() raises:
     # Non-standard normal: N(5, 2), pdf at mean = 1/(σ√(2π))
     var n2 = Normal(5.0, 2.0)
     assert_almost_equal(n2.pdf(5.0), 0.19947114020071635, atol=1e-12)
-    print("✓ test_normal_pdf passed")
 
 
 fn test_normal_cdf() raises:
@@ -74,7 +73,6 @@ fn test_normal_cdf() raises:
     # Tails
     assert_almost_equal(n.cdf(-10.0), 0.0, atol=1e-15)
     assert_almost_equal(n.cdf(10.0), 1.0, atol=1e-15)
-    print("✓ test_normal_cdf passed")
 
 
 fn test_normal_ppf() raises:
@@ -88,7 +86,6 @@ fn test_normal_ppf() raises:
     var n2 = Normal(10.0, 3.0)
     assert_almost_equal(n2.ppf(0.5), 10.0, atol=1e-10)
     assert_almost_equal(n2.ppf(n2.cdf(15.0)), 15.0, atol=1e-10)
-    print("✓ test_normal_ppf passed")
 
 
 fn test_normal_cdf_ppf_roundtrip() raises:
@@ -100,15 +97,12 @@ fn test_normal_cdf_ppf_roundtrip() raises:
         var p = ps[i]
         assert_almost_equal(n.cdf(n.ppf(p)), p, atol=1e-10)
 
-    print("✓ test_normal_cdf_ppf_roundtrip passed")
-
 
 fn test_normal_sf() raises:
     """Test Normal survival function."""
     var n = Normal(0.0, 1.0)
     assert_almost_equal(n.sf(0.0), 0.5, atol=1e-15)
     assert_almost_equal(n.cdf(1.5) + n.sf(1.5), 1.0, atol=1e-15)
-    print("✓ test_normal_sf passed")
 
 
 fn test_normal_stats() raises:
@@ -117,7 +111,6 @@ fn test_normal_stats() raises:
     assert_almost_equal(n.mean(), 3.0, atol=1e-15)
     assert_almost_equal(n.variance(), 4.0, atol=1e-15)
     assert_almost_equal(n.std(), 2.0, atol=1e-15)
-    print("✓ test_normal_stats passed")
 
 
 fn test_normal_scipy() raises:
@@ -137,8 +130,6 @@ fn test_normal_scipy() raises:
         assert_almost_equal(n.pdf(x), sp_pdf, atol=1e-12)
         assert_almost_equal(n.cdf(x), sp_cdf, atol=1e-12)
 
-    print("✓ test_normal_scipy passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # Student's t distribution tests
@@ -150,7 +141,6 @@ fn test_t_pdf_symmetry() raises:
     var t = StudentT(5.0)
     assert_almost_equal(t.pdf(1.0), t.pdf(-1.0), atol=1e-15)
     assert_almost_equal(t.pdf(2.5), t.pdf(-2.5), atol=1e-15)
-    print("✓ test_t_pdf_symmetry passed")
 
 
 fn test_t_cdf() raises:
@@ -164,7 +154,6 @@ fn test_t_cdf() raises:
     var t5 = StudentT(5.0)
     assert_almost_equal(t5.cdf(0.0), 0.5, atol=1e-12)
     assert_almost_equal(t5.cdf(2.0) + t5.cdf(-2.0), 1.0, atol=1e-10)
-    print("✓ test_t_cdf passed")
 
 
 fn test_t_ppf() raises:
@@ -175,7 +164,6 @@ fn test_t_ppf() raises:
     assert_almost_equal(t5.cdf(t5.ppf(0.975)), 0.975, atol=1e-6)
     assert_almost_equal(t5.cdf(t5.ppf(0.025)), 0.025, atol=1e-6)
     assert_almost_equal(t5.cdf(t5.ppf(0.9)), 0.9, atol=1e-6)
-    print("✓ test_t_ppf passed")
 
 
 fn test_t_stats() raises:
@@ -183,7 +171,6 @@ fn test_t_stats() raises:
     var t5 = StudentT(5.0)
     assert_almost_equal(t5.mean(), 0.0, atol=1e-15)
     assert_almost_equal(t5.variance(), 5.0 / 3.0, atol=1e-12)
-    print("✓ test_t_stats passed")
 
 
 fn test_t_scipy() raises:
@@ -207,8 +194,6 @@ fn test_t_scipy() raises:
             assert_almost_equal(t.pdf(x), sp_pdf, atol=1e-10)
             assert_almost_equal(t.cdf(x), sp_cdf, atol=1e-6)
 
-    print("✓ test_t_scipy passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # Chi-squared distribution tests
@@ -224,7 +209,6 @@ fn test_chi2_cdf() raises:
     assert_almost_equal(c2.cdf(2.0), 1.0 - exp(-1.0), atol=1e-10)
     assert_almost_equal(c2.cdf(4.0), 1.0 - exp(-2.0), atol=1e-10)
     assert_almost_equal(c2.cdf(0.0), 0.0, atol=1e-15)
-    print("✓ test_chi2_cdf passed")
 
 
 fn test_chi2_ppf() raises:
@@ -233,7 +217,6 @@ fn test_chi2_ppf() raises:
     assert_almost_equal(c5.cdf(c5.ppf(0.95)), 0.95, atol=1e-6)
     assert_almost_equal(c5.cdf(c5.ppf(0.5)), 0.5, atol=1e-6)
     assert_almost_equal(c5.cdf(c5.ppf(0.01)), 0.01, atol=1e-6)
-    print("✓ test_chi2_ppf passed")
 
 
 fn test_chi2_stats() raises:
@@ -241,7 +224,6 @@ fn test_chi2_stats() raises:
     var c5 = ChiSquared(5.0)
     assert_almost_equal(c5.mean(), 5.0, atol=1e-15)
     assert_almost_equal(c5.variance(), 10.0, atol=1e-15)
-    print("✓ test_chi2_stats passed")
 
 
 fn test_chi2_scipy() raises:
@@ -263,8 +245,6 @@ fn test_chi2_scipy() raises:
             var sp_cdf = _py_f64(sp.chi2.cdf(x, df))
             assert_almost_equal(c.cdf(x), sp_cdf, atol=1e-6)
 
-    print("✓ test_chi2_scipy passed")
-
 
 # ===----------------------------------------------------------------------=== #
 # F-distribution tests
@@ -281,7 +261,6 @@ fn test_f_cdf_boundary() raises:
     var c3 = f.cdf(5.0)
     if not (c1 < c2 and c2 < c3):
         raise Error("F CDF not monotonically increasing")
-    print("✓ test_f_cdf_boundary passed")
 
 
 fn test_f_ppf() raises:
@@ -290,7 +269,6 @@ fn test_f_ppf() raises:
     assert_almost_equal(f.cdf(f.ppf(0.95)), 0.95, atol=1e-6)
     assert_almost_equal(f.cdf(f.ppf(0.5)), 0.5, atol=1e-6)
     assert_almost_equal(f.cdf(f.ppf(0.1)), 0.1, atol=1e-6)
-    print("✓ test_f_ppf passed")
 
 
 fn test_f_stats() raises:
@@ -298,7 +276,6 @@ fn test_f_stats() raises:
     var f = FDist(5.0, 10.0)
     # mean = d2 / (d2 - 2) = 10/8 = 1.25
     assert_almost_equal(f.mean(), 1.25, atol=1e-12)
-    print("✓ test_f_stats passed")
 
 
 fn test_f_scipy() raises:
@@ -315,8 +292,6 @@ fn test_f_scipy() raises:
         var x = xs[i]
         var sp_cdf = _py_f64(sp.f.cdf(x, 5.0, 10.0))
         assert_almost_equal(f.cdf(x), sp_cdf, atol=1e-6)
-
-    print("✓ test_f_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #
@@ -343,7 +318,6 @@ fn test_expon_pdf() raises:
     var e3 = Exponential(loc=1.0)
     assert_almost_equal(e3.pdf(1.0), 1.0, atol=1e-15)
     assert_almost_equal(e3.pdf(0.5), 0.0, atol=1e-15)
-    print("✓ test_expon_pdf passed")
 
 
 fn test_expon_logpdf() raises:
@@ -358,7 +332,6 @@ fn test_expon_logpdf() raises:
     # With scale=3: logpdf(x) = -x/3 - log(3)
     var e2 = Exponential(scale=3.0)
     assert_almost_equal(e2.logpdf(3.0), -1.0 - log(3.0), atol=1e-15)
-    print("✓ test_expon_logpdf passed")
 
 
 fn test_expon_cdf() raises:
@@ -379,7 +352,6 @@ fn test_expon_cdf() raises:
     # With scale=0.5 (rate=2): CDF(x) = 1 - exp(-2x)
     var e2 = Exponential(scale=0.5)
     assert_almost_equal(e2.cdf(1.0), 1.0 - exp(-2.0), atol=1e-15)
-    print("✓ test_expon_cdf passed")
 
 
 fn test_expon_sf() raises:
@@ -393,7 +365,6 @@ fn test_expon_sf() raises:
         assert_almost_equal(e.cdf(xs[i]) + e.sf(xs[i]), 1.0, atol=1e-15)
     # SF(x < loc) = 1
     assert_almost_equal(e.sf(-1.0), 1.0, atol=1e-15)
-    print("✓ test_expon_sf passed")
 
 
 fn test_expon_ppf() raises:
@@ -408,7 +379,6 @@ fn test_expon_ppf() raises:
     # With loc and scale
     var e2 = Exponential(loc=1.0, scale=2.0)
     assert_almost_equal(e2.ppf(0.5), 1.0 + 2.0 * log(2.0), atol=1e-12)
-    print("✓ test_expon_ppf passed")
 
 
 fn test_expon_cdf_ppf_roundtrip() raises:
@@ -423,7 +393,6 @@ fn test_expon_cdf_ppf_roundtrip() raises:
     for i in range(len(ps)):
         var p = ps[i]
         assert_almost_equal(e2.cdf(e2.ppf(p)), p, atol=1e-12)
-    print("✓ test_expon_cdf_ppf_roundtrip passed")
 
 
 fn test_expon_isf() raises:
@@ -438,7 +407,6 @@ fn test_expon_isf() raises:
     for i in range(len(qs)):
         var q = qs[i]
         assert_almost_equal(e.isf(q), e.ppf(1.0 - q), atol=1e-12)
-    print("✓ test_expon_isf passed")
 
 
 fn test_expon_logcdf_logsf() raises:
@@ -449,7 +417,6 @@ fn test_expon_logcdf_logsf() raises:
         var x = xs[i]
         assert_almost_equal(e.logcdf(x), log(e.cdf(x)), atol=1e-12)
         assert_almost_equal(e.logsf(x), log(e.sf(x)), atol=1e-15)
-    print("✓ test_expon_logcdf_logsf passed")
 
 
 fn test_expon_stats() raises:
@@ -466,7 +433,6 @@ fn test_expon_stats() raises:
     assert_almost_equal(e2.variance(), 9.0, atol=1e-15)
     assert_almost_equal(e2.std(), 3.0, atol=1e-15)
     assert_almost_equal(e2.median(), 2.0 + 3.0 * log(2.0), atol=1e-15)
-    print("✓ test_expon_stats passed")
 
 
 fn test_expon_loc_scale() raises:
@@ -482,7 +448,6 @@ fn test_expon_loc_scale() raises:
     assert_almost_equal(e.sf(loc), 1.0, atol=1e-15)
     # CDF(loc + scale) = 1 - exp(-1)
     assert_almost_equal(e.cdf(loc + scale), 1.0 - exp(-1.0), atol=1e-15)
-    print("✓ test_expon_loc_scale passed")
 
 
 fn test_expon_scipy() raises:
@@ -521,8 +486,6 @@ fn test_expon_scipy() raises:
         var sp_cdf2 = _py_f64(sp.expon.cdf(x, loc, scale))
         assert_almost_equal(e2.pdf(x), sp_pdf2, atol=1e-12)
         assert_almost_equal(e2.cdf(x), sp_cdf2, atol=1e-12)
-
-    print("✓ test_expon_scipy passed")
 
 
 # ===----------------------------------------------------------------------=== #
