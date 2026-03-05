@@ -42,7 +42,7 @@ struct Binomial(DiscretelyDistributed):
 
     # --- Initialization -------------------------------------------------------
 
-    fn __init__(out self, n: UInt, p: Float64) raises:
+    fn __init__(out self, n: UInt, p: Float64):
         self.n = n
         self.p = p
 
