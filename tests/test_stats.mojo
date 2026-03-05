@@ -8,7 +8,7 @@ Covers mean, variance, std, median, quantile, skewness, and kurtosis
 with both analytical checks and scipy/numpy comparisons.
 """
 
-from math import sqrt
+from math import sqrt, exp, log
 from python import Python, PythonObject
 from testing import assert_almost_equal, TestSuite
 
@@ -22,6 +22,8 @@ from stamojo.stats import (
     kurtosis,
     data_min,
     data_max,
+    gmean,
+    hmean,
 )
 
 
@@ -150,6 +152,70 @@ fn test_scipy_comparison() raises:
         print("✓ test_scipy_comparison passed")
     except:
         print("⊘ test_scipy_comparison skipped (numpy not available)")
+
+
+fn test_gmean() raises:
+    """Test geometric mean."""
+    # first three test values are from scipy examples.
+    var data: List[Float64] = [1.0, 4.0]
+    var res = gmean(data, List[Float64]())
+    assert_almost_equal(res, 2.0, atol=1e-12)
+
+    var data2: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var res2 = gmean(data2, List[Float64]())
+    assert_almost_equal(res2, 3.3800151591412964, atol=1e-12)
+
+    var data3: List[Float64] = [1.0, 4.0, 7.0]
+    var weights3: List[Float64] = [3.0, 1.0, 3.0]
+    var res3 = gmean(data3, weights3)
+    assert_almost_equal(res3, 2.80668351922014, atol=1e-12)
+
+    var sp = Python.import_module("scipy.stats")
+    var data4: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var py_data4 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var sp_gmean = _py_f64(sp.gmean(py_data4))
+    var res4 = gmean(data4, List[Float64]())
+    assert_almost_equal(res4, sp_gmean, atol=1e-12)
+
+    var data5: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var weights5: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var py_data5 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var py_weights5 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var sp_gmean_w = _py_f64(sp.gmean(a=py_data5, weights=py_weights5))
+    var res5 = gmean(data5, weights5)
+    assert_almost_equal(res5, sp_gmean_w, atol=1e-12)
+
+
+fn test_hmean() raises:
+    """Test harmonic mean."""
+    # first three test values are from scipy examples.
+    var data: List[Float64] = [1.0, 4.0]
+    var res = hmean(data, List[Float64]())
+    assert_almost_equal(res, 1.6, atol=1e-12)
+
+    var data2: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var res2 = hmean(data2, List[Float64]())
+    assert_almost_equal(res2, 2.6997245179063363, atol=1e-12)
+
+    var data3: List[Float64] = [1.0, 4.0, 7.0]
+    var weights3: List[Float64] = [3.0, 1.0, 3.0]
+    var res3 = hmean(data3, weights3)
+    assert_almost_equal(res3, 1.9029126213592233, atol=1e-12)
+
+    var sp = Python.import_module("scipy.stats")
+    var data4: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var py_data4 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var sp_hmean = _py_f64(sp.hmean(py_data4))
+    var res4 = hmean(data4, List[Float64]())
+    assert_almost_equal(res4, sp_hmean, atol=1e-12)
+
+    var data5: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var weights5: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+    var py_data5 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var py_weights5 = Python.list(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0)
+    var sp_hmean_w = _py_f64(sp.hmean(a=py_data5, weights=py_weights5))
+    var res5 = hmean(data5, weights5)
+    assert_almost_equal(res5, sp_hmean_w, atol=1e-12)
 
 
 # ===----------------------------------------------------------------------=== #
