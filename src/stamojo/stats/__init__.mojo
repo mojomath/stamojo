@@ -20,6 +20,8 @@ from .descriptive import (
     kurtosis,
     data_min,
     data_max,
+    gmean,
+    hmean,
 )
 
 from .correlation import (
