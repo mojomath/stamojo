@@ -15,6 +15,8 @@ Provides functions for computing summary statistics of ``List[Float64]`` data:
 - ``kurtosis`` — (Excess) kurtosis (bias-corrected)
 - ``data_min`` — Minimum value
 - ``data_max`` — Maximum value
+- ``gmean`` — Geoemtric mean
+- ``hmean`` — Harmonic mean
 """
 
 from math import sqrt, nan, log, exp
