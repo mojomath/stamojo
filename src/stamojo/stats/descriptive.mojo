@@ -259,3 +259,14 @@ fn data_max(data: List[Float64]) -> Float64:
         if data[i] > result:
             result = data[i]
     return result
+
+fn gmean(data: List[Float64]) -> Float64:
+    """Geometric mean of *data*.
+
+    Args:
+        data: A list of values.
+
+    Returns:
+        The geometric mean. Returns NaN for an empty list or if any value is negative.
+    """
+    pass
