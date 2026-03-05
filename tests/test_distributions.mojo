@@ -567,7 +567,7 @@ fn test_binomial_scipy() raises:
         print("test_binomial_scipy skipped (scipy not available)")
         return
 
-    var n: UInt = 10
+    var n: Int = 10
     var p = 0.3
     var b = Binomial(n, p)
     var ks: List[Int] = [0, 1, 2, 5, 10]

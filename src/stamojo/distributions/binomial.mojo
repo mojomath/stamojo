@@ -34,7 +34,7 @@ struct Binomial(DiscretelyDistributed):
     where C(n, k) is the binomial coefficient.
     """
 
-    var n: UInt
+    var n: Int
     """Number of trials (must be >= 0)."""
 
     var p: Float64
@@ -42,7 +42,7 @@ struct Binomial(DiscretelyDistributed):
 
     # --- Initialization -------------------------------------------------------
 
-    fn __init__(out self, n: UInt, p: Float64):
+    fn __init__(out self, n: Int, p: Float64):
         self.n = n
         self.p = p
 
@@ -68,14 +68,14 @@ struct Binomial(DiscretelyDistributed):
         Returns:
             Returns -∞ if k > n.
         """
-        if k > Int(self.n):
+        if k > self.n:
             return -inf[DType.float64]()
 
         if self.p == 0.0:
             return 0.0 if k == 0 else -inf[DType.float64]()
 
         if self.p == 1.0:
-            return 0.0 if k == Int(self.n) else -inf[DType.float64]()
+            return 0.0 if k == self.n else -inf[DType.float64]()
 
         var kf = Float64(k)
         var nf = Float64(self.n)
@@ -91,13 +91,13 @@ struct Binomial(DiscretelyDistributed):
         Returns:
             CDF value at *k*. Returns 1.0 for k >= n.
         """
-        if k >= Int(self.n):
+        if k >= self.n:
             return 1.0
 
         if self.p == 0.0:
             return 1.0
         if self.p == 1.0:
-            return 0.0 if k < Int(self.n) else 1.0
+            return 0.0 if k < self.n else 1.0
 
         var nf = Float64(self.n)
         var q = 1.0 - self.p
@@ -145,8 +145,6 @@ struct Binomial(DiscretelyDistributed):
         Returns:
             Log-survival function value at *k*.
         """
-        if self.p < 0.0 or self.p > 1.0:
-            return nan[DType.float64]()
         return log1p(-self.cdf(k))
 
     fn ppf(self, q: Float64) -> Int:
@@ -161,7 +159,7 @@ struct Binomial(DiscretelyDistributed):
         if q == 0.0:
             return 0
         if q == 1.0:
-            return Int(self.n)
+            return self.n
 
         var cumulative: Float64 = 0.0
         for k in range(self.n + 1):
@@ -169,7 +167,7 @@ struct Binomial(DiscretelyDistributed):
             if cumulative >= q:
                 return Int(k)
 
-        return Int(self.n)
+        return self.n
 
     fn isf(self, q: Float64) -> Int:
         """Inverse survival function (inverse SF).
@@ -181,7 +179,7 @@ struct Binomial(DiscretelyDistributed):
             Smallest integer k such that SF(k) ≤ q. Returns n for q=0, 0 for q=1.
         """
         if q == 0.0:
-            return Int(self.n)
+            return self.n
         if q == 1.0:
             return 0
 
@@ -191,11 +189,11 @@ struct Binomial(DiscretelyDistributed):
             if 1.0 - cumulative <= q:
                 return Int(k)
 
-        return Int(self.n)
+        return self.n
 
     # --- Summary statistics --------------------------------------------------
     fn median(self) -> UInt:
-        """Median of the distribution.
+        """Median of the distribution: floor(n * p + 0.5).
 
         Returns:
             The median of the distribution.
@@ -220,7 +218,7 @@ struct Binomial(DiscretelyDistributed):
         return np * (1.0 - self.p)
 
     fn std(self) -> Float64:
-        """Distribution standard deviation.
+        """Distribution standard deviation: sqrt(n * p * (1 - p)).
 
         Returns:
             The standard deviation of the distribution.
