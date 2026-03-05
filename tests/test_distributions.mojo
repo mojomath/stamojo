@@ -22,6 +22,7 @@ from stamojo.distributions import (
     ChiSquared,
     FDist,
     Exponential,
+    Binomial,
 )
 
 
@@ -486,6 +487,105 @@ fn test_expon_scipy() raises:
         var sp_cdf2 = _py_f64(sp.expon.cdf(x, loc, scale))
         assert_almost_equal(e2.pdf(x), sp_pdf2, atol=1e-12)
         assert_almost_equal(e2.cdf(x), sp_cdf2, atol=1e-12)
+
+
+# ===----------------------------------------------------------------------=== #
+# Binomial distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+fn test_binomial_pmf_basic() raises:
+    """Test Binomial PMF at known values."""
+    var b = Binomial(10, 0.5)
+    assert_almost_equal(b.pmf(0), 1.0 / 1024.0, atol=1e-12)
+    assert_almost_equal(b.pmf(5), 252.0 / 1024.0, atol=1e-12)
+    assert_almost_equal(b.pmf(10), 1.0 / 1024.0, atol=1e-12)
+    assert_almost_equal(b.pmf(11), 0.0, atol=1e-12)
+
+
+fn test_binomial_cdf_sf() raises:
+    """Test Binomial CDF and SF at known values."""
+    var b = Binomial(4, 0.5)
+    assert_almost_equal(b.cdf(2), 0.6875, atol=1e-12)
+    assert_almost_equal(b.sf(2), 0.3125, atol=1e-12)
+    assert_almost_equal(b.cdf(4), 1.0, atol=1e-12)
+
+
+fn test_binomial_edge_p() raises:
+    """Test Binomial behavior for p=0 and p=1."""
+    var b0 = Binomial(5, 0.0)
+    assert_almost_equal(b0.pmf(0), 1.0, atol=1e-12)
+    assert_almost_equal(b0.pmf(1), 0.0, atol=1e-12)
+    assert_almost_equal(b0.cdf(0), 1.0, atol=1e-12)
+    assert_almost_equal(b0.sf(0), 0.0, atol=1e-12)
+
+    var b1 = Binomial(5, 1.0)
+    assert_almost_equal(b1.pmf(5), 1.0, atol=1e-12)
+    assert_almost_equal(b1.pmf(4), 0.0, atol=1e-12)
+    assert_almost_equal(b1.cdf(4), 0.0, atol=1e-12)
+    assert_almost_equal(b1.cdf(5), 1.0, atol=1e-12)
+
+
+fn test_binomial_logpmf() raises:
+    """Test Binomial log-PMF consistency."""
+    var b = Binomial(6, 0.3)
+    var k = 2
+    assert_almost_equal(b.logpmf(k), log(b.pmf(k)), atol=1e-12)
+
+
+fn test_binomial_symmetry_p_half() raises:
+    """Test Binomial symmetry for p=0.5."""
+    var b = Binomial(10, 0.5)
+    for k in range(0, 11):
+        assert_almost_equal(b.pmf(k), b.pmf(10 - k), atol=1e-12)
+
+
+fn test_binomial_ppf_isf_roundtrip() raises:
+    """Test Binomial PPF/ISF consistency with CDF/SF."""
+    var b = Binomial(12, 0.4)
+    var qs: List[Float64] = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
+
+    for i in range(len(qs)):
+        var q = qs[i]
+        var k = b.ppf(q)
+        if b.cdf(k) < q:
+            raise Error("binomial ppf: cdf(k) < q")
+        if k > 0 and b.cdf(k - 1) >= q:
+            raise Error("binomial ppf: cdf(k-1) >= q")
+
+        var k2 = b.isf(q)
+        if b.sf(k2) > q:
+            raise Error("binomial isf: sf(k) > q")
+        if k2 > 0 and b.sf(k2 - 1) <= q:
+            raise Error("binomial isf: sf(k-1) <= q")
+
+
+fn test_binomial_scipy() raises:
+    """Test Binomial distribution against scipy.stats.binom."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_binomial_scipy skipped (scipy not available)")
+        return
+
+    var n: UInt = 10
+    var p = 0.3
+    var b = Binomial(n, p)
+    var ks: List[Int] = [0, 1, 2, 5, 10]
+
+    for i in range(len(ks)):
+        var k = ks[i]
+        var sp_pmf = _py_f64(sp.binom.pmf(k, n, p))
+        var sp_cdf = _py_f64(sp.binom.cdf(k, n, p))
+        var sp_sf = _py_f64(sp.binom.sf(k, n, p))
+        assert_almost_equal(b.pmf(k), sp_pmf, atol=1e-10)
+        assert_almost_equal(b.cdf(k), sp_cdf, atol=1e-10)
+        assert_almost_equal(b.sf(k), sp_sf, atol=1e-10)
+
+    var qs: List[Float64] = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
+    for i in range(len(qs)):
+        var q = qs[i]
+        var sp_ppf = _py_f64(sp.binom.ppf(q, n, p))
+        assert_almost_equal(Float64(b.ppf(q)), sp_ppf, atol=1e-10)
 
 
 # ===----------------------------------------------------------------------=== #
