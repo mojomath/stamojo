@@ -13,6 +13,7 @@ Distributions provided:
 - `ChiSquared`    — Chi-squared distribution
 - `FDist`         — F-distribution (Fisher-Snedecor)
 - `Exponential`   — Exponential distribution
+- `Binomial`      — Binomial distribution
 """
 
 from .normal import Normal
@@ -20,3 +21,4 @@ from .t import StudentT
 from .chi2 import ChiSquared
 from .f import FDist
 from .exponential import Exponential
+from .binomial import Binomial
