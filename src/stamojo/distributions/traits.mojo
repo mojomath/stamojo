@@ -61,3 +61,61 @@ trait ContinuouslyDistributed(Copyable, Movable):
     fn std(self) -> Float64:
         """Standard deviation of the distribution."""
         ...
+
+
+trait DiscretelyDistributed(Copyable, Movable):
+    """Trait for discrete probability distributions."""
+
+    # --- Probability mass functions ------------------------------------------
+
+    fn pmf(self, k: Int) -> Float64:
+        """Probability mass function at *k*."""
+        ...
+
+    fn logpmf(self, k: Int) -> Float64:
+        """Natural logarithm of the probability mass function at *k*."""
+        ...
+
+    # --- Distribution functions ----------------------------------------------
+
+    fn cdf(self, k: Int) -> Float64:
+        """Cumulative distribution function P(X ≤ k)."""
+        ...
+
+    fn logcdf(self, k: Int) -> Float64:
+        """Natural logarithm of the cumulative distribution function at *k*."""
+        ...
+
+    fn sf(self, k: Int) -> Float64:
+        """Survival function (1 − CDF) at *k*."""
+        ...
+
+    fn logsf(self, k: Int) -> Float64:
+        """Natural logarithm of the survival function at *k*."""
+        ...
+
+    fn ppf(self, q: Float64) -> Int:
+        """Percent point function (inverse of CDF) at *q*."""
+        ...
+
+    fn isf(self, q: Float64) -> Int:
+        """Inverse survival function (inverse of SF) at *q*."""
+        ...
+
+    # --- Statistical properties ----------------------------------------------
+
+    fn median(self) -> UInt:
+        """Median of the distribution."""
+        ...
+
+    fn mean(self) -> Float64:
+        """Mean of the distribution."""
+        ...
+
+    fn variance(self) -> Float64:
+        """Variance of the distribution."""
+        ...
+
+    fn std(self) -> Float64:
+        """Standard deviation of the distribution."""
+        ...
