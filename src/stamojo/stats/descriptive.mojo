@@ -15,7 +15,7 @@ Provides functions for computing summary statistics of ``List[Float64]`` data:
 - ``kurtosis`` — (Excess) kurtosis (bias-corrected)
 - ``data_min`` — Minimum value
 - ``data_max`` — Maximum value
-- ``gmean`` — Geoemtric mean
+- ``gmean`` — Geometric mean
 - ``hmean`` — Harmonic mean
 """
 
@@ -293,7 +293,7 @@ fn gmean(data: List[Float64], weights: List[Float64]) -> Float64:
     if n == 0:
         return nan[DType.float64]()
 
-    var ws = True if len(weights) > 0 else False
+    var ws = len(weights) > 0
     if ws:
         if len(weights) != n:
             return nan[DType.float64]()
@@ -305,13 +305,12 @@ fn gmean(data: List[Float64], weights: List[Float64]) -> Float64:
 
         if total == 0.0:
             return nan[DType.float64]()
-        else:
-            var log_sum: Float64 = 0.0
-            for i in range(n):
-                if data[i] < 0.0:
-                    return nan[DType.float64]()
-                log_sum += weights[i] * log(data[i])
-            return exp(log_sum / total)
+        var log_sum: Float64 = 0.0
+        for i in range(n):
+            if data[i] < 0.0:
+                return nan[DType.float64]()
+            log_sum += weights[i] * log(data[i])
+        return exp(log_sum / total)
 
     var log_sum: Float64 = 0.0
     for i in range(n):
@@ -333,7 +332,7 @@ fn hmean(data: List[Float64], weights: List[Float64]) -> Float64:
     where xᵢ are the data values and wᵢ are the corresponding weights.
 
     Args:
-        data: A list of values, which must all be non-negative.
+        data: A list of positive values (must all be strictly greater than zero).
         weights: A list of weights corresponding to each value in `data`.
             If weights are provided, they must be the same length as `data`,
             all weights must be non-negative, and the sum of weights must be greater than zero.
@@ -343,13 +342,13 @@ fn hmean(data: List[Float64], weights: List[Float64]) -> Float64:
         The weighted harmonic mean of the values.
         If `data` is empty, or if weights are provided and have a different length than `data`,
         or if any weight is negative, or if the total weight is zero,
-        or if any value in `data` is negative, the function returns NaN.
+        or if any value in `data` is zero or negative, the function returns NaN.
     """
     var n = len(data)
     if n == 0:
         return nan[DType.float64]()
 
-    var ws = True if len(weights) > 0 else False
+    var ws = len(weights) > 0
     if ws:
         if len(weights) != n:
             return nan[DType.float64]()
@@ -361,17 +360,16 @@ fn hmean(data: List[Float64], weights: List[Float64]) -> Float64:
 
         if total == 0.0:
             return nan[DType.float64]()
-        else:
-            var sum: Float64 = 0.0
-            for i in range(n):
-                if data[i] <= 0.0:
-                    return nan[DType.float64]()
-                sum += weights[i] / data[i]
-            return total / sum
+        var inv_sum: Float64 = 0.0
+        for i in range(n):
+            if data[i] <= 0.0:
+                return nan[DType.float64]()
+            inv_sum += weights[i] / data[i]
+        return total / inv_sum
 
-    var sum: Float64 = 0.0
+    var inv_sum: Float64 = 0.0
     for i in range(n):
         if data[i] <= 0.0:
             return nan[DType.float64]()
-        sum += 1.0 / data[i]
-    return Float64(n) / sum
+        inv_sum += 1.0 / data[i]
+    return Float64(n) / inv_sum
