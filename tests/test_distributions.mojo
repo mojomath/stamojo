@@ -4,7 +4,7 @@
 # ===----------------------------------------------------------------------=== #
 """Tests for the distributions subpackage.
 
-Covers Normal, Student's t, Chi-squared, F, and Exponential distributions.
+Covers Normal, Student's t, Chi-squared, F, Exponential, and Binomial distributions.
 Each distribution is tested for:
   - Known analytical values
   - CDF/PPF round-trip consistency

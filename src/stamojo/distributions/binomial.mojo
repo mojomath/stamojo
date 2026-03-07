@@ -68,7 +68,7 @@ struct Binomial(DiscretelyDistributed):
         Returns:
             Returns -∞ if k > n.
         """
-        if k > self.n:
+        if k < 0 or k > self.n:
             return -inf[DType.float64]()
 
         if self.p == 0.0:
@@ -91,6 +91,8 @@ struct Binomial(DiscretelyDistributed):
         Returns:
             CDF value at *k*. Returns 1.0 for k >= n.
         """
+        if k < 0:
+            return 0.0
         if k >= self.n:
             return 1.0
 
@@ -163,9 +165,9 @@ struct Binomial(DiscretelyDistributed):
 
         var cumulative: Float64 = 0.0
         for k in range(self.n + 1):
-            cumulative += self.pmf(Int(k))
+            cumulative += self.pmf(k)
             if cumulative >= q:
-                return Int(k)
+                return k
 
         return self.n
 
@@ -185,9 +187,9 @@ struct Binomial(DiscretelyDistributed):
 
         var cumulative = 0.0
         for k in range(self.n + 1):
-            cumulative += self.pmf(Int(k))
+            cumulative += self.pmf(k)
             if 1.0 - cumulative <= q:
-                return Int(k)
+                return k
 
         return self.n
 
@@ -231,7 +233,7 @@ struct Binomial(DiscretelyDistributed):
 # ===----------------------------------------------------------------------=== #
 
 
-fn _log_binomial_coefficient(n: UInt, k: Int) -> Float64:
+fn _log_binomial_coefficient(n: Int, k: Int) -> Float64:
     """Log of the binomial coefficient C(n, k).
 
     Args:
