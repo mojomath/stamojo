@@ -23,6 +23,9 @@ from stamojo.distributions import (
     FDist,
     Exponential,
     Binomial,
+    Gamma,
+    Beta,
+    Poisson,
 )
 
 
@@ -587,6 +590,173 @@ fn test_binomial_scipy() raises:
         var sp_ppf = _py_f64(sp.binom.ppf(q, n, p))
         assert_almost_equal(Float64(b.ppf(q)), sp_ppf, atol=1e-10)
 
+
+# ===----------------------------------------------------------------------=== #
+# Gamma distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+fn test_gamma_pdf() raises:
+    """Test Gamma PDF at known values."""
+    var g = Gamma(2.0, 1.0)
+    # PDF at x=1 for Gamma(2,1): 1*exp(-1) = exp(-1)
+    assert_almost_equal(g.pdf(1.0), exp(-1.0), atol=1e-12)
+    # PDF(x < 0) = 0
+    assert_almost_equal(g.pdf(-1.0), 0.0, atol=1e-15)
+
+
+fn test_gamma_cdf() raises:
+    """Test Gamma CDF at known values."""
+    var g = Gamma(1.0, 1.0)
+    # Gamma(1,1) = Exponential(1): CDF(x) = 1 - exp(-x)
+    assert_almost_equal(g.cdf(1.0), 1.0 - exp(-1.0), atol=1e-12)
+    assert_almost_equal(g.cdf(2.0), 1.0 - exp(-2.0), atol=1e-12)
+
+
+fn test_gamma_ppf_roundtrip() raises:
+    """Test Gamma PPF round-trip."""
+    var g = Gamma(3.0, 2.0)
+    assert_almost_equal(g.cdf(g.ppf(0.5)), 0.5, atol=1e-6)
+    assert_almost_equal(g.cdf(g.ppf(0.95)), 0.95, atol=1e-6)
+    assert_almost_equal(g.cdf(g.ppf(0.1)), 0.1, atol=1e-6)
+
+
+fn test_gamma_stats() raises:
+    """Test Gamma distribution statistics."""
+    var g = Gamma(4.0, 3.0)
+    # mean = a*scale = 12
+    assert_almost_equal(g.mean(), 12.0, atol=1e-12)
+    # variance = a*scale^2 = 36
+    assert_almost_equal(g.variance(), 36.0, atol=1e-12)
+    # std = 6
+    assert_almost_equal(g.std(), 6.0, atol=1e-12)
+
+
+fn test_gamma_scipy() raises:
+    """Test Gamma distribution against scipy.stats.gamma."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_gamma_scipy skipped (scipy not available)")
+        return
+
+    var g = Gamma(2.5, 1.5)
+    var xs: List[Float64] = [1.0, 2.0, 5.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.gamma.pdf(x, 2.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.gamma.cdf(x, 2.5, scale=1.5))
+        assert_almost_equal(g.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(g.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Beta distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+fn test_beta_pdf() raises:
+    """Test Beta PDF at known values."""
+    var b = Beta(2.0, 2.0)
+    # PDF at 0.5 for Beta(2,2): 6 * 0.25 = 1.5
+    assert_almost_equal(b.pdf(0.5), 1.5, atol=1e-12)
+    # PDF outside [0,1] = 0
+    assert_almost_equal(b.pdf(-0.1), 0.0, atol=1e-15)
+    assert_almost_equal(b.pdf(1.1), 0.0, atol=1e-15)
+
+
+fn test_beta_cdf() raises:
+    """Test Beta CDF at known values."""
+    var b = Beta(1.0, 1.0)
+    # Beta(1,1) = Uniform(0,1): CDF(x) = x
+    assert_almost_equal(b.cdf(0.3), 0.3, atol=1e-12)
+    assert_almost_equal(b.cdf(0.7), 0.7, atol=1e-12)
+
+
+fn test_beta_ppf_roundtrip() raises:
+    """Test Beta PPF round-trip."""
+    var b = Beta(3.0, 5.0)
+    assert_almost_equal(b.cdf(b.ppf(0.5)), 0.5, atol=1e-6)
+    assert_almost_equal(b.cdf(b.ppf(0.9)), 0.9, atol=1e-6)
+    assert_almost_equal(b.cdf(b.ppf(0.1)), 0.1, atol=1e-6)
+
+
+fn test_beta_stats() raises:
+    """Test Beta distribution statistics."""
+    var b = Beta(2.0, 3.0)
+    # mean = a/(a+b) = 2/5 = 0.4
+    assert_almost_equal(b.mean(), 0.4, atol=1e-12)
+    # variance = ab/((a+b)^2*(a+b+1)) = 6/(25*6) = 0.04
+    assert_almost_equal(b.variance(), 0.04, atol=1e-12)
+
+
+fn test_beta_scipy() raises:
+    """Test Beta distribution against scipy.stats.beta."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_beta_scipy skipped (scipy not available)")
+        return
+
+    var b = Beta(2.5, 3.5)
+    var xs: List[Float64] = [0.2, 0.5, 0.8]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.beta.pdf(x, 2.5, 3.5))
+        var sp_cdf = _py_f64(sp.beta.cdf(x, 2.5, 3.5))
+        assert_almost_equal(b.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(b.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Poisson distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+fn test_poisson_pmf() raises:
+    """Test Poisson PMF at known values."""
+    var p = Poisson(3.0)
+    # PMF at k=0: exp(-3)
+    assert_almost_equal(p.pmf(0), exp(-3.0), atol=1e-12)
+    # PMF at k=3: 3^3 * exp(-3) / 6 = 27*exp(-3)/6
+    assert_almost_equal(p.pmf(3), 27.0 * exp(-3.0) / 6.0, atol=1e-12)
+    # PMF for k < 0 = 0
+    assert_almost_equal(p.pmf(-1), 0.0, atol=1e-15)
+
+
+fn test_poisson_cdf() raises:
+    """Test Poisson CDF at known values."""
+    var p = Poisson(1.0)
+    # CDF at k=0: exp(-1)
+    assert_almost_equal(p.cdf(0), exp(-1.0), atol=1e-12)
+    # CDF at k=1: exp(-1) + exp(-1) = 2*exp(-1)
+    assert_almost_equal(p.cdf(1), 2.0 * exp(-1.0), atol=1e-12)
+
+
+fn test_poisson_stats() raises:
+    """Test Poisson distribution statistics."""
+    var p = Poisson(5.0)
+    assert_almost_equal(p.mean(), 5.0, atol=1e-15)
+    assert_almost_equal(p.variance(), 5.0, atol=1e-15)
+    assert_almost_equal(p.std(), sqrt(5.0), atol=1e-12)
+
+
+fn test_poisson_scipy() raises:
+    """Test Poisson distribution against scipy.stats.poisson."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_poisson_scipy skipped (scipy not available)")
+        return
+
+    var p = Poisson(4.0)
+    var ks: List[Int] = [0, 1, 2, 4, 8]
+
+    for i in range(len(ks)):
+        var k = ks[i]
+        var sp_pmf = _py_f64(sp.poisson.pmf(k, 4.0))
+        var sp_cdf = _py_f64(sp.poisson.cdf(k, 4.0))
+        assert_almost_equal(p.pmf(k), sp_pmf, atol=1e-10)
+        assert_almost_equal(p.cdf(k), sp_cdf, atol=1e-10)
 
 # ===----------------------------------------------------------------------=== #
 # Main test runner
