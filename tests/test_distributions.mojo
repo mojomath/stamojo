@@ -12,7 +12,7 @@ Each distribution is tested for:
   - Comparison against scipy.stats (when available)
 """
 
-from math import exp, log
+from math import exp, log, sqrt
 from python import Python, PythonObject
 from testing import assert_almost_equal, TestSuite
 
@@ -757,6 +757,7 @@ fn test_poisson_scipy() raises:
         var sp_cdf = _py_f64(sp.poisson.cdf(k, 4.0))
         assert_almost_equal(p.pmf(k), sp_pmf, atol=1e-10)
         assert_almost_equal(p.cdf(k), sp_cdf, atol=1e-10)
+
 
 # ===----------------------------------------------------------------------=== #
 # Main test runner
