@@ -86,7 +86,7 @@ fn variance(data: List[Float64], ddof: Int = 0) -> Float64:
     return ss / Float64(n - ddof)
 
 
-fn std(data: List[Float64], ddof: Int = 0) -> Float64:
+fn stddev(data: List[Float64], ddof: Int = 0) -> Float64:
     """Standard deviation of *data*.
 
     Args:
@@ -170,7 +170,7 @@ fn skewness(data: List[Float64]) -> Float64:
         return nan[DType.float64]()
 
     var m = mean(data)
-    var s = std(data, ddof=1)
+    var s = stddev(data, ddof=1)
     if s == 0.0:
         return 0.0
 
