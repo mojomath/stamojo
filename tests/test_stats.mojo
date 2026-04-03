@@ -15,7 +15,7 @@ from testing import assert_almost_equal, TestSuite
 from stamojo.stats import (
     mean,
     variance,
-    std,
+    stddev,
     median,
     quantile,
     skewness,
@@ -68,7 +68,7 @@ fn test_std() raises:
     """Test standard deviation."""
     var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
-    assert_almost_equal(std(data, ddof=0), 2.0, atol=1e-12)
+    assert_almost_equal(stddev(data, ddof=0), 2.0, atol=1e-12)
 
 
 fn test_median_odd() raises:
@@ -146,7 +146,7 @@ fn test_scipy_comparison() raises:
 
         assert_almost_equal(mean(data), np_mean, atol=1e-10)
         assert_almost_equal(variance(data, ddof=0), np_var, atol=1e-10)
-        assert_almost_equal(std(data, ddof=0), np_std, atol=1e-10)
+        assert_almost_equal(stddev(data, ddof=0), np_std, atol=1e-10)
         assert_almost_equal(median(data), np_median, atol=1e-10)
 
         print("✓ test_scipy_comparison passed")

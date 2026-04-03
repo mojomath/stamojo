@@ -152,9 +152,8 @@ struct Poisson(DiscretelyDistributed):
         if q >= 1.0:
             return _MAX_K
 
-        var cumulative: Float64 = 0.0
         var pk = exp(-self.mu)
-        cumulative = pk
+        var cumulative: Float64 = pk
 
         if cumulative >= q:
             return 0
@@ -181,9 +180,8 @@ struct Poisson(DiscretelyDistributed):
         if q >= 1.0:
             return 0
 
-        var cumulative: Float64 = 0.0
-        var pk = exp(-self.mu)
-        cumulative = pk
+        var pk: Float64 = exp(-self.mu)
+        var cumulative: Float64 = pk
 
         if 1.0 - cumulative <= q:
             return 0
