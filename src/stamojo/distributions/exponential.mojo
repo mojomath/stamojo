@@ -50,7 +50,7 @@ struct Exponential(ContinuouslyDistributed):
 
     # --- Initialization -------------------------------------------------------
 
-    fn __init__(out self, loc: Float64 = 0.0, scale: Float64 = 1.0):
+    def __init__(out self, loc: Float64 = 0.0, scale: Float64 = 1.0):
         """Constructs an Exponential distribution.
 
         Args:
@@ -62,7 +62,7 @@ struct Exponential(ContinuouslyDistributed):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -76,7 +76,7 @@ struct Exponential(ContinuouslyDistributed):
             return 0.0
         return exp(-y) / self.scale
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -91,7 +91,7 @@ struct Exponential(ContinuouslyDistributed):
         return -y - log(self.scale)
 
     # --- Distribution functions ----------------------------------------------
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         Args:
@@ -105,7 +105,7 @@ struct Exponential(ContinuouslyDistributed):
         var y = (x - self.loc) / self.scale
         return -expm1(-y)
 
-    fn logcdf(self, x: Float64) -> Float64:
+    def logcdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the CDF at *x*.
 
         Uses ``log(-expm1(-y))`` instead of ``log1p(-exp(-y))`` for better
@@ -122,7 +122,7 @@ struct Exponential(ContinuouslyDistributed):
         var y = (x - self.loc) / self.scale
         return log(-expm1(-y))
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -136,7 +136,7 @@ struct Exponential(ContinuouslyDistributed):
         var y = (x - self.loc) / self.scale
         return exp(-y)
 
-    fn logsf(self, x: Float64) -> Float64:
+    def logsf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the survival function at *x*.
 
         Args:
@@ -150,7 +150,7 @@ struct Exponential(ContinuouslyDistributed):
         var y = (x - self.loc) / self.scale
         return -y
 
-    fn ppf(self, q: Float64) -> Float64:
+    def ppf(self, q: Float64) -> Float64:
         """Computes the percent-point (quantile) function (inverse CDF).
 
         Args:
@@ -173,7 +173,7 @@ struct Exponential(ContinuouslyDistributed):
             return inf[DType.float64]()
         return self.loc - self.scale * log1p(-q)
 
-    fn isf(self, q: Float64) -> Float64:
+    def isf(self, q: Float64) -> Float64:
         """Computes the inverse survival function (inverse SF).
 
         Args:
@@ -197,7 +197,7 @@ struct Exponential(ContinuouslyDistributed):
         return self.loc - self.scale * log(q)
 
     # --- Summary statistics --------------------------------------------------
-    fn median(self) -> Float64:
+    def median(self) -> Float64:
         """Computes the median of the distribution: loc + scale * ln(2).
 
         Returns:
@@ -205,7 +205,7 @@ struct Exponential(ContinuouslyDistributed):
         """
         return self.loc + self.scale * log(2.0)
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean: loc + scale.
 
         Returns:
@@ -213,7 +213,7 @@ struct Exponential(ContinuouslyDistributed):
         """
         return self.loc + self.scale
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance: scale².
 
         Returns:
@@ -221,7 +221,7 @@ struct Exponential(ContinuouslyDistributed):
         """
         return self.scale * self.scale
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation: scale.
 
         Returns:

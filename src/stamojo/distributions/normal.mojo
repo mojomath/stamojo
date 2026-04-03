@@ -61,7 +61,7 @@ struct Normal(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -73,7 +73,7 @@ struct Normal(Copyable, Movable):
         var z = (x - self.mu) / self.sigma
         return _INV_SQRT_2PI / self.sigma * exp(-0.5 * z * z)
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -87,7 +87,7 @@ struct Normal(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         Args:
@@ -98,7 +98,7 @@ struct Normal(Copyable, Movable):
         """
         return 0.5 * erfc(-(x - self.mu) / (self.sigma * _SQRT2))
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -109,7 +109,7 @@ struct Normal(Copyable, Movable):
         """
         return 0.5 * erfc((x - self.mu) / (self.sigma * _SQRT2))
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Computes the percent-point function (quantile / inverse CDF).
 
         Returns the value *x* such that P(X ≤ x) = p.
@@ -130,7 +130,7 @@ struct Normal(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean.
 
         Returns:
@@ -138,7 +138,7 @@ struct Normal(Copyable, Movable):
         """
         return self.mu
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance σ².
 
         Returns:
@@ -146,7 +146,7 @@ struct Normal(Copyable, Movable):
         """
         return self.sigma * self.sigma
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation σ.
 
         Returns:
@@ -154,7 +154,7 @@ struct Normal(Copyable, Movable):
         """
         return self.sigma
 
-    fn entropy(self) -> Float64:
+    def entropy(self) -> Float64:
         """Computes the differential entropy of the distribution.
 
         Returns:
@@ -165,7 +165,7 @@ struct Normal(Copyable, Movable):
 
     # --- Random variate generation -------------------------------------------
 
-    fn rvs(self) -> Float64:
+    def rvs(self) -> Float64:
         """Generates a single random variate (Box-Muller transform).
 
         Returns:
@@ -178,7 +178,7 @@ struct Normal(Copyable, Movable):
         var z = sqrt(-2.0 * log(u1)) * cos(_2PI * u2)
         return self.mu + self.sigma * z
 
-    fn rvs(self, n: Int) -> List[Float64]:
+    def rvs(self, n: Int) -> List[Float64]:
         """Generates *n* random variates.
 
         Args:

@@ -49,7 +49,7 @@ struct FDist(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -69,7 +69,7 @@ struct FDist(Copyable, Movable):
                 return 0.0
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -91,7 +91,7 @@ struct FDist(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         CDF(x) = I_{d₁x/(d₁x+d₂)}(d₁/2, d₂/2).
@@ -109,7 +109,7 @@ struct FDist(Copyable, Movable):
         var u = d1 * x / (d1 * x + d2)
         return betainc(d1 / 2.0, d2 / 2.0, u)
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -120,7 +120,7 @@ struct FDist(Copyable, Movable):
         """
         return 1.0 - self.cdf(x)
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Computes the percent-point function (quantile / inverse CDF).
 
         Computed via Newton-Raphson with bisection fallback.
@@ -178,7 +178,7 @@ struct FDist(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean.  Defined for d₂ > 2.
 
         Returns:
@@ -188,7 +188,7 @@ struct FDist(Copyable, Movable):
             return self.dfd / (self.dfd - 2.0)
         return nan[DType.float64]()
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance.  Defined for d₂ > 4.
 
         Returns:
@@ -206,7 +206,7 @@ struct FDist(Copyable, Movable):
             )
         return nan[DType.float64]()
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation.
 
         Returns:

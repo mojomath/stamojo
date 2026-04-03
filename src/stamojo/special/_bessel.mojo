@@ -40,7 +40,7 @@ comptime _EULER_GAMMA: Float64 = 0.5772156649015328606
 # ===----------------------------------------------------------------------=== #
 
 
-fn _factorial(n: Int) -> Float64:
+def _factorial(n: Int) -> Float64:
     var res = 1.0
     for i in range(2, n + 1):
         res *= Float64(i)
@@ -52,7 +52,7 @@ fn _factorial(n: Int) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn j0(x: Float64) -> Float64:
+def j0(x: Float64) -> Float64:
     """Bessel function of the first kind of order 0.
 
     Args:
@@ -66,7 +66,7 @@ fn j0(x: Float64) -> Float64:
         from stamojo.special import j0
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(j0(1.0), 0.7651976865579666, atol=1e-12)
         ```
     """
@@ -87,7 +87,7 @@ fn j0(x: Float64) -> Float64:
     return res
 
 
-fn j1(x: Float64) -> Float64:
+def j1(x: Float64) -> Float64:
     """Bessel function of the first kind of order 1.
 
     Args:
@@ -101,7 +101,7 @@ fn j1(x: Float64) -> Float64:
         from stamojo.special import j1
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(j1(1.0), 0.44005058574493355, atol=1e-12)
         ```
     """
@@ -123,7 +123,7 @@ fn j1(x: Float64) -> Float64:
     return sign * res
 
 
-fn jn[n: Int](x: Float64) -> Float64:
+def jn[n: Int](x: Float64) -> Float64:
     """Bessel function of the first kind of order *n*.
 
     Parameters:
@@ -178,7 +178,7 @@ fn jn[n: Int](x: Float64) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn i0(x: Float64) -> Float64:
+def i0(x: Float64) -> Float64:
     """Modified Bessel function of the first kind of order 0.
 
     Args:
@@ -192,7 +192,7 @@ fn i0(x: Float64) -> Float64:
         from stamojo.special import i0
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(i0(1.0), 1.2660658777520082, atol=1e-12)
         ```
     """
@@ -205,7 +205,7 @@ fn i0(x: Float64) -> Float64:
     return res
 
 
-fn i1(x: Float64) -> Float64:
+def i1(x: Float64) -> Float64:
     """Modified Bessel function of the first kind of order 1.
 
     Args:
@@ -219,7 +219,7 @@ fn i1(x: Float64) -> Float64:
         from stamojo.special import i1
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(i1(1.0), 0.5651591039924851, atol=1e-12)
         ```
     """
@@ -232,7 +232,7 @@ fn i1(x: Float64) -> Float64:
     return res
 
 
-fn i0e(x: Float64) -> Float64:
+def i0e(x: Float64) -> Float64:
     """Exponentially scaled modified Bessel function of the first kind
     of order 0: ``i0e(x) = exp(-|x|) * i0(x)``.
 
@@ -247,14 +247,14 @@ fn i0e(x: Float64) -> Float64:
         from stamojo.special import i0e
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(i0e(1.0), 0.4657596075936405, atol=1e-12)
         ```
     """
     return i0(x) * exp(-abs(x))
 
 
-fn i1e(x: Float64) -> Float64:
+def i1e(x: Float64) -> Float64:
     """Exponentially scaled modified Bessel function of the first kind
     of order 1: ``i1e(x) = exp(-|x|) * i1(x)``.
 
@@ -269,7 +269,7 @@ fn i1e(x: Float64) -> Float64:
         from stamojo.special import i1e
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(i1e(1.0), 0.2079104153497085, atol=1e-12)
         ```
     """
@@ -281,7 +281,7 @@ fn i1e(x: Float64) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn y0(x: Float64) -> Float64:
+def y0(x: Float64) -> Float64:
     """Bessel function of the second kind of order 0.
 
     Defined for x > 0.  Returns -∞ at x = 0 and NaN for x < 0.
@@ -297,7 +297,7 @@ fn y0(x: Float64) -> Float64:
         from stamojo.special import y0
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(y0(1.0), 0.08825696421567697, atol=1e-12)
         ```
     """
@@ -323,7 +323,7 @@ fn y0(x: Float64) -> Float64:
     return sqrt(2.0 / (_PI * x)) * sin(t)
 
 
-fn y1(x: Float64) -> Float64:
+def y1(x: Float64) -> Float64:
     """Bessel function of the second kind of order 1.
 
     Defined for x > 0.  Returns -∞ at x = 0 and NaN for x < 0.
@@ -339,7 +339,7 @@ fn y1(x: Float64) -> Float64:
         from stamojo.special import y1
         from std.testing import assert_almost_equal
 
-        fn main() raises:
+        def main() raises:
             assert_almost_equal(y1(1.0), -0.7812128213002887, atol=1e-12)
         ```
     """

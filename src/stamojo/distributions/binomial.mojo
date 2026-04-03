@@ -42,7 +42,7 @@ struct Binomial(DiscretelyDistributed):
 
     # --- Initialization -------------------------------------------------------
 
-    fn __init__(out self, n: Int, p: Float64):
+    def __init__(out self, n: Int, p: Float64):
         """Constructs a Binomial distribution.
 
         Args:
@@ -54,7 +54,7 @@ struct Binomial(DiscretelyDistributed):
 
     # --- Probability functions ------------------------------------------------
 
-    fn pmf(self, k: Int) -> Float64:
+    def pmf(self, k: Int) -> Float64:
         """Computes the probability mass function at *k*.
 
         Args:
@@ -65,7 +65,7 @@ struct Binomial(DiscretelyDistributed):
         """
         return exp(self.logpmf(k))
 
-    fn logpmf(self, k: Int) -> Float64:
+    def logpmf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the PMF at *k*.
 
         Args:
@@ -88,7 +88,7 @@ struct Binomial(DiscretelyDistributed):
         var logc = _log_binomial_coefficient(self.n, k)
         return logc + kf * log(self.p) + (nf - kf) * log1p(-self.p)
 
-    fn cdf(self, k: Int) -> Float64:
+    def cdf(self, k: Int) -> Float64:
         """Computes the cumulative distribution function P(X ≤ k).
 
         Args:
@@ -119,7 +119,7 @@ struct Binomial(DiscretelyDistributed):
 
         return total
 
-    fn logcdf(self, k: Int) -> Float64:
+    def logcdf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the CDF at *k*.
 
         Args:
@@ -133,7 +133,7 @@ struct Binomial(DiscretelyDistributed):
             return -inf[DType.float64]()
         return log(c)
 
-    fn sf(self, k: Int) -> Float64:
+    def sf(self, k: Int) -> Float64:
         """Computes the survival function (1 − CDF) at *k*.
 
         Args:
@@ -144,7 +144,7 @@ struct Binomial(DiscretelyDistributed):
         """
         return 1.0 - self.cdf(k)
 
-    fn logsf(self, k: Int) -> Float64:
+    def logsf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the survival function at *k*.
 
         Args:
@@ -155,7 +155,7 @@ struct Binomial(DiscretelyDistributed):
         """
         return log1p(-self.cdf(k))
 
-    fn ppf(self, q: Float64) -> Int:
+    def ppf(self, q: Float64) -> Int:
         """Computes the percent point function (inverse CDF).
 
         Args:
@@ -177,7 +177,7 @@ struct Binomial(DiscretelyDistributed):
 
         return self.n
 
-    fn isf(self, q: Float64) -> Int:
+    def isf(self, q: Float64) -> Int:
         """Computes the inverse survival function (inverse SF).
 
         Args:
@@ -200,7 +200,7 @@ struct Binomial(DiscretelyDistributed):
         return self.n
 
     # --- Summary statistics --------------------------------------------------
-    fn median(self) -> UInt:
+    def median(self) -> UInt:
         """Computes the median of the distribution: floor(n * p + 0.5).
 
         Returns:
@@ -208,7 +208,7 @@ struct Binomial(DiscretelyDistributed):
         """
         return UInt(floor(Float64(self.n) * self.p + 0.5))
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean: n * p.
 
         Returns:
@@ -216,7 +216,7 @@ struct Binomial(DiscretelyDistributed):
         """
         return Float64(self.n) * self.p
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance: n * p * (1 - p).
 
         Returns:
@@ -225,7 +225,7 @@ struct Binomial(DiscretelyDistributed):
         var np = Float64(self.n) * self.p
         return np * (1.0 - self.p)
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation: sqrt(n * p * (1 - p)).
 
         Returns:
@@ -239,7 +239,7 @@ struct Binomial(DiscretelyDistributed):
 # ===----------------------------------------------------------------------=== #
 
 
-fn _log_binomial_coefficient(n: Int, k: Int) -> Float64:
+def _log_binomial_coefficient(n: Int, k: Int) -> Float64:
     """Computes the log of the binomial coefficient C(n, k).
 
     Args:

@@ -32,7 +32,7 @@ from stamojo.stats import (
 # ===----------------------------------------------------------------------=== #
 
 
-fn _py_f64(obj: PythonObject) -> Float64:
+def _py_f64(obj: PythonObject) -> Float64:
     """Converts a PythonObject holding a numeric value to Float64."""
     try:
         return atof(String(obj))
@@ -45,7 +45,7 @@ fn _py_f64(obj: PythonObject) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_mean() raises:
+def test_mean() raises:
     """Tests arithmetic mean."""
     var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
     assert_almost_equal(mean(data), 3.0, atol=1e-15)
@@ -54,7 +54,7 @@ fn test_mean() raises:
     assert_almost_equal(mean(data2), 10.0, atol=1e-15)
 
 
-fn test_variance() raises:
+def test_variance() raises:
     """Tests variance (population and sample)."""
     var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
@@ -64,14 +64,14 @@ fn test_variance() raises:
     assert_almost_equal(variance(data, ddof=1), 32.0 / 7.0, atol=1e-12)
 
 
-fn test_std() raises:
+def test_std() raises:
     """Tests standard deviation."""
     var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
 
     assert_almost_equal(stddev(data, ddof=0), 2.0, atol=1e-12)
 
 
-fn test_median_odd() raises:
+def test_median_odd() raises:
     """Tests median with odd-length data."""
     var data: List[Float64] = [3.0, 1.0, 2.0]
     assert_almost_equal(median(data), 2.0, atol=1e-15)
@@ -80,13 +80,13 @@ fn test_median_odd() raises:
     assert_almost_equal(median(data2), 3.0, atol=1e-15)
 
 
-fn test_median_even() raises:
+def test_median_even() raises:
     """Tests median with even-length data."""
     var data: List[Float64] = [3.0, 1.0, 2.0, 4.0]
     assert_almost_equal(median(data), 2.5, atol=1e-15)
 
 
-fn test_quantile() raises:
+def test_quantile() raises:
     """Tests quantile function."""
     var data = List[Float64]()
     for i in range(1, 11):
@@ -101,13 +101,13 @@ fn test_quantile() raises:
     assert_almost_equal(quantile(data, 0.25), 3.25, atol=1e-12)
 
 
-fn test_skewness_symmetric() raises:
+def test_skewness_symmetric() raises:
     """Tests skewness of perfectly symmetric data is 0."""
     var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
     assert_almost_equal(skewness(data), 0.0, atol=1e-12)
 
 
-fn test_kurtosis_uniform() raises:
+def test_kurtosis_uniform() raises:
     """Tests kurtosis of uniform-like data is negative (platykurtic)."""
     var data = List[Float64]()
     for i in range(1, 101):
@@ -121,7 +121,7 @@ fn test_kurtosis_uniform() raises:
         )
 
 
-fn test_min_max() raises:
+def test_min_max() raises:
     """Tests data_min and data_max."""
     var data: List[Float64] = [3.0, 1.0, 4.0, 1.5, 9.0, 2.6]
 
@@ -129,7 +129,7 @@ fn test_min_max() raises:
     assert_almost_equal(data_max(data), 9.0, atol=1e-15)
 
 
-fn test_scipy_comparison() raises:
+def test_scipy_comparison() raises:
     """Tests descriptive statistics against numpy/scipy."""
     try:
         var np = Python.import_module("numpy")
@@ -154,7 +154,7 @@ fn test_scipy_comparison() raises:
         print("⊘ test_scipy_comparison skipped (numpy not available)")
 
 
-fn test_gmean() raises:
+def test_gmean() raises:
     """Tests geometric mean."""
     # first three test values are from scipy examples.
     var data: List[Float64] = [1.0, 4.0]
@@ -189,7 +189,7 @@ fn test_gmean() raises:
         print("⊘ test_gmean scipy comparison skipped (scipy not available)")
 
 
-fn test_hmean() raises:
+def test_hmean() raises:
     """Tests harmonic mean."""
     # first three test values are from scipy examples.
     var data: List[Float64] = [1.0, 4.0]
@@ -229,5 +229,5 @@ fn test_hmean() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn main() raises:
+def main() raises:
     TestSuite.discover_tests[__functions_in_module()]().run()
