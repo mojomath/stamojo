@@ -12,7 +12,7 @@ The gamma distribution with shape *a* and scale *θ* has PDF::
     f(x; a, θ) = x^{a-1} exp(−x/θ) / (θ^a Γ(a)),  x > 0
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf, floor, pow
+from std.math import sqrt, log, lgamma, exp, nan, inf, floor, pow
 
 from stamojo.special import gammainc, gammaincc, ndtri
 

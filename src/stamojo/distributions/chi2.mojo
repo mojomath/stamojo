@@ -12,7 +12,7 @@ The chi-squared distribution with *k* degrees of freedom has PDF::
     f(x; k) = x^{k/2−1} exp(−x/2) / (2^{k/2} Γ(k/2)),  x > 0
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import gammainc, gammaincc, ndtri
 
@@ -43,7 +43,7 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         if x < 0.0:
             return 0.0
@@ -56,7 +56,7 @@ struct ChiSquared(Copyable, Movable):
                 return 0.0
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         if x <= 0.0:
             return -inf[DType.float64]()
@@ -70,7 +70,7 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x).
 
         CDF(x; k) = P(k/2, x/2) (regularized lower incomplete gamma).
@@ -79,13 +79,13 @@ struct ChiSquared(Copyable, Movable):
             return 0.0
         return gammainc(self.df / 2.0, x / 2.0)
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         if x <= 0.0:
             return 1.0
         return gammaincc(self.df / 2.0, x / 2.0)
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Percent-point function (quantile / inverse CDF).
 
         Uses the Wilson-Hilferty initial approximation refined by
@@ -152,14 +152,14 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean = k."""
         return self.df
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance = 2k."""
         return 2.0 * self.df
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation = √(2k)."""
         return sqrt(2.0 * self.df)

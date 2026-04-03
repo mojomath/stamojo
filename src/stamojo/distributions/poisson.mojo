@@ -12,7 +12,7 @@ The Poisson distribution with rate parameter *μ* has PMF::
     P(X = k; μ) = μ^k exp(−μ) / k!,  k = 0, 1, 2, ...
 """
 
-from math import log, exp, lgamma, nan, inf, floor, sqrt
+from std.math import log, exp, lgamma, nan, inf, floor, sqrt
 
 from stamojo.distributions.traits import DiscretelyDistributed
 from stamojo.special import gammaincc

@@ -12,7 +12,7 @@ The Student's t-distribution with ν degrees of freedom has PDF::
     f(x; ν) = Γ((ν+1)/2) / (√(νπ) Γ(ν/2)) (1 + x²/ν)^{-(ν+1)/2}
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import betainc, ndtri
 
@@ -43,11 +43,11 @@ struct StudentT(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         var v = self.df
         return (
@@ -60,7 +60,7 @@ struct StudentT(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x).
 
         Uses the regularized incomplete beta function:
@@ -76,7 +76,7 @@ struct StudentT(Copyable, Movable):
         else:
             return 0.5 * ib
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         var v = self.df
         var u = v / (v + x * x)
@@ -86,7 +86,7 @@ struct StudentT(Copyable, Movable):
         else:
             return 1.0 - 0.5 * ib
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Percent-point function (quantile / inverse CDF).
 
         Computed via Newton-Raphson with bisection fallback.
@@ -140,13 +140,13 @@ struct StudentT(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean.  Defined for df > 1."""
         if self.df > 1.0:
             return 0.0
         return nan[DType.float64]()
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2.
         """
         if self.df > 2.0:
@@ -155,6 +155,6 @@ struct StudentT(Copyable, Movable):
             return inf[DType.float64]()
         return nan[DType.float64]()
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation."""
         return sqrt(self.variance())

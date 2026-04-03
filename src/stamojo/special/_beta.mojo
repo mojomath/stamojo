@@ -22,7 +22,7 @@ Reference:
     Press et al., Numerical Recipes, 3rd ed., Section 6.4.
 """
 
-from math import lgamma, exp, log, nan
+from std.math import lgamma, exp, log, nan
 
 
 # ===----------------------------------------------------------------------=== #
@@ -39,7 +39,7 @@ comptime _FPMIN = 1.0e-30
 # ===----------------------------------------------------------------------=== #
 
 
-fn lbeta(a: Float64, b: Float64) -> Float64:
+def lbeta(a: Float64, b: Float64) -> Float64:
     """Natural logarithm of the beta function.
 
     Computes ln(B(a, b)) = ln(Γ(a)) + ln(Γ(b)) - ln(Γ(a+b)).
@@ -54,7 +54,7 @@ fn lbeta(a: Float64, b: Float64) -> Float64:
     return lgamma(a) + lgamma(b) - lgamma(a + b)
 
 
-fn beta(a: Float64, b: Float64) -> Float64:
+def beta(a: Float64, b: Float64) -> Float64:
     """Beta function B(a, b) = Γ(a)Γ(b) / Γ(a+b).
 
     Args:
@@ -67,7 +67,7 @@ fn beta(a: Float64, b: Float64) -> Float64:
     return exp(lbeta(a, b))
 
 
-fn betainc(a: Float64, b: Float64, x: Float64) -> Float64:
+def betainc(a: Float64, b: Float64, x: Float64) -> Float64:
     """Regularized incomplete beta function I_x(a, b).
 
     Computes I_x(a, b) = B(x; a, b) / B(a, b), where B(x; a, b) is the
@@ -107,7 +107,7 @@ fn betainc(a: Float64, b: Float64, x: Float64) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn _betainc_cf(
+def _betainc_cf(
     a: Float64, b: Float64, x: Float64, lbeta_ab: Float64
 ) -> Float64:
     """Evaluate the regularized incomplete beta function using Lentz's

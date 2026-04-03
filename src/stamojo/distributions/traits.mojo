@@ -10,55 +10,55 @@ trait ContinuouslyDistributed(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         ...
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         ...
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x)."""
         ...
 
-    fn logcdf(self, x: Float64) -> Float64:
+    def logcdf(self, x: Float64) -> Float64:
         """Natural logarithm of the cumulative distribution function at *x*."""
         ...
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         ...
 
-    fn logsf(self, x: Float64) -> Float64:
+    def logsf(self, x: Float64) -> Float64:
         """Natural logarithm of the survival function at *x*."""
         ...
 
-    fn ppf(self, q: Float64) -> Float64:
+    def ppf(self, q: Float64) -> Float64:
         """Percent point function (inverse of CDF) at *q*."""
         ...
 
-    fn isf(self, q: Float64) -> Float64:
+    def isf(self, q: Float64) -> Float64:
         """Inverse survival function (inverse of SF) at *q*."""
         ...
 
     # --- Statistical properties ----------------------------------------------
 
-    fn median(self) -> Float64:
+    def median(self) -> Float64:
         """Median of the distribution."""
         ...
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Mean of the distribution."""
         ...
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Variance of the distribution."""
         ...
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Standard deviation of the distribution."""
         ...
 
@@ -68,54 +68,54 @@ trait DiscretelyDistributed(Copyable, Movable):
 
     # --- Probability mass functions ------------------------------------------
 
-    fn pmf(self, k: Int) -> Float64:
+    def pmf(self, k: Int) -> Float64:
         """Probability mass function at *k*."""
         ...
 
-    fn logpmf(self, k: Int) -> Float64:
+    def logpmf(self, k: Int) -> Float64:
         """Natural logarithm of the probability mass function at *k*."""
         ...
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, k: Int) -> Float64:
+    def cdf(self, k: Int) -> Float64:
         """Cumulative distribution function P(X ≤ k)."""
         ...
 
-    fn logcdf(self, k: Int) -> Float64:
+    def logcdf(self, k: Int) -> Float64:
         """Natural logarithm of the cumulative distribution function at *k*."""
         ...
 
-    fn sf(self, k: Int) -> Float64:
+    def sf(self, k: Int) -> Float64:
         """Survival function (1 − CDF) at *k*."""
         ...
 
-    fn logsf(self, k: Int) -> Float64:
+    def logsf(self, k: Int) -> Float64:
         """Natural logarithm of the survival function at *k*."""
         ...
 
-    fn ppf(self, q: Float64) -> Int:
+    def ppf(self, q: Float64) -> Int:
         """Percent point function (inverse of CDF) at *q*."""
         ...
 
-    fn isf(self, q: Float64) -> Int:
+    def isf(self, q: Float64) -> Int:
         """Inverse survival function (inverse of SF) at *q*."""
         ...
 
     # --- Statistical properties ----------------------------------------------
 
-    fn median(self) -> UInt:
+    def median(self) -> UInt:
         """Median of the distribution."""
         ...
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Mean of the distribution."""
         ...
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Variance of the distribution."""
         ...
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Standard deviation of the distribution."""
         ...

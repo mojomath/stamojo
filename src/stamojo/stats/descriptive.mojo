@@ -19,7 +19,7 @@ Provides functions for computing summary statistics of ``List[Float64]`` data:
 - ``hmean`` — Harmonic mean
 """
 
-from math import sqrt, nan, log, exp
+from std.math import sqrt, nan, log, exp
 
 
 # ===----------------------------------------------------------------------=== #
@@ -27,7 +27,7 @@ from math import sqrt, nan, log, exp
 # ===----------------------------------------------------------------------=== #
 
 
-fn _sorted_copy(data: List[Float64]) -> List[Float64]:
+def _sorted_copy(data: List[Float64]) -> List[Float64]:
     """Return a sorted copy of *data* (ascending, insertion sort)."""
     var result = data.copy()
     var n = len(result)
@@ -46,7 +46,7 @@ fn _sorted_copy(data: List[Float64]) -> List[Float64]:
 # ===----------------------------------------------------------------------=== #
 
 
-fn mean(data: List[Float64]) -> Float64:
+def mean(data: List[Float64]) -> Float64:
     """Arithmetic mean of *data*.
 
     Args:
@@ -64,7 +64,7 @@ fn mean(data: List[Float64]) -> Float64:
     return s / Float64(n)
 
 
-fn variance(data: List[Float64], ddof: Int = 0) -> Float64:
+def variance(data: List[Float64], ddof: Int = 0) -> Float64:
     """Variance of *data*.
 
     Args:
@@ -86,7 +86,7 @@ fn variance(data: List[Float64], ddof: Int = 0) -> Float64:
     return ss / Float64(n - ddof)
 
 
-fn stddev(data: List[Float64], ddof: Int = 0) -> Float64:
+def stddev(data: List[Float64], ddof: Int = 0) -> Float64:
     """Standard deviation of *data*.
 
     Args:
@@ -99,7 +99,7 @@ fn stddev(data: List[Float64], ddof: Int = 0) -> Float64:
     return sqrt(variance(data, ddof))
 
 
-fn median(data: List[Float64]) -> Float64:
+def median(data: List[Float64]) -> Float64:
     """Median of *data*.
 
     Args:
@@ -120,7 +120,7 @@ fn median(data: List[Float64]) -> Float64:
         return (sorted_data[n // 2 - 1] + sorted_data[n // 2]) / 2.0
 
 
-fn quantile(data: List[Float64], q: Float64) -> Float64:
+def quantile(data: List[Float64], q: Float64) -> Float64:
     """Quantile of *data* using linear interpolation (NumPy default).
 
     Args:
@@ -150,7 +150,7 @@ fn quantile(data: List[Float64], q: Float64) -> Float64:
     return sorted_data[lo] * (1.0 - frac) + sorted_data[hi] * frac
 
 
-fn skewness(data: List[Float64]) -> Float64:
+def skewness(data: List[Float64]) -> Float64:
     """Fisher's skewness (bias-corrected) of *data*.
 
     Computes the adjusted Fisher-Pearson standardized moment coefficient::
@@ -183,7 +183,7 @@ fn skewness(data: List[Float64]) -> Float64:
     return m3 * fn_ / ((fn_ - 1.0) * (fn_ - 2.0))
 
 
-fn kurtosis(data: List[Float64], excess: Bool = True) -> Float64:
+def kurtosis(data: List[Float64], excess: Bool = True) -> Float64:
     """Kurtosis of *data* (bias-corrected).
 
     Uses the standard bias-corrected formula matching ``scipy.stats.kurtosis``
@@ -225,7 +225,7 @@ fn kurtosis(data: List[Float64], excess: Bool = True) -> Float64:
         return kurt + 3.0
 
 
-fn data_min(data: List[Float64]) -> Float64:
+def data_min(data: List[Float64]) -> Float64:
     """Minimum value in *data*.
 
     Args:
@@ -244,7 +244,7 @@ fn data_min(data: List[Float64]) -> Float64:
     return result
 
 
-fn data_max(data: List[Float64]) -> Float64:
+def data_max(data: List[Float64]) -> Float64:
     """Maximum value in *data*.
 
     Args:
@@ -266,7 +266,7 @@ fn data_max(data: List[Float64]) -> Float64:
 # TODO: Due to limitation in mojo compiler in 0.26.1 (resolved in nightly), we can't have Optional[List].
 # Once we have that, we can make weights optional and handle the unweighted case more cleanly.
 # For now, we can just require an empty list for unweighted case.
-fn gmean(data: List[Float64], weights: List[Float64]) -> Float64:
+def gmean(data: List[Float64], weights: List[Float64]) -> Float64:
     """Compute the weighted geometric mean of a list of values.
 
     The geometric mean is the nth root of the product of n values. If weights are provided,
@@ -320,7 +320,7 @@ fn gmean(data: List[Float64], weights: List[Float64]) -> Float64:
     return exp(log_sum / Float64(n))
 
 
-fn hmean(data: List[Float64], weights: List[Float64]) -> Float64:
+def hmean(data: List[Float64], weights: List[Float64]) -> Float64:
     """
     Compute the weighted harmonic mean of a list of values.
 

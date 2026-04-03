@@ -34,7 +34,7 @@ from stamojo.distributions import (
 # ===----------------------------------------------------------------------=== #
 
 
-fn _load_scipy_stats() -> PythonObject:
+def _load_scipy_stats() -> PythonObject:
     """Try to import scipy.stats.  Returns Python None if unavailable."""
     try:
         return Python.import_module("scipy.stats")
@@ -42,7 +42,7 @@ fn _load_scipy_stats() -> PythonObject:
         return PythonObject(None)
 
 
-fn _py_f64(obj: PythonObject) -> Float64:
+def _py_f64(obj: PythonObject) -> Float64:
     """Convert a PythonObject holding a numeric value to Float64."""
     try:
         return atof(String(obj))
@@ -55,7 +55,7 @@ fn _py_f64(obj: PythonObject) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_normal_pdf() raises:
+def test_normal_pdf() raises:
     """Test Normal PDF at known values."""
     var n = Normal(0.0, 1.0)
     # PDF at 0 for standard normal ≈ 1/√(2π) ≈ 0.3989422804014327
@@ -68,7 +68,7 @@ fn test_normal_pdf() raises:
     assert_almost_equal(n2.pdf(5.0), 0.19947114020071635, atol=1e-12)
 
 
-fn test_normal_cdf() raises:
+def test_normal_cdf() raises:
     """Test Normal CDF at known values."""
     var n = Normal(0.0, 1.0)
     assert_almost_equal(n.cdf(0.0), 0.5, atol=1e-15)
@@ -79,7 +79,7 @@ fn test_normal_cdf() raises:
     assert_almost_equal(n.cdf(10.0), 1.0, atol=1e-15)
 
 
-fn test_normal_ppf() raises:
+def test_normal_ppf() raises:
     """Test Normal PPF (inverse CDF)."""
     var n = Normal(0.0, 1.0)
     assert_almost_equal(n.ppf(0.5), 0.0, atol=1e-12)
@@ -92,7 +92,7 @@ fn test_normal_ppf() raises:
     assert_almost_equal(n2.ppf(n2.cdf(15.0)), 15.0, atol=1e-10)
 
 
-fn test_normal_cdf_ppf_roundtrip() raises:
+def test_normal_cdf_ppf_roundtrip() raises:
     """Test CDF(PPF(p)) ≈ p for many probability values."""
     var n = Normal(0.0, 1.0)
     var ps: List[Float64] = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99]
@@ -102,14 +102,14 @@ fn test_normal_cdf_ppf_roundtrip() raises:
         assert_almost_equal(n.cdf(n.ppf(p)), p, atol=1e-10)
 
 
-fn test_normal_sf() raises:
+def test_normal_sf() raises:
     """Test Normal survival function."""
     var n = Normal(0.0, 1.0)
     assert_almost_equal(n.sf(0.0), 0.5, atol=1e-15)
     assert_almost_equal(n.cdf(1.5) + n.sf(1.5), 1.0, atol=1e-15)
 
 
-fn test_normal_stats() raises:
+def test_normal_stats() raises:
     """Test Normal distribution statistics."""
     var n = Normal(3.0, 2.0)
     assert_almost_equal(n.mean(), 3.0, atol=1e-15)
@@ -117,7 +117,7 @@ fn test_normal_stats() raises:
     assert_almost_equal(n.std(), 2.0, atol=1e-15)
 
 
-fn test_normal_scipy() raises:
+def test_normal_scipy() raises:
     """Test Normal distribution against scipy.stats.norm."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -140,14 +140,14 @@ fn test_normal_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_t_pdf_symmetry() raises:
+def test_t_pdf_symmetry() raises:
     """Test Student's t PDF is symmetric about 0."""
     var t = StudentT(5.0)
     assert_almost_equal(t.pdf(1.0), t.pdf(-1.0), atol=1e-15)
     assert_almost_equal(t.pdf(2.5), t.pdf(-2.5), atol=1e-15)
 
 
-fn test_t_cdf() raises:
+def test_t_cdf() raises:
     """Test Student's t CDF at known values."""
     # Cauchy distribution (df=1): CDF(0)=0.5, CDF(1)=0.75
     var t1 = StudentT(1.0)
@@ -160,7 +160,7 @@ fn test_t_cdf() raises:
     assert_almost_equal(t5.cdf(2.0) + t5.cdf(-2.0), 1.0, atol=1e-10)
 
 
-fn test_t_ppf() raises:
+def test_t_ppf() raises:
     """Test Student's t PPF."""
     var t5 = StudentT(5.0)
     assert_almost_equal(t5.ppf(0.5), 0.0, atol=1e-10)
@@ -170,14 +170,14 @@ fn test_t_ppf() raises:
     assert_almost_equal(t5.cdf(t5.ppf(0.9)), 0.9, atol=1e-6)
 
 
-fn test_t_stats() raises:
+def test_t_stats() raises:
     """Test Student's t distribution statistics."""
     var t5 = StudentT(5.0)
     assert_almost_equal(t5.mean(), 0.0, atol=1e-15)
     assert_almost_equal(t5.variance(), 5.0 / 3.0, atol=1e-12)
 
 
-fn test_t_scipy() raises:
+def test_t_scipy() raises:
     """Test Student's t distribution against scipy.stats.t."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -204,7 +204,7 @@ fn test_t_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_chi2_cdf() raises:
+def test_chi2_cdf() raises:
     """Test Chi-squared CDF at known values.
 
     For df=2: CDF(x) = 1 − exp(−x/2).
@@ -215,7 +215,7 @@ fn test_chi2_cdf() raises:
     assert_almost_equal(c2.cdf(0.0), 0.0, atol=1e-15)
 
 
-fn test_chi2_ppf() raises:
+def test_chi2_ppf() raises:
     """Test Chi-squared PPF (round-trip)."""
     var c5 = ChiSquared(5.0)
     assert_almost_equal(c5.cdf(c5.ppf(0.95)), 0.95, atol=1e-6)
@@ -223,14 +223,14 @@ fn test_chi2_ppf() raises:
     assert_almost_equal(c5.cdf(c5.ppf(0.01)), 0.01, atol=1e-6)
 
 
-fn test_chi2_stats() raises:
+def test_chi2_stats() raises:
     """Test Chi-squared distribution statistics."""
     var c5 = ChiSquared(5.0)
     assert_almost_equal(c5.mean(), 5.0, atol=1e-15)
     assert_almost_equal(c5.variance(), 10.0, atol=1e-15)
 
 
-fn test_chi2_scipy() raises:
+def test_chi2_scipy() raises:
     """Test Chi-squared distribution against scipy.stats.chi2."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -255,7 +255,7 @@ fn test_chi2_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_f_cdf_boundary() raises:
+def test_f_cdf_boundary() raises:
     """Test F-distribution CDF boundary and monotonicity."""
     var f = FDist(5.0, 10.0)
     assert_almost_equal(f.cdf(0.0), 0.0, atol=1e-15)
@@ -267,7 +267,7 @@ fn test_f_cdf_boundary() raises:
         raise Error("F CDF not monotonically increasing")
 
 
-fn test_f_ppf() raises:
+def test_f_ppf() raises:
     """Test F-distribution PPF (round-trip)."""
     var f = FDist(5.0, 10.0)
     assert_almost_equal(f.cdf(f.ppf(0.95)), 0.95, atol=1e-6)
@@ -275,14 +275,14 @@ fn test_f_ppf() raises:
     assert_almost_equal(f.cdf(f.ppf(0.1)), 0.1, atol=1e-6)
 
 
-fn test_f_stats() raises:
+def test_f_stats() raises:
     """Test F-distribution statistics."""
     var f = FDist(5.0, 10.0)
     # mean = d2 / (d2 - 2) = 10/8 = 1.25
     assert_almost_equal(f.mean(), 1.25, atol=1e-12)
 
 
-fn test_f_scipy() raises:
+def test_f_scipy() raises:
     """Test F-distribution against scipy.stats.f."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -303,7 +303,7 @@ fn test_f_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_expon_pdf() raises:
+def test_expon_pdf() raises:
     """Test Exponential PDF at known values."""
     var e = Exponential()
     # Standard exponential: pdf(0) = 1.0
@@ -324,7 +324,7 @@ fn test_expon_pdf() raises:
     assert_almost_equal(e3.pdf(0.5), 0.0, atol=1e-15)
 
 
-fn test_expon_logpdf() raises:
+def test_expon_logpdf() raises:
     """Test Exponential log-PDF at known values."""
     var e = Exponential()
     # logpdf(0) = 0.0 for standard exponential
@@ -338,7 +338,7 @@ fn test_expon_logpdf() raises:
     assert_almost_equal(e2.logpdf(3.0), -1.0 - log(3.0), atol=1e-15)
 
 
-fn test_expon_cdf() raises:
+def test_expon_cdf() raises:
     """Test Exponential CDF at known values."""
     var e = Exponential()
     # CDF(0) = 0
@@ -358,7 +358,7 @@ fn test_expon_cdf() raises:
     assert_almost_equal(e2.cdf(1.0), 1.0 - exp(-2.0), atol=1e-15)
 
 
-fn test_expon_sf() raises:
+def test_expon_sf() raises:
     """Test Exponential survival function: SF(x) = 1 - CDF(x)."""
     var e = Exponential()
     assert_almost_equal(e.sf(0.0), 1.0, atol=1e-15)
@@ -371,7 +371,7 @@ fn test_expon_sf() raises:
     assert_almost_equal(e.sf(-1.0), 1.0, atol=1e-15)
 
 
-fn test_expon_ppf() raises:
+def test_expon_ppf() raises:
     """Test Exponential PPF (inverse CDF)."""
     var e = Exponential()
     # PPF(0) = 0 (loc)
@@ -385,7 +385,7 @@ fn test_expon_ppf() raises:
     assert_almost_equal(e2.ppf(0.5), 1.0 + 2.0 * log(2.0), atol=1e-12)
 
 
-fn test_expon_cdf_ppf_roundtrip() raises:
+def test_expon_cdf_ppf_roundtrip() raises:
     """Test CDF(PPF(p)) ≈ p for many probability values."""
     var e = Exponential()
     var ps: List[Float64] = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99]
@@ -399,7 +399,7 @@ fn test_expon_cdf_ppf_roundtrip() raises:
         assert_almost_equal(e2.cdf(e2.ppf(p)), p, atol=1e-12)
 
 
-fn test_expon_isf() raises:
+def test_expon_isf() raises:
     """Test Exponential ISF (inverse survival function)."""
     var e = Exponential()
     # ISF(1) = loc = 0
@@ -413,7 +413,7 @@ fn test_expon_isf() raises:
         assert_almost_equal(e.isf(q), e.ppf(1.0 - q), atol=1e-12)
 
 
-fn test_expon_logcdf_logsf() raises:
+def test_expon_logcdf_logsf() raises:
     """Test log-CDF and log-SF against log of CDF and SF."""
     var e = Exponential()
     var xs: List[Float64] = [0.01, 0.1, 0.5, 1.0, 2.0, 5.0]
@@ -423,7 +423,7 @@ fn test_expon_logcdf_logsf() raises:
         assert_almost_equal(e.logsf(x), log(e.sf(x)), atol=1e-15)
 
 
-fn test_expon_stats() raises:
+def test_expon_stats() raises:
     """Test Exponential distribution summary statistics."""
     var e = Exponential()
     # Standard exponential: mean=1, var=1, std=1, median=ln(2)
@@ -439,7 +439,7 @@ fn test_expon_stats() raises:
     assert_almost_equal(e2.median(), 2.0 + 3.0 * log(2.0), atol=1e-15)
 
 
-fn test_expon_loc_scale() raises:
+def test_expon_loc_scale() raises:
     """Test Exponential with non-default loc and scale across all functions."""
     var loc = 5.0
     var scale = 2.0
@@ -454,7 +454,7 @@ fn test_expon_loc_scale() raises:
     assert_almost_equal(e.cdf(loc + scale), 1.0 - exp(-1.0), atol=1e-15)
 
 
-fn test_expon_scipy() raises:
+def test_expon_scipy() raises:
     """Test Exponential distribution against scipy.stats.expon."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -497,7 +497,7 @@ fn test_expon_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_binomial_pmf_basic() raises:
+def test_binomial_pmf_basic() raises:
     """Test Binomial PMF at known values."""
     var b = Binomial(10, 0.5)
     assert_almost_equal(b.pmf(0), 1.0 / 1024.0, atol=1e-12)
@@ -506,7 +506,7 @@ fn test_binomial_pmf_basic() raises:
     assert_almost_equal(b.pmf(11), 0.0, atol=1e-12)
 
 
-fn test_binomial_cdf_sf() raises:
+def test_binomial_cdf_sf() raises:
     """Test Binomial CDF and SF at known values."""
     var b = Binomial(4, 0.5)
     assert_almost_equal(b.cdf(2), 0.6875, atol=1e-12)
@@ -514,7 +514,7 @@ fn test_binomial_cdf_sf() raises:
     assert_almost_equal(b.cdf(4), 1.0, atol=1e-12)
 
 
-fn test_binomial_edge_p() raises:
+def test_binomial_edge_p() raises:
     """Test Binomial behavior for p=0 and p=1."""
     var b0 = Binomial(5, 0.0)
     assert_almost_equal(b0.pmf(0), 1.0, atol=1e-12)
@@ -529,21 +529,21 @@ fn test_binomial_edge_p() raises:
     assert_almost_equal(b1.cdf(5), 1.0, atol=1e-12)
 
 
-fn test_binomial_logpmf() raises:
+def test_binomial_logpmf() raises:
     """Test Binomial log-PMF consistency."""
     var b = Binomial(6, 0.3)
     var k = 2
     assert_almost_equal(b.logpmf(k), log(b.pmf(k)), atol=1e-12)
 
 
-fn test_binomial_symmetry_p_half() raises:
+def test_binomial_symmetry_p_half() raises:
     """Test Binomial symmetry for p=0.5."""
     var b = Binomial(10, 0.5)
     for k in range(0, 11):
         assert_almost_equal(b.pmf(k), b.pmf(10 - k), atol=1e-12)
 
 
-fn test_binomial_ppf_isf_roundtrip() raises:
+def test_binomial_ppf_isf_roundtrip() raises:
     """Test Binomial PPF/ISF consistency with CDF/SF."""
     var b = Binomial(12, 0.4)
     var qs: List[Float64] = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
@@ -563,7 +563,7 @@ fn test_binomial_ppf_isf_roundtrip() raises:
             raise Error("binomial isf: sf(k-1) <= q")
 
 
-fn test_binomial_scipy() raises:
+def test_binomial_scipy() raises:
     """Test Binomial distribution against scipy.stats.binom."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -596,7 +596,7 @@ fn test_binomial_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_gamma_pdf() raises:
+def test_gamma_pdf() raises:
     """Test Gamma PDF at known values."""
     var g = Gamma(2.0, 1.0)
     # PDF at x=1 for Gamma(2,1): 1*exp(-1) = exp(-1)
@@ -605,7 +605,7 @@ fn test_gamma_pdf() raises:
     assert_almost_equal(g.pdf(-1.0), 0.0, atol=1e-15)
 
 
-fn test_gamma_cdf() raises:
+def test_gamma_cdf() raises:
     """Test Gamma CDF at known values."""
     var g = Gamma(1.0, 1.0)
     # Gamma(1,1) = Exponential(1): CDF(x) = 1 - exp(-x)
@@ -613,7 +613,7 @@ fn test_gamma_cdf() raises:
     assert_almost_equal(g.cdf(2.0), 1.0 - exp(-2.0), atol=1e-12)
 
 
-fn test_gamma_ppf_roundtrip() raises:
+def test_gamma_ppf_roundtrip() raises:
     """Test Gamma PPF round-trip."""
     var g = Gamma(3.0, 2.0)
     assert_almost_equal(g.cdf(g.ppf(0.5)), 0.5, atol=1e-6)
@@ -621,7 +621,7 @@ fn test_gamma_ppf_roundtrip() raises:
     assert_almost_equal(g.cdf(g.ppf(0.1)), 0.1, atol=1e-6)
 
 
-fn test_gamma_stats() raises:
+def test_gamma_stats() raises:
     """Test Gamma distribution statistics."""
     var g = Gamma(4.0, 3.0)
     # mean = a*scale = 12
@@ -632,7 +632,7 @@ fn test_gamma_stats() raises:
     assert_almost_equal(g.std(), 6.0, atol=1e-12)
 
 
-fn test_gamma_scipy() raises:
+def test_gamma_scipy() raises:
     """Test Gamma distribution against scipy.stats.gamma."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -655,7 +655,7 @@ fn test_gamma_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_beta_pdf() raises:
+def test_beta_pdf() raises:
     """Test Beta PDF at known values."""
     var b = Beta(2.0, 2.0)
     # PDF at 0.5 for Beta(2,2): 6 * 0.25 = 1.5
@@ -665,7 +665,7 @@ fn test_beta_pdf() raises:
     assert_almost_equal(b.pdf(1.1), 0.0, atol=1e-15)
 
 
-fn test_beta_cdf() raises:
+def test_beta_cdf() raises:
     """Test Beta CDF at known values."""
     var b = Beta(1.0, 1.0)
     # Beta(1,1) = Uniform(0,1): CDF(x) = x
@@ -673,7 +673,7 @@ fn test_beta_cdf() raises:
     assert_almost_equal(b.cdf(0.7), 0.7, atol=1e-12)
 
 
-fn test_beta_ppf_roundtrip() raises:
+def test_beta_ppf_roundtrip() raises:
     """Test Beta PPF round-trip."""
     var b = Beta(3.0, 5.0)
     assert_almost_equal(b.cdf(b.ppf(0.5)), 0.5, atol=1e-6)
@@ -681,7 +681,7 @@ fn test_beta_ppf_roundtrip() raises:
     assert_almost_equal(b.cdf(b.ppf(0.1)), 0.1, atol=1e-6)
 
 
-fn test_beta_stats() raises:
+def test_beta_stats() raises:
     """Test Beta distribution statistics."""
     var b = Beta(2.0, 3.0)
     # mean = a/(a+b) = 2/5 = 0.4
@@ -690,7 +690,7 @@ fn test_beta_stats() raises:
     assert_almost_equal(b.variance(), 0.04, atol=1e-12)
 
 
-fn test_beta_scipy() raises:
+def test_beta_scipy() raises:
     """Test Beta distribution against scipy.stats.beta."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -713,7 +713,7 @@ fn test_beta_scipy() raises:
 # ===----------------------------------------------------------------------=== #
 
 
-fn test_poisson_pmf() raises:
+def test_poisson_pmf() raises:
     """Test Poisson PMF at known values."""
     var p = Poisson(3.0)
     # PMF at k=0: exp(-3)
@@ -724,7 +724,7 @@ fn test_poisson_pmf() raises:
     assert_almost_equal(p.pmf(-1), 0.0, atol=1e-15)
 
 
-fn test_poisson_cdf() raises:
+def test_poisson_cdf() raises:
     """Test Poisson CDF at known values."""
     var p = Poisson(1.0)
     # CDF at k=0: exp(-1)
@@ -733,7 +733,7 @@ fn test_poisson_cdf() raises:
     assert_almost_equal(p.cdf(1), 2.0 * exp(-1.0), atol=1e-12)
 
 
-fn test_poisson_stats() raises:
+def test_poisson_stats() raises:
     """Test Poisson distribution statistics."""
     var p = Poisson(5.0)
     assert_almost_equal(p.mean(), 5.0, atol=1e-15)
@@ -741,7 +741,7 @@ fn test_poisson_stats() raises:
     assert_almost_equal(p.std(), sqrt(5.0), atol=1e-12)
 
 
-fn test_poisson_scipy() raises:
+def test_poisson_scipy() raises:
     """Test Poisson distribution against scipy.stats.poisson."""
     var sp = _load_scipy_stats()
     if sp is None:
@@ -758,10 +758,11 @@ fn test_poisson_scipy() raises:
         assert_almost_equal(p.pmf(k), sp_pmf, atol=1e-10)
         assert_almost_equal(p.cdf(k), sp_cdf, atol=1e-10)
 
+
 # ===----------------------------------------------------------------------=== #
 # Main test runner
 # ===----------------------------------------------------------------------=== #
 
 
-fn main() raises:
+def main() raises:
     TestSuite.discover_tests[__functions_in_module()]().run()
