@@ -29,7 +29,7 @@ Reference:
     Press et al., Numerical Recipes, 3rd ed., Section 6.2.
 """
 
-from math import lgamma, exp, log, nan, inf
+from std.math import lgamma, exp, log, nan, inf
 
 
 # ===----------------------------------------------------------------------=== #
@@ -47,7 +47,7 @@ comptime _FPMIN = 1.0e-30  # Near smallest representable floating-point number.
 # ===----------------------------------------------------------------------=== #
 
 
-fn _is_near_integer(a: Float64) -> Bool:
+def _is_near_integer(a: Float64) -> Bool:
     """Return True if `a` is within 1e-12 of a positive integer.
 
     When a is (close to) an integer, the continued-fraction expansion
@@ -66,7 +66,7 @@ fn _is_near_integer(a: Float64) -> Bool:
 # ===----------------------------------------------------------------------=== #
 
 
-fn gammainc(a: Float64, x: Float64) -> Float64:
+def gammainc(a: Float64, x: Float64) -> Float64:
     """Regularized lower incomplete gamma function P(a, x).
 
     Computes P(a, x) = γ(a, x) / Γ(a), where γ(a, x) is the lower
@@ -93,7 +93,7 @@ fn gammainc(a: Float64, x: Float64) -> Float64:
         return 1.0 - _gamma_cf(a, x)
 
 
-fn gammaincc(a: Float64, x: Float64) -> Float64:
+def gammaincc(a: Float64, x: Float64) -> Float64:
     """Regularized upper incomplete gamma function Q(a, x).
 
     Computes Q(a, x) = 1 - P(a, x) = Γ(a, x) / Γ(a), where Γ(a, x)
@@ -126,7 +126,7 @@ fn gammaincc(a: Float64, x: Float64) -> Float64:
 # ===----------------------------------------------------------------------=== #
 
 
-fn _gamma_series(a: Float64, x: Float64) -> Float64:
+def _gamma_series(a: Float64, x: Float64) -> Float64:
     """Evaluate the regularized lower incomplete gamma function P(a, x)
     by its series representation.
 
@@ -151,7 +151,7 @@ fn _gamma_series(a: Float64, x: Float64) -> Float64:
     return sum_val * exp(-x + a * log(x) - gln)
 
 
-fn _gamma_cf(a: Float64, x: Float64) -> Float64:
+def _gamma_cf(a: Float64, x: Float64) -> Float64:
     """Evaluate the regularized upper incomplete gamma function Q(a, x)
     by its continued fraction representation (modified Lentz's method).
 

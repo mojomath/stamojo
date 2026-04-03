@@ -18,8 +18,8 @@ Examples::
     n.ppf(0.975)                     # ≈ 1.96
 """
 
-from math import sqrt, log, cos, exp, erf, erfc, nan, inf
-from random import random_float64
+from std.math import sqrt, log, cos, exp, erf, erfc, nan, inf
+from std.random import random_float64
 
 from stamojo.special import ndtri
 
@@ -58,27 +58,27 @@ struct Normal(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         var z = (x - self.mu) / self.sigma
         return _INV_SQRT_2PI / self.sigma * exp(-0.5 * z * z)
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         var z = (x - self.mu) / self.sigma
         return -_LN_SQRT_2PI - log(self.sigma) - 0.5 * z * z
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x)."""
         return 0.5 * erfc(-(x - self.mu) / (self.sigma * _SQRT2))
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         return 0.5 * erfc((x - self.mu) / (self.sigma * _SQRT2))
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Percent-point function (quantile / inverse CDF).
 
         Returns the value *x* such that P(X ≤ x) = p.
@@ -99,26 +99,26 @@ struct Normal(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean."""
         return self.mu
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance σ²."""
         return self.sigma * self.sigma
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation σ."""
         return self.sigma
 
-    fn entropy(self) -> Float64:
+    def entropy(self) -> Float64:
         """Differential entropy of the distribution."""
         # H = 0.5 * ln(2πeσ²) = ln(σ√(2πe)) = ln(σ) + 0.5*ln(2π) + 0.5
         return _LN_SQRT_2PI + log(self.sigma) + 0.5
 
     # --- Random variate generation -------------------------------------------
 
-    fn rvs(self) -> Float64:
+    def rvs(self) -> Float64:
         """Generate a single random variate (Box-Muller transform)."""
         var u1 = random_float64()
         while u1 == 0.0:
@@ -127,7 +127,7 @@ struct Normal(Copyable, Movable):
         var z = sqrt(-2.0 * log(u1)) * cos(_2PI * u2)
         return self.mu + self.sigma * z
 
-    fn rvs(self, n: Int) -> List[Float64]:
+    def rvs(self, n: Int) -> List[Float64]:
         """Generate *n* random variates.
 
         Args:

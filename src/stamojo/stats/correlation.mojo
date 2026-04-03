@@ -14,7 +14,7 @@ The two-sided p-value tests the null hypothesis that the true correlation is
 zero.
 """
 
-from math import sqrt, nan
+from std.math import sqrt, nan
 
 from stamojo.distributions import Normal, StudentT
 from stamojo.stats.descriptive import mean
@@ -25,7 +25,7 @@ from stamojo.stats.descriptive import mean
 # ===----------------------------------------------------------------------=== #
 
 
-fn _rank_data(data: List[Float64]) -> List[Float64]:
+def _rank_data(data: List[Float64]) -> List[Float64]:
     """Assign ranks to data, handling ties by averaging.
 
     Returns a list of ranks (1-based) with the same length as *data*.
@@ -72,7 +72,7 @@ fn _rank_data(data: List[Float64]) -> List[Float64]:
 # ===----------------------------------------------------------------------=== #
 
 
-fn pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
+def pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Pearson product-moment correlation coefficient and p-value.
 
     The p-value is two-sided and tests H₀: ρ = 0 using the t-distribution
@@ -122,7 +122,7 @@ fn pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     return (r, p_value)
 
 
-fn spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
+def spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Spearman rank-order correlation coefficient and p-value.
 
     Computes the Pearson correlation of the rank-transformed data.
@@ -145,7 +145,7 @@ fn spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     return pearsonr(rx, ry)
 
 
-fn kendalltau(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
+def kendalltau(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
     """Kendall's tau-b rank correlation coefficient and p-value.
 
     Tau-b adjusts for ties. The p-value is two-sided based on the

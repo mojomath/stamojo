@@ -13,7 +13,7 @@ This subpackage provides:
 from .descriptive import (
     mean,
     variance,
-    std,
+    stddev,
     median,
     quantile,
     skewness,
