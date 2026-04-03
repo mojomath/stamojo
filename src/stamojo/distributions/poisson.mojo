@@ -48,12 +48,12 @@ struct Poisson(DiscretelyDistributed):
 
     var mu: Float64
 
-    fn __init__(out self, mu: Float64):
+    def __init__(out self, mu: Float64):
         self.mu = mu
 
     # --- Probability functions ------------------------------------------------
 
-    fn pmf(self, k: Int) -> Float64:
+    def pmf(self, k: Int) -> Float64:
         """Probability mass function at *k*.
 
         Args:
@@ -64,7 +64,7 @@ struct Poisson(DiscretelyDistributed):
         """
         return exp(self.logpmf(k))
 
-    fn logpmf(self, k: Int) -> Float64:
+    def logpmf(self, k: Int) -> Float64:
         """Natural logarithm of the PMF at *k*.
 
         Args:
@@ -79,7 +79,7 @@ struct Poisson(DiscretelyDistributed):
             return 0.0 if k == 0 else -inf[DType.float64]()
         return Float64(k) * log(self.mu) - self.mu - lgamma(Float64(k) + 1.0)
 
-    fn cdf(self, k: Int) -> Float64:
+    def cdf(self, k: Int) -> Float64:
         """Cumulative distribution function P(X ≤ k).
 
         Args:
@@ -95,7 +95,7 @@ struct Poisson(DiscretelyDistributed):
         # CDF of Poisson(μ) at k = Q(k+1, μ) = gammaincc(k+1, μ)
         return gammaincc(Float64(k + 1), self.mu)
 
-    fn logcdf(self, k: Int) -> Float64:
+    def logcdf(self, k: Int) -> Float64:
         """Natural logarithm of the CDF at *k*.
 
         Args:
@@ -109,7 +109,7 @@ struct Poisson(DiscretelyDistributed):
             return -inf[DType.float64]()
         return log(c)
 
-    fn sf(self, k: Int) -> Float64:
+    def sf(self, k: Int) -> Float64:
         """Survival function (1 − CDF) at *k*.
 
         Args:
@@ -124,7 +124,7 @@ struct Poisson(DiscretelyDistributed):
             return 0.0
         return 1.0 - self.cdf(k)
 
-    fn logsf(self, k: Int) -> Float64:
+    def logsf(self, k: Int) -> Float64:
         """Natural logarithm of the survival function at *k*.
 
         Args:
@@ -138,7 +138,7 @@ struct Poisson(DiscretelyDistributed):
             return -inf[DType.float64]()
         return log(s)
 
-    fn ppf(self, q: Float64) -> Int:
+    def ppf(self, q: Float64) -> Int:
         """Percent point function (inverse CDF).
 
         Args:
@@ -167,7 +167,7 @@ struct Poisson(DiscretelyDistributed):
 
         return _MAX_K
 
-    fn isf(self, q: Float64) -> Int:
+    def isf(self, q: Float64) -> Int:
         """Inverse survival function (inverse SF).
 
         Args:
@@ -198,7 +198,7 @@ struct Poisson(DiscretelyDistributed):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn median(self) -> UInt:
+    def median(self) -> UInt:
         """Median of the distribution (approximation).
 
         Uses the approximation: floor(μ + 1/3 - 0.02/μ).
@@ -207,14 +207,14 @@ struct Poisson(DiscretelyDistributed):
             return 0
         return UInt(floor(self.mu + 1.0 / 3.0 - 0.02 / self.mu))
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean = μ."""
         return self.mu
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance = μ."""
         return self.mu
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation = √μ."""
         return sqrt(self.mu)

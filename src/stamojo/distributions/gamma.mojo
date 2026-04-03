@@ -44,13 +44,13 @@ struct Gamma(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         if x <= 0.0:
             return 0.0
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         if x <= 0.0:
             return -inf[DType.float64]()
@@ -63,7 +63,7 @@ struct Gamma(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x).
 
         CDF(x; a, θ) = P(a, x/θ) (regularized lower incomplete gamma).
@@ -72,7 +72,7 @@ struct Gamma(Copyable, Movable):
             return 0.0
         return gammainc(self.a, x / self.scale)
 
-    fn logcdf(self, x: Float64) -> Float64:
+    def logcdf(self, x: Float64) -> Float64:
         """Natural logarithm of the CDF at *x*."""
         if x <= 0.0:
             return -inf[DType.float64]()
@@ -81,13 +81,13 @@ struct Gamma(Copyable, Movable):
             return -inf[DType.float64]()
         return log(c)
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         if x <= 0.0:
             return 1.0
         return gammaincc(self.a, x / self.scale)
 
-    fn logsf(self, x: Float64) -> Float64:
+    def logsf(self, x: Float64) -> Float64:
         """Natural logarithm of the survival function at *x*."""
         if x <= 0.0:
             return 0.0
@@ -96,7 +96,7 @@ struct Gamma(Copyable, Movable):
             return -inf[DType.float64]()
         return log(s)
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Percent-point function (quantile / inverse CDF).
 
         Uses Newton-Raphson with bisection fallback.
@@ -130,7 +130,7 @@ struct Gamma(Copyable, Movable):
             x = 0.01
         x *= self.scale
 
-        # TODO: Since many use Newton-Raphson, we could have a separate func for this. 
+        # TODO: Since many use Newton-Raphson, we could have a separate func for this.
         var lo = 0.0
         var hi = x * 4.0 + 10.0 * self.scale
         while self.cdf(hi) < p:
@@ -161,7 +161,7 @@ struct Gamma(Copyable, Movable):
 
         return x
 
-    fn isf(self, q: Float64) -> Float64:
+    def isf(self, q: Float64) -> Float64:
         """Inverse survival function (inverse SF).
 
         Args:
@@ -174,7 +174,7 @@ struct Gamma(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn median(self) -> Float64:
+    def median(self) -> Float64:
         """Median of the distribution (approximation).
 
         Uses the approximation: scale * a * (1 - 1/(9a))^3 for a >= 1,
@@ -185,19 +185,19 @@ struct Gamma(Copyable, Movable):
         else:
             return self.scale * self.a * pow(2.0, -1.0 / self.a)
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean = a * θ."""
         return self.a * self.scale
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance = a * θ²."""
         return self.a * self.scale * self.scale
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation = √(a) * θ."""
         return sqrt(self.a) * self.scale
 
-    fn entropy(self) -> Float64:
+    def entropy(self) -> Float64:
         """Differential entropy of the distribution.
 
         H = a + ln(θ) + ln(Γ(a)) + (1 - a) * ψ(a)

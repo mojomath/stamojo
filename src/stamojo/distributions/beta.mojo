@@ -44,13 +44,13 @@ struct Beta(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Probability density function at *x*."""
         if x <= 0.0 or x >= 1.0:
             return 0.0
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Natural logarithm of the probability density function at *x*."""
         if x <= 0.0 or x >= 1.0:
             return -inf[DType.float64]()
@@ -62,7 +62,7 @@ struct Beta(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Cumulative distribution function P(X ≤ x).
 
         CDF(x; a, b) = I_x(a, b) (regularized incomplete beta).
@@ -73,7 +73,7 @@ struct Beta(Copyable, Movable):
             return 1.0
         return betainc(self.a, self.b, x)
 
-    fn logcdf(self, x: Float64) -> Float64:
+    def logcdf(self, x: Float64) -> Float64:
         """Natural logarithm of the CDF at *x*."""
         if x <= 0.0:
             return -inf[DType.float64]()
@@ -84,7 +84,7 @@ struct Beta(Copyable, Movable):
             return -inf[DType.float64]()
         return log(c)
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Survival function (1 − CDF) at *x*."""
         if x <= 0.0:
             return 1.0
@@ -92,7 +92,7 @@ struct Beta(Copyable, Movable):
             return 0.0
         return 1.0 - self.cdf(x)
 
-    fn logsf(self, x: Float64) -> Float64:
+    def logsf(self, x: Float64) -> Float64:
         """Natural logarithm of the survival function at *x*."""
         if x <= 0.0:
             return 0.0
@@ -103,7 +103,7 @@ struct Beta(Copyable, Movable):
             return -inf[DType.float64]()
         return log(s)
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Percent-point function (quantile / inverse CDF).
 
         Uses Newton-Raphson with bisection fallback.
@@ -166,7 +166,7 @@ struct Beta(Copyable, Movable):
 
         return x
 
-    fn isf(self, q: Float64) -> Float64:
+    def isf(self, q: Float64) -> Float64:
         """Inverse survival function (inverse SF).
 
         Args:
@@ -179,7 +179,7 @@ struct Beta(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn median(self) -> Float64:
+    def median(self) -> Float64:
         """Median of the distribution (approximation).
 
         Uses the approximation: (a - 1/3) / (a + b - 2/3) for a, b >= 1.
@@ -188,20 +188,20 @@ struct Beta(Copyable, Movable):
             return (self.a - 1.0 / 3.0) / (self.a + self.b - 2.0 / 3.0)
         return self.a / (self.a + self.b)
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Distribution mean = a / (a + b)."""
         return self.a / (self.a + self.b)
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Distribution variance = ab / ((a+b)²(a+b+1))."""
         var ab = self.a + self.b
         return self.a * self.b / (ab * ab * (ab + 1.0))
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Distribution standard deviation."""
         return sqrt(self.variance())
 
-    fn entropy(self) -> Float64:
+    def entropy(self) -> Float64:
         """Differential entropy of the distribution.
 
         H = ln(B(a,b)) - (a-1)ψ(a) - (b-1)ψ(b) + (a+b-2)ψ(a+b)

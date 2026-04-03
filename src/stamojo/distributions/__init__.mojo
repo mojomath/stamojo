@@ -14,6 +14,9 @@ Distributions provided:
 - `FDist`         — F-distribution (Fisher-Snedecor)
 - `Exponential`   — Exponential distribution
 - `Binomial`      — Binomial distribution
+- `Gamma`         — Gamma distribution
+- `Beta`          — Beta distribution
+- `Poisson`       — Poisson distribution
 """
 
 from .normal import Normal
@@ -22,3 +25,6 @@ from .chi2 import ChiSquared
 from .f import FDist
 from .exponential import Exponential
 from .binomial import Binomial
+from .gamma import Gamma
+from .beta import Beta
+from .poisson import Poisson
