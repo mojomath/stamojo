@@ -12,7 +12,7 @@ The Student's t-distribution with ν degrees of freedom has PDF::
     f(x; ν) = Γ((ν+1)/2) / (√(νπ) Γ(ν/2)) (1 + x²/ν)^{-(ν+1)/2}
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import betainc, ndtri
 
@@ -40,15 +40,30 @@ struct StudentT(Copyable, Movable):
     """
 
     var df: Float64
+    """Degrees of freedom. Must be positive."""
 
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         return exp(self.logpdf(x))
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         var v = self.df
         return (
             lgamma((v + 1.0) / 2.0)
@@ -61,12 +76,18 @@ struct StudentT(Copyable, Movable):
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x).
+        """Computes the cumulative distribution function P(X ≤ x).
 
         Uses the regularized incomplete beta function:
             CDF(t) = 1 − 0.5·I_u(ν/2, 1/2)  for t ≥ 0
             CDF(t) = 0.5·I_u(ν/2, 1/2)      for t < 0
         where u = ν / (ν + t²).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
         """
         var v = self.df
         var u = v / (v + x * x)
@@ -77,7 +98,14 @@ struct StudentT(Copyable, Movable):
             return 0.5 * ib
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         var v = self.df
         var u = v / (v + x * x)
         var ib = betainc(v / 2.0, 0.5, u)
@@ -87,7 +115,7 @@ struct StudentT(Copyable, Movable):
             return 1.0 - 0.5 * ib
 
     fn ppf(self, p: Float64) -> Float64:
-        """Percent-point function (quantile / inverse CDF).
+        """Computes the percent-point function (quantile / inverse CDF).
 
         Computed via Newton-Raphson with bisection fallback.
 
@@ -141,13 +169,20 @@ struct StudentT(Copyable, Movable):
     # --- Summary statistics --------------------------------------------------
 
     fn mean(self) -> Float64:
-        """Distribution mean.  Defined for df > 1."""
+        """Computes the distribution mean.  Defined for df > 1.
+
+        Returns:
+            The mean of the distribution.
+        """
         if self.df > 1.0:
             return 0.0
         return nan[DType.float64]()
 
     fn variance(self) -> Float64:
-        """Distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2.
+        """Computes the distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2.
+
+        Returns:
+            The variance of the distribution.
         """
         if self.df > 2.0:
             return self.df / (self.df - 2.0)
@@ -156,5 +191,9 @@ struct StudentT(Copyable, Movable):
         return nan[DType.float64]()
 
     fn std(self) -> Float64:
-        """Distribution standard deviation."""
+        """Computes the distribution standard deviation.
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return sqrt(self.variance())

@@ -12,9 +12,9 @@ Covers:
   - One-way ANOVA
 """
 
-from math import sqrt
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import sqrt
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, TestSuite
 
 from stamojo.stats import (
     ttest_1samp,
@@ -44,7 +44,7 @@ fn _load_scipy_stats() -> PythonObject:
 
 
 fn _py_f64(obj: PythonObject) -> Float64:
-    """Convert a PythonObject holding a numeric value to Float64."""
+    """Converts a PythonObject holding a numeric value to Float64."""
     try:
         return atof(String(obj))
     except:
@@ -57,7 +57,7 @@ fn _py_f64(obj: PythonObject) -> Float64:
 
 
 fn test_ttest_1samp_basic() raises:
-    """Test one-sample t-test with known data."""
+    """Tests one-sample t-test with known data."""
     # Data with mean = 3.0; test H0: mu = 0
     var data: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
 
@@ -73,7 +73,7 @@ fn test_ttest_1samp_basic() raises:
 
 
 fn test_ttest_1samp_no_effect() raises:
-    """Test one-sample t-test when data mean ≈ mu0."""
+    """Tests one-sample t-test when data mean ≈ mu0."""
     var data: List[Float64] = [-1.0, 0.0, 1.0]
 
     var result = ttest_1samp(data, 0.0)
@@ -83,7 +83,7 @@ fn test_ttest_1samp_no_effect() raises:
 
 
 fn test_ttest_1samp_scipy() raises:
-    """Test one-sample t-test against scipy."""
+    """Tests one-sample t-test against scipy."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_ttest_1samp_scipy skipped (scipy not available)")
@@ -102,7 +102,7 @@ fn test_ttest_1samp_scipy() raises:
 
 
 fn test_ttest_ind_welch() raises:
-    """Test Welch's two-sample t-test."""
+    """Tests Welch's two-sample t-test."""
     var x: List[Float64] = [1.0, 2.0, 3.0, 4.0, 5.0]
 
     var y: List[Float64] = [4.0, 5.0, 6.0, 7.0, 8.0]
@@ -116,7 +116,7 @@ fn test_ttest_ind_welch() raises:
 
 
 fn test_ttest_ind_scipy() raises:
-    """Test Welch's t-test against scipy."""
+    """Tests Welch's t-test against scipy."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_ttest_ind_scipy skipped (scipy not available)")
@@ -138,7 +138,7 @@ fn test_ttest_ind_scipy() raises:
 
 
 fn test_ttest_rel() raises:
-    """Test paired t-test."""
+    """Tests paired t-test."""
     # Before and after treatment.
     var before: List[Float64] = [10.0, 12.0, 14.0, 11.0, 13.0]
 
@@ -159,7 +159,7 @@ fn test_ttest_rel() raises:
 
 
 fn test_chi2_gof_fair_die() raises:
-    """Test chi-squared GoF for a fair die."""
+    """Tests chi-squared GoF for a fair die."""
     var observed: List[Float64] = [16.0, 18.0, 16.0, 14.0, 12.0, 14.0]
 
     var expected: List[Float64] = [15.0, 15.0, 15.0, 15.0, 15.0, 15.0]
@@ -175,7 +175,7 @@ fn test_chi2_gof_fair_die() raises:
 
 
 fn test_chi2_ind_basic() raises:
-    """Test chi-squared independence test with 2×2 table."""
+    """Tests chi-squared independence test with 2×2 table."""
     # Example: [[10, 20], [20, 40]]
     # This table has perfect proportionality, chi2 ≈ 0.
     var row1: List[Float64] = [10.0, 20.0]
@@ -190,7 +190,7 @@ fn test_chi2_ind_basic() raises:
 
 
 fn test_chi2_ind_scipy() raises:
-    """Test chi-squared independence test against scipy."""
+    """Tests chi-squared independence test against scipy."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_chi2_ind_scipy skipped (scipy not available)")
@@ -220,7 +220,7 @@ fn test_chi2_ind_scipy() raises:
 
 
 fn test_ks_normal_data() raises:
-    """Test KS test with data drawn from N(0,1) (should not reject)."""
+    """Tests KS test with data drawn from N(0,1) (should not reject)."""
     # Pre-computed standard normal quantiles (approx).
     var data: List[Float64] = [
         -1.28,
@@ -244,7 +244,7 @@ fn test_ks_normal_data() raises:
 
 
 fn test_ks_uniform_data() raises:
-    """Test KS test with uniform data (should reject N(0,1))."""
+    """Tests KS test with uniform data (should reject N(0,1))."""
     # Uniform [0, 10] data — definitely not N(0,1).
     var data = List[Float64]()
     for i in range(20):
@@ -265,7 +265,7 @@ fn test_ks_uniform_data() raises:
 
 
 fn test_pearsonr_perfect() raises:
-    """Test Pearson correlation with perfectly correlated data."""
+    """Tests Pearson correlation with perfectly correlated data."""
     var x = List[Float64]()
     var y = List[Float64]()
     for i in range(10):
@@ -280,7 +280,7 @@ fn test_pearsonr_perfect() raises:
 
 
 fn test_pearsonr_negative() raises:
-    """Test Pearson correlation for negative correlation."""
+    """Tests Pearson correlation for negative correlation."""
     var x = List[Float64]()
     var y = List[Float64]()
     for i in range(10):
@@ -292,7 +292,7 @@ fn test_pearsonr_negative() raises:
 
 
 fn test_pearsonr_scipy() raises:
-    """Test Pearson correlation against scipy."""
+    """Tests Pearson correlation against scipy."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_pearsonr_scipy skipped (scipy not available)")
@@ -314,7 +314,7 @@ fn test_pearsonr_scipy() raises:
 
 
 fn test_spearmanr_perfect_monotone() raises:
-    """Test Spearman correlation with perfect monotone data."""
+    """Tests Spearman correlation with perfect monotone data."""
     var x = List[Float64]()
     var y = List[Float64]()
     for i in range(10):
@@ -326,7 +326,7 @@ fn test_spearmanr_perfect_monotone() raises:
 
 
 fn test_spearmanr_scipy() raises:
-    """Test Spearman correlation against scipy."""
+    """Tests Spearman correlation against scipy."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_spearmanr_scipy skipped (scipy not available)")
@@ -346,7 +346,7 @@ fn test_spearmanr_scipy() raises:
 
 
 fn test_kendalltau_concordant() raises:
-    """Test Kendall's tau with perfectly concordant data."""
+    """Tests Kendall's tau with perfectly concordant data."""
     var x = List[Float64]()
     var y = List[Float64]()
     for i in range(10):
@@ -358,7 +358,7 @@ fn test_kendalltau_concordant() raises:
 
 
 fn test_kendalltau_discordant() raises:
-    """Test Kendall's tau with perfectly discordant data."""
+    """Tests Kendall's tau with perfectly discordant data."""
     var x = List[Float64]()
     var y = List[Float64]()
     for i in range(10):
@@ -375,7 +375,7 @@ fn test_kendalltau_discordant() raises:
 
 
 fn test_f_oneway_identical() raises:
-    """Test ANOVA with identical group means (should not reject)."""
+    """Tests ANOVA with identical group means (should not reject)."""
     var g1: List[Float64] = [1.0, 2.0, 3.0]
     var g2: List[Float64] = [1.0, 2.0, 3.0]
     var g3: List[Float64] = [1.0, 2.0, 3.0]
@@ -391,7 +391,7 @@ fn test_f_oneway_identical() raises:
 
 
 fn test_f_oneway_different() raises:
-    """Test ANOVA with clearly different group means."""
+    """Tests ANOVA with clearly different group means."""
     var g1: List[Float64] = [1.0, 2.0, 3.0]
     var g2: List[Float64] = [10.0, 11.0, 12.0]
     var g3: List[Float64] = [20.0, 21.0, 22.0]
@@ -411,7 +411,7 @@ fn test_f_oneway_different() raises:
 
 
 fn test_f_oneway_scipy() raises:
-    """Test ANOVA against scipy.stats.f_oneway."""
+    """Tests ANOVA against scipy.stats.f_oneway."""
     var sp = _load_scipy_stats()
     if sp is None:
         print("⊘ test_f_oneway_scipy skipped (scipy not available)")

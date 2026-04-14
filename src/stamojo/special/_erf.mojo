@@ -20,7 +20,7 @@ Reference:
     https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/
 """
 
-from math import sqrt, log, exp, erf, erfc, nan, inf
+from std.math import sqrt, log, exp, erf, erfc, nan, inf
 
 
 # ===----------------------------------------------------------------------=== #
@@ -65,7 +65,7 @@ comptime _D4 = 3.754408661907416e0
 
 
 fn ndtri(p: Float64) -> Float64:
-    """Inverse of the standard normal CDF (quantile / PPF).
+    """Computes the inverse of the standard normal CDF (quantile / PPF).
 
     Computes x such that Φ(x) = p, where Φ is the CDF of N(0,1).
 
@@ -121,7 +121,7 @@ fn ndtri(p: Float64) -> Float64:
 
 
 fn erfinv(p: Float64) -> Float64:
-    """Inverse error function.
+    """Computes the inverse error function.
 
     Computes the value x such that erf(x) = p.
 

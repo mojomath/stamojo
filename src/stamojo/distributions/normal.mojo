@@ -18,8 +18,8 @@ Examples::
     n.ppf(0.975)                     # ≈ 1.96
 """
 
-from math import sqrt, log, cos, exp, erf, erfc, nan, inf
-from random import random_float64
+from std.math import sqrt, log, cos, exp, erf, erfc, nan, inf
+from std.random import random_float64
 
 from stamojo.special import ndtri
 
@@ -54,32 +54,63 @@ struct Normal(Copyable, Movable):
     """
 
     var mu: Float64
+    """Mean (location parameter)."""
+
     var sigma: Float64
+    """Standard deviation (scale parameter). Must be positive."""
 
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         var z = (x - self.mu) / self.sigma
         return _INV_SQRT_2PI / self.sigma * exp(-0.5 * z * z)
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         var z = (x - self.mu) / self.sigma
         return -_LN_SQRT_2PI - log(self.sigma) - 0.5 * z * z
 
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x)."""
+        """Computes the cumulative distribution function P(X ≤ x).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
+        """
         return 0.5 * erfc(-(x - self.mu) / (self.sigma * _SQRT2))
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         return 0.5 * erfc((x - self.mu) / (self.sigma * _SQRT2))
 
     fn ppf(self, p: Float64) -> Float64:
-        """Percent-point function (quantile / inverse CDF).
+        """Computes the percent-point function (quantile / inverse CDF).
 
         Returns the value *x* such that P(X ≤ x) = p.
 
@@ -100,26 +131,46 @@ struct Normal(Copyable, Movable):
     # --- Summary statistics --------------------------------------------------
 
     fn mean(self) -> Float64:
-        """Distribution mean."""
+        """Computes the distribution mean.
+
+        Returns:
+            The mean of the distribution.
+        """
         return self.mu
 
     fn variance(self) -> Float64:
-        """Distribution variance σ²."""
+        """Computes the distribution variance σ².
+
+        Returns:
+            The variance of the distribution.
+        """
         return self.sigma * self.sigma
 
     fn std(self) -> Float64:
-        """Distribution standard deviation σ."""
+        """Computes the distribution standard deviation σ.
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return self.sigma
 
     fn entropy(self) -> Float64:
-        """Differential entropy of the distribution."""
+        """Computes the differential entropy of the distribution.
+
+        Returns:
+            The differential entropy.
+        """
         # H = 0.5 * ln(2πeσ²) = ln(σ√(2πe)) = ln(σ) + 0.5*ln(2π) + 0.5
         return _LN_SQRT_2PI + log(self.sigma) + 0.5
 
     # --- Random variate generation -------------------------------------------
 
     fn rvs(self) -> Float64:
-        """Generate a single random variate (Box-Muller transform)."""
+        """Generates a single random variate (Box-Muller transform).
+
+        Returns:
+            A random variate from this distribution.
+        """
         var u1 = random_float64()
         while u1 == 0.0:
             u1 = random_float64()
@@ -128,7 +179,7 @@ struct Normal(Copyable, Movable):
         return self.mu + self.sigma * z
 
     fn rvs(self, n: Int) -> List[Float64]:
-        """Generate *n* random variates.
+        """Generates *n* random variates.
 
         Args:
             n: Number of variates to generate.

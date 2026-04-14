@@ -16,9 +16,9 @@ Two verification strategies are used:
    is printed for easy diagnosis.
 """
 
-from math import exp, log, lgamma, erf, sqrt
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import exp, log, lgamma, erf, sqrt
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, TestSuite
 
 from stamojo.special import (
     gammainc,
@@ -63,7 +63,7 @@ fn _load_scipy() -> PythonObject:
 
 
 fn _py_f64(obj: PythonObject) -> Float64:
-    """Convert a PythonObject holding a numeric value to Float64."""
+    """Converts a PythonObject holding a numeric value to Float64."""
     try:
         return atof(String(obj))
     except:
@@ -103,7 +103,7 @@ fn _assert_with_scipy(
 
 
 fn test_gammainc_boundary() raises:
-    """Test boundary conditions."""
+    """Tests boundary conditions."""
     assert_almost_equal(gammainc(1.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(gammainc(5.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(gammaincc(1.0, 0.0), 1.0, atol=1e-15)
@@ -111,7 +111,7 @@ fn test_gammainc_boundary() raises:
 
 
 fn test_gammainc_exponential() raises:
-    """Test P(1, x) = 1 - e^{-x} (exponential distribution CDF)."""
+    """Tests P(1, x) = 1 - e^{-x} (exponential distribution CDF)."""
     var sp = _load_scipy()
     var test_x: List[Float64] = [0.5, 1.0, 2.0, 5.0, 10.0]
 
@@ -130,7 +130,7 @@ fn test_gammainc_exponential() raises:
 
 
 fn test_gammainc_half() raises:
-    """Test P(0.5, x) = erf(sqrt(x))."""
+    """Tests P(0.5, x) = erf(sqrt(x))."""
     var sp = _load_scipy()
     var test_x: List[Float64] = [0.25, 0.5, 1.0, 2.0, 4.0]
 
@@ -149,7 +149,8 @@ fn test_gammainc_half() raises:
 
 
 fn test_gammainc_integer_a() raises:
-    """Test gammainc/gammaincc against the Poisson sum formula for integer a."""
+    """Tests gammainc/gammaincc against the Poisson sum formula for integer a.
+    """
     var sp = _load_scipy()
 
     var test_a: List[Int] = [2, 3, 5, 5, 10, 10, 20]
@@ -183,7 +184,7 @@ fn test_gammainc_integer_a() raises:
 
 
 fn test_gammainc_scipy() raises:
-    """Test gammainc/gammaincc against scipy for non-integer a values."""
+    """Tests gammainc/gammaincc against scipy for non-integer a values."""
     var sp = _load_scipy()
     if sp is None:
         print("⊘ test_gammainc_scipy skipped (scipy not available)")
@@ -218,7 +219,7 @@ fn test_gammainc_scipy() raises:
 
 
 fn test_gammainc_complementary() raises:
-    """Test P(a,x) + Q(a,x) = 1."""
+    """Tests P(a,x) + Q(a,x) = 1."""
     var test_cases: List[Tuple[Float64, Float64]] = [
         (0.5, 0.5),
         (1.0, 2.0),
@@ -242,7 +243,7 @@ fn test_gammainc_complementary() raises:
 
 
 fn test_beta_basic() raises:
-    """Test beta function against known exact values."""
+    """Tests beta function against known exact values."""
     assert_almost_equal(beta(1.0, 1.0), 1.0, atol=1e-12)
     assert_almost_equal(beta(2.0, 2.0), 1.0 / 6.0, atol=1e-12)
     assert_almost_equal(beta(0.5, 0.5), 3.141592653589793, atol=1e-10)
@@ -255,14 +256,14 @@ fn test_beta_basic() raises:
 
 
 fn test_betainc_boundary() raises:
-    """Test betainc boundary values."""
+    """Tests betainc boundary values."""
     assert_almost_equal(betainc(2.0, 3.0, 0.0), 0.0, atol=1e-15)
     assert_almost_equal(betainc(2.0, 3.0, 1.0), 1.0, atol=1e-15)
     assert_almost_equal(betainc(1.0, 1.0, 0.5), 0.5, atol=1e-12)
 
 
 fn test_betainc_symmetric() raises:
-    """Test I_{0.5}(a, a) = 0.5."""
+    """Tests I_{0.5}(a, a) = 0.5."""
     var test_a: List[Float64] = [1.0, 2.0, 5.0, 10.0]
 
     for i in range(len(test_a)):
@@ -271,7 +272,7 @@ fn test_betainc_symmetric() raises:
 
 
 fn test_betainc_symmetry_identity() raises:
-    """Test I_x(a,b) = 1 - I_{1-x}(b,a)."""
+    """Tests I_x(a,b) = 1 - I_{1-x}(b,a)."""
     assert_almost_equal(
         betainc(3.0, 5.0, 0.4),
         1.0 - betainc(5.0, 3.0, 0.6),
@@ -285,7 +286,7 @@ fn test_betainc_symmetry_identity() raises:
 
 
 fn test_betainc_known_values() raises:
-    """Test I_x(1, n) = 1 - (1-x)^n for integer n."""
+    """Tests I_x(1, n) = 1 - (1-x)^n for integer n."""
     var x = 0.3
     assert_almost_equal(betainc(1.0, 1.0, x), x, atol=1e-12)
     assert_almost_equal(betainc(1.0, 2.0, x), 1.0 - (1.0 - x) ** 2, atol=1e-10)
@@ -293,7 +294,7 @@ fn test_betainc_known_values() raises:
 
 
 fn test_betainc_scipy() raises:
-    """Test betainc against scipy.special for general parameters."""
+    """Tests betainc against scipy.special for general parameters."""
     var sp = _load_scipy()
     if sp is None:
         print("⊘ test_betainc_scipy skipped (scipy not available)")
@@ -325,7 +326,7 @@ fn test_betainc_scipy() raises:
 
 
 fn test_erfinv_basic() raises:
-    """Test erfinv by checking erf(erfinv(p)) ≈ p (round-trip)."""
+    """Tests erfinv by checking erf(erfinv(p)) ≈ p (round-trip)."""
     assert_almost_equal(erfinv(0.0), 0.0, atol=1e-15)
 
     var test_vals: List[Float64] = [
@@ -347,7 +348,7 @@ fn test_erfinv_basic() raises:
 
 
 fn test_erfinv_symmetry() raises:
-    """Test erfinv(-p) = -erfinv(p)."""
+    """Tests erfinv(-p) = -erfinv(p)."""
     var test_vals: List[Float64] = [0.1, 0.5, 0.9]
 
     for i in range(len(test_vals)):
@@ -356,7 +357,7 @@ fn test_erfinv_symmetry() raises:
 
 
 fn test_erfinv_scipy() raises:
-    """Test erfinv against scipy.special.erfinv."""
+    """Tests erfinv against scipy.special.erfinv."""
     var sp = _load_scipy()
     if sp is None:
         print("⊘ test_erfinv_scipy skipped (scipy not available)")
@@ -395,7 +396,7 @@ fn test_erfinv_scipy() raises:
 
 
 fn test_bessel_basic_values() raises:
-    """Test basic Bessel function values."""
+    """Tests basic Bessel function values."""
     assert_almost_equal(j0(0.0), 1.0, atol=1e-15)
     assert_almost_equal(j1(0.0), 0.0, atol=1e-15)
     assert_almost_equal(jn[1](0.0), 0.0, atol=1e-15)
@@ -407,7 +408,7 @@ fn test_bessel_basic_values() raises:
 
 
 fn test_bessel_symmetry() raises:
-    """Test symmetry relations for Bessel functions."""
+    """Tests symmetry relations for Bessel functions."""
     var x = 2.5
     assert_almost_equal(j0(-x), j0(x), atol=1e-12)
     assert_almost_equal(j1(-x), -j1(x), atol=1e-12)
@@ -415,14 +416,14 @@ fn test_bessel_symmetry() raises:
 
 
 fn test_bessel_scaled() raises:
-    """Test scaled modified Bessel functions."""
+    """Tests scaled modified Bessel functions."""
     var x = 2.0
     assert_almost_equal(i0e(x), i0(x) * exp(-x), atol=1e-12)
     assert_almost_equal(i1e(x), i1(x) * exp(-x), atol=1e-12)
 
 
 fn test_bessel_scipy() raises:
-    """Test Bessel functions against scipy.special."""
+    """Tests Bessel functions against scipy.special."""
     var sp = _load_scipy()
     if sp is None:
         print("test_bessel_scipy skipped (scipy not available)")

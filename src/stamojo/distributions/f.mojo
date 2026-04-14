@@ -13,7 +13,7 @@ The F-distribution with d₁ and d₂ degrees of freedom has PDF::
                    / (x · B(d₁/2, d₂/2))
 """
 
-from math import sqrt, log, exp, nan, inf
+from std.math import sqrt, log, exp, nan, inf
 
 from stamojo.special import betainc, lbeta, ndtri
 
@@ -42,12 +42,22 @@ struct FDist(Copyable, Movable):
     """
 
     var dfn: Float64
+    """Numerator degrees of freedom (d₁). Must be positive."""
+
     var dfd: Float64
+    """Denominator degrees of freedom (d₂). Must be positive."""
 
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         if x < 0.0:
             return 0.0
         if x == 0.0:
@@ -60,7 +70,14 @@ struct FDist(Copyable, Movable):
         return exp(self.logpdf(x))
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         if x <= 0.0:
             return -inf[DType.float64]()
         var d1 = self.dfn
@@ -75,9 +92,15 @@ struct FDist(Copyable, Movable):
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x).
+        """Computes the cumulative distribution function P(X ≤ x).
 
         CDF(x) = I_{d₁x/(d₁x+d₂)}(d₁/2, d₂/2).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
         """
         if x <= 0.0:
             return 0.0
@@ -87,11 +110,18 @@ struct FDist(Copyable, Movable):
         return betainc(d1 / 2.0, d2 / 2.0, u)
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         return 1.0 - self.cdf(x)
 
     fn ppf(self, p: Float64) -> Float64:
-        """Percent-point function (quantile / inverse CDF).
+        """Computes the percent-point function (quantile / inverse CDF).
 
         Computed via Newton-Raphson with bisection fallback.
 
@@ -149,13 +179,21 @@ struct FDist(Copyable, Movable):
     # --- Summary statistics --------------------------------------------------
 
     fn mean(self) -> Float64:
-        """Distribution mean.  Defined for d₂ > 2."""
+        """Computes the distribution mean.  Defined for d₂ > 2.
+
+        Returns:
+            The mean of the distribution.
+        """
         if self.dfd > 2.0:
             return self.dfd / (self.dfd - 2.0)
         return nan[DType.float64]()
 
     fn variance(self) -> Float64:
-        """Distribution variance.  Defined for d₂ > 4."""
+        """Computes the distribution variance.  Defined for d₂ > 4.
+
+        Returns:
+            The variance of the distribution.
+        """
         if self.dfd > 4.0:
             var d1 = self.dfn
             var d2 = self.dfd
@@ -169,5 +207,9 @@ struct FDist(Copyable, Movable):
         return nan[DType.float64]()
 
     fn std(self) -> Float64:
-        """Distribution standard deviation."""
+        """Computes the distribution standard deviation.
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return sqrt(self.variance())

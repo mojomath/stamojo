@@ -17,7 +17,7 @@ References:
     - https://en.wikipedia.org/wiki/Bessel_function
 """
 
-from math import cos, exp, inf, log, nan, sin, sqrt
+from std.math import cos, exp, inf, log, nan, sin, sqrt
 
 # === --------------------------------------------------------------------=== #
 # General notes:
@@ -64,7 +64,7 @@ fn j0(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import j0
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(j0(1.0), 0.7651976865579666, atol=1e-12)
@@ -99,7 +99,7 @@ fn j1(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import j1
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(j1(1.0), 0.44005058574493355, atol=1e-12)
@@ -136,12 +136,10 @@ fn jn[n: Int](x: Float64) -> Float64:
         Jₙ(x).
     """
 
-    @parameter
-    if n == 0:
+    comptime if n == 0:
         return j0(x)
 
-    @parameter
-    if n == 1:
+    comptime if n == 1:
         return j1(x)
 
     comptime m = n if n >= 0 else -n
@@ -192,7 +190,7 @@ fn i0(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import i0
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(i0(1.0), 1.2660658777520082, atol=1e-12)
@@ -219,7 +217,7 @@ fn i1(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import i1
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(i1(1.0), 0.5651591039924851, atol=1e-12)
@@ -247,7 +245,7 @@ fn i0e(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import i0e
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(i0e(1.0), 0.4657596075936405, atol=1e-12)
@@ -269,7 +267,7 @@ fn i1e(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import i1e
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(i1e(1.0), 0.2079104153497085, atol=1e-12)
@@ -297,7 +295,7 @@ fn y0(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import y0
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(y0(1.0), 0.08825696421567697, atol=1e-12)
@@ -339,7 +337,7 @@ fn y1(x: Float64) -> Float64:
     Examples:
         ```mojo
         from stamojo.special import y1
-        from testing import assert_almost_equal
+        from std.testing import assert_almost_equal
 
         fn main() raises:
             assert_almost_equal(y1(1.0), -0.7812128213002887, atol=1e-12)
