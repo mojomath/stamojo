@@ -8,9 +8,9 @@ Covers mean, variance, std, median, quantile, skewness, and kurtosis
 with both analytical checks and scipy/numpy comparisons.
 """
 
-from math import sqrt, exp, log
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import sqrt, exp, log
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, TestSuite
 
 from stamojo.stats import (
     mean,

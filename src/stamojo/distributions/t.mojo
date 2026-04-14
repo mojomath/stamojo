@@ -12,7 +12,7 @@ The Student's t-distribution with ν degrees of freedom has PDF::
     f(x; ν) = Γ((ν+1)/2) / (√(νπ) Γ(ν/2)) (1 + x²/ν)^{-(ν+1)/2}
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import betainc, ndtri
 

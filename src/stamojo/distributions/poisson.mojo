@@ -12,7 +12,7 @@ The Poisson distribution with rate parameter *μ* has PMF::
     P(X = k; μ) = μ^k exp(−μ) / k!,  k = 0, 1, 2, ...
 """
 
-from math import log, exp, lgamma, nan, inf, floor, sqrt
+from std.math import log, exp, lgamma, nan, inf, floor, sqrt
 
 from stamojo.distributions.traits import DiscretelyDistributed
 from stamojo.special import gammaincc
@@ -23,6 +23,7 @@ from stamojo.special import gammaincc
 # ===----------------------------------------------------------------------=== #
 
 comptime _MAX_K = 10000
+"""Maximum k value for PPF search to prevent infinite loops in extreme cases."""
 
 
 # ===----------------------------------------------------------------------=== #
@@ -139,7 +140,11 @@ struct Poisson(DiscretelyDistributed):
         return log(s)
 
     def ppf(self, q: Float64) -> Int:
-        """Percent point function (inverse CDF).
+        """Finds the smallest integer k such that CDF(k) ≥ q
+        (percent point function).
+
+        Uses binary search with the CDF to avoid numerical underflow
+        that would occur with incremental PMF summation for large mu.
 
         Args:
             q: Probability in [0, 1].
@@ -152,19 +157,25 @@ struct Poisson(DiscretelyDistributed):
         if q >= 1.0:
             return _MAX_K
 
-        var pk = exp(-self.mu)
-        var cumulative: Float64 = pk
+        # Binary search: find smallest k where CDF(k) >= q.
+        var lo = 0
+        var hi = Int(self.mu + 10.0 * sqrt(self.mu) + 20.0)
+        if hi > _MAX_K:
+            hi = _MAX_K
+        # Ensure hi is large enough.
+        while self.cdf(hi) < q:
+            hi *= 2
+            if hi > _MAX_K:
+                return _MAX_K
 
-        if cumulative >= q:
-            return 0
+        while lo < hi:
+            var mid = (lo + hi) // 2
+            if self.cdf(mid) < q:
+                lo = mid + 1
+            else:
+                hi = mid
 
-        for k in range(1, _MAX_K):
-            pk *= self.mu / Float64(k)
-            cumulative += pk
-            if cumulative >= q:
-                return k
-
-        return _MAX_K
+        return lo
 
     def isf(self, q: Float64) -> Int:
         """Inverse survival function (inverse SF).
@@ -175,24 +186,7 @@ struct Poisson(DiscretelyDistributed):
         Returns:
             Smallest integer k such that SF(k) ≤ q.
         """
-        if q <= 0.0:
-            return _MAX_K
-        if q >= 1.0:
-            return 0
-
-        var pk: Float64 = exp(-self.mu)
-        var cumulative: Float64 = pk
-
-        if 1.0 - cumulative <= q:
-            return 0
-
-        for k in range(1, _MAX_K):
-            pk *= self.mu / Float64(k)
-            cumulative += pk
-            if 1.0 - cumulative <= q:
-                return k
-
-        return _MAX_K
+        return self.ppf(1.0 - q)
 
     # --- Summary statistics --------------------------------------------------
 

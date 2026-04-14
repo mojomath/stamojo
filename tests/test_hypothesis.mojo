@@ -12,9 +12,9 @@ Covers:
   - One-way ANOVA
 """
 
-from math import sqrt
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import sqrt
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, TestSuite
 
 from stamojo.stats import (
     ttest_1samp,

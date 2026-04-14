@@ -14,7 +14,7 @@ The two-sided p-value tests the null hypothesis that the true correlation is
 zero.
 """
 
-from math import sqrt, nan
+from std.math import sqrt, nan
 
 from stamojo.distributions import Normal, StudentT
 from stamojo.stats.descriptive import mean

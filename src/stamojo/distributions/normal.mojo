@@ -18,8 +18,8 @@ Examples::
     n.ppf(0.975)                     # ≈ 1.96
 """
 
-from math import sqrt, log, cos, exp, erf, erfc, nan, inf
-from random import random_float64
+from std.math import sqrt, log, cos, exp, erf, erfc, nan, inf
+from std.random import random_float64
 
 from stamojo.special import ndtri
 

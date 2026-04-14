@@ -29,7 +29,7 @@ Reference:
     Press et al., Numerical Recipes, 3rd ed., Section 6.2.
 """
 
-from math import lgamma, exp, log, nan, inf
+from std.math import lgamma, exp, log, nan, inf
 
 
 # ===----------------------------------------------------------------------=== #

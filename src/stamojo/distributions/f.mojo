@@ -13,7 +13,7 @@ The F-distribution with d₁ and d₂ degrees of freedom has PDF::
                    / (x · B(d₁/2, d₂/2))
 """
 
-from math import sqrt, log, exp, nan, inf
+from std.math import sqrt, log, exp, nan, inf
 
 from stamojo.special import betainc, lbeta, ndtri
 

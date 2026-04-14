@@ -17,7 +17,7 @@ Each function returns a ``Tuple[Float64, Float64]`` of (test statistic, p-value)
 unless otherwise noted.
 """
 
-from math import sqrt, exp, nan, inf
+from std.math import sqrt, exp, nan, inf
 
 from stamojo.distributions import Normal, StudentT, ChiSquared, FDist
 from stamojo.stats.descriptive import mean, variance

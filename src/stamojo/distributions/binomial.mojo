@@ -14,7 +14,7 @@ The binomial distribution with parameters n and p has PMF:
 where C(n, k) is the binomial coefficient.
 """
 
-from math import log, log1p, exp, lgamma, nan, inf, floor, sqrt
+from std.math import log, log1p, exp, lgamma, nan, inf, floor, sqrt
 
 from stamojo.distributions.traits import DiscretelyDistributed
 

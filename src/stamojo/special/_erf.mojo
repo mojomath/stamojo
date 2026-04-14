@@ -20,7 +20,7 @@ Reference:
     https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/
 """
 
-from math import sqrt, log, exp, erf, erfc, nan, inf
+from std.math import sqrt, log, exp, erf, erfc, nan, inf
 
 
 # ===----------------------------------------------------------------------=== #

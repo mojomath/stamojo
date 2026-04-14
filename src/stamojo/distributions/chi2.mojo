@@ -12,7 +12,7 @@ The chi-squared distribution with *k* degrees of freedom has PDF::
     f(x; k) = x^{k/2−1} exp(−x/2) / (2^{k/2} Γ(k/2)),  x > 0
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import gammainc, gammaincc, ndtri
 

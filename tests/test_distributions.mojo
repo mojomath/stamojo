@@ -12,9 +12,9 @@ Each distribution is tested for:
   - Comparison against scipy.stats (when available)
 """
 
-from math import exp, log, sqrt
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import exp, log, sqrt
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, assert_true, TestSuite
 
 from stamojo.distributions import (
     Normal,
@@ -757,6 +757,19 @@ fn test_poisson_scipy() raises:
         var sp_cdf = _py_f64(sp.poisson.cdf(k, 4.0))
         assert_almost_equal(p.pmf(k), sp_pmf, atol=1e-10)
         assert_almost_equal(p.cdf(k), sp_cdf, atol=1e-10)
+
+
+fn test_poisson_ppf_large_mu() raises:
+    """Test Poisson PPF for large mu (regression test for underflow bug)."""
+    var p = Poisson(1000.0)
+    # ppf(0.5) should be near 1000, not _MAX_K
+    var k = p.ppf(0.5)
+    assert_true(
+        k >= 990 and k <= 1010, "Poisson(1000).ppf(0.5) should be ~1000"
+    )
+    # Round-trip: CDF(ppf(q)) >= q
+    assert_true(p.cdf(k) >= 0.5, "CDF(ppf(0.5)) must be >= 0.5")
+    assert_true(p.cdf(k - 1) < 0.5, "CDF(ppf(0.5)-1) must be < 0.5")
 
 
 # ===----------------------------------------------------------------------=== #

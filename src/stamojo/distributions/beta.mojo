@@ -12,7 +12,7 @@ The beta distribution with shape parameters *a* and *b* has PDF::
     f(x; a, b) = x^{a-1} (1-x)^{b-1} / B(a, b),  0 < x < 1
 """
 
-from math import sqrt, log, lgamma, exp, nan, inf
+from std.math import sqrt, log, lgamma, exp, nan, inf
 
 from stamojo.special import betainc, lbeta, ndtri
 

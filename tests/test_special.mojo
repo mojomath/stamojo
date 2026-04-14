@@ -16,9 +16,9 @@ Two verification strategies are used:
    is printed for easy diagnosis.
 """
 
-from math import exp, log, lgamma, erf, sqrt
-from python import Python, PythonObject
-from testing import assert_almost_equal, TestSuite
+from std.math import exp, log, lgamma, erf, sqrt
+from std.python import Python, PythonObject
+from std.testing import assert_almost_equal, TestSuite
 
 from stamojo.special import (
     gammainc,

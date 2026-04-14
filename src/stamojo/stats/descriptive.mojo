@@ -19,7 +19,7 @@ Provides functions for computing summary statistics of ``List[Float64]`` data:
 - ``hmean`` — Harmonic mean
 """
 
-from math import sqrt, nan, log, exp
+from std.math import sqrt, nan, log, exp
 
 
 # ===----------------------------------------------------------------------=== #

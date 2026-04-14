@@ -12,7 +12,7 @@ The exponential distribution with rate parameter λ has PDF:
     f(x; λ) = λ exp(−λx),  x ≥ 0
 """
 
-from math import log, exp, nan, inf, log1p, expm1
+from std.math import log, exp, nan, inf, log1p, expm1
 
 from stamojo.distributions.traits import ContinuouslyDistributed
 
