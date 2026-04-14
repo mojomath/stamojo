@@ -29,7 +29,7 @@ from stamojo.stats.descriptive import mean, variance
 
 
 fn _sorted_copy(data: List[Float64]) -> List[Float64]:
-    """Return a sorted copy of *data* (ascending, insertion sort)."""
+    """Returns a sorted copy of *data* (ascending, insertion sort)."""
     var result = data.copy()
     var n = len(result)
     for i in range(1, n):
@@ -50,7 +50,7 @@ fn _sorted_copy(data: List[Float64]) -> List[Float64]:
 fn ttest_1samp(
     data: List[Float64], mu0: Float64 = 0.0
 ) -> Tuple[Float64, Float64]:
-    """One-sample t-test.
+    """Performs a one-sample t-test.
 
     Tests H₀: μ = mu0 against H₁: μ ≠ mu0 (two-sided).
 
@@ -87,7 +87,7 @@ fn ttest_ind(
     y: List[Float64],
     equal_var: Bool = False,
 ) -> Tuple[Float64, Float64]:
-    """Independent two-sample t-test (Welch's by default).
+    """Performs an independent two-sample t-test (Welch's by default).
 
     Tests H₀: μ₁ = μ₂ against H₁: μ₁ ≠ μ₂ (two-sided).
 
@@ -153,7 +153,7 @@ fn ttest_ind(
 
 
 fn ttest_rel(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
-    """Paired (related) samples t-test.
+    """Performs a paired (related) samples t-test.
 
     Tests H₀: μ_d = 0 against H₁: μ_d ≠ 0, where d = x − y.
 
@@ -183,7 +183,7 @@ fn ttest_rel(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
 fn chi2_gof(
     observed: List[Float64], expected: List[Float64]
 ) -> Tuple[Float64, Float64]:
-    """Chi-squared goodness-of-fit test.
+    """Performs a chi-squared goodness-of-fit test.
 
     Tests H₀: the data follow the expected distribution.
 
@@ -215,7 +215,7 @@ fn chi2_gof(
 fn chi2_ind(
     observed: List[List[Float64]],
 ) -> Tuple[Float64, Float64]:
-    """Chi-squared test of independence for a contingency table.
+    """Performs a chi-squared test of independence for a contingency table.
 
     Tests H₀: the row and column variables are independent.
 
@@ -277,7 +277,7 @@ fn chi2_ind(
 
 
 fn ks_1samp(data: List[Float64]) -> Tuple[Float64, Float64]:
-    """One-sample Kolmogorov-Smirnov test against the standard normal N(0,1).
+    """Performs a one-sample Kolmogorov-Smirnov test against the standard normal N(0,1).
 
     Tests H₀: the data come from a standard normal distribution.
 
@@ -318,7 +318,7 @@ fn ks_1samp(data: List[Float64]) -> Tuple[Float64, Float64]:
 
 
 fn _ks_pvalue(d: Float64, n: Int) -> Float64:
-    """Compute the two-sided KS test p-value using the asymptotic formula.
+    """Computes the two-sided KS test p-value using the asymptotic formula.
 
     P(D_n > d) ≈ 2 * sum_{k=1}^{inf} (-1)^{k+1} * exp(-2 k² (√n d)²)
     """
@@ -351,7 +351,7 @@ fn _ks_pvalue(d: Float64, n: Int) -> Float64:
 
 
 fn _exp_safe(x: Float64) -> Float64:
-    """Safe exponential that avoids underflow."""
+    """Computes a safe exponential that avoids underflow."""
     if x < -700.0:
         return 0.0
     return exp(x)
@@ -365,7 +365,7 @@ fn _exp_safe(x: Float64) -> Float64:
 fn f_oneway(
     groups: List[List[Float64]],
 ) -> Tuple[Float64, Float64]:
-    """One-way ANOVA F-test.
+    """Performs a one-way ANOVA F-test.
 
     Tests H₀: all group means are equal against H₁: at least one differs.
 

@@ -40,11 +40,19 @@ struct ChiSquared(Copyable, Movable):
     """
 
     var df: Float64
+    """Degrees of freedom. Must be positive."""
 
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         if x < 0.0:
             return 0.0
         if x == 0.0:
@@ -57,7 +65,14 @@ struct ChiSquared(Copyable, Movable):
         return exp(self.logpdf(x))
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         if x <= 0.0:
             return -inf[DType.float64]()
         var k = self.df
@@ -71,22 +86,35 @@ struct ChiSquared(Copyable, Movable):
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x).
+        """Computes the cumulative distribution function P(X ≤ x).
 
         CDF(x; k) = P(k/2, x/2) (regularized lower incomplete gamma).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
         """
         if x <= 0.0:
             return 0.0
         return gammainc(self.df / 2.0, x / 2.0)
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         if x <= 0.0:
             return 1.0
         return gammaincc(self.df / 2.0, x / 2.0)
 
     fn ppf(self, p: Float64) -> Float64:
-        """Percent-point function (quantile / inverse CDF).
+        """Computes the percent-point function (quantile / inverse CDF).
 
         Uses the Wilson-Hilferty initial approximation refined by
         Newton-Raphson with bisection fallback.
@@ -153,13 +181,25 @@ struct ChiSquared(Copyable, Movable):
     # --- Summary statistics --------------------------------------------------
 
     fn mean(self) -> Float64:
-        """Distribution mean = k."""
+        """Computes the distribution mean = k.
+
+        Returns:
+            The mean of the distribution.
+        """
         return self.df
 
     fn variance(self) -> Float64:
-        """Distribution variance = 2k."""
+        """Computes the distribution variance = 2k.
+
+        Returns:
+            The variance of the distribution.
+        """
         return 2.0 * self.df
 
     fn std(self) -> Float64:
-        """Distribution standard deviation = √(2k)."""
+        """Computes the distribution standard deviation = √(2k).
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return sqrt(2.0 * self.df)

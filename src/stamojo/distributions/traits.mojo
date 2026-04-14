@@ -11,55 +11,127 @@ trait ContinuouslyDistributed(Copyable, Movable):
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         ...
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         ...
 
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x)."""
+        """Computes the cumulative distribution function P(X ≤ x).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
+        """
         ...
 
     fn logcdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the cumulative distribution function at *x*."""
+        """Computes the natural logarithm of the CDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-CDF.
+
+        Returns:
+            The log-CDF value at *x*.
+        """
         ...
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         ...
 
     fn logsf(self, x: Float64) -> Float64:
-        """Natural logarithm of the survival function at *x*."""
+        """Computes the natural logarithm of the survival function at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-SF.
+
+        Returns:
+            The log-SF value at *x*.
+        """
         ...
 
     fn ppf(self, q: Float64) -> Float64:
-        """Percent point function (inverse of CDF) at *q*."""
+        """Computes the percent point function (inverse of CDF) at *q*.
+
+        Args:
+            q: Probability in [0, 1].
+
+        Returns:
+            The quantile corresponding to *q*.
+        """
         ...
 
     fn isf(self, q: Float64) -> Float64:
-        """Inverse survival function (inverse of SF) at *q*."""
+        """Computes the inverse survival function (inverse of SF) at *q*.
+
+        Args:
+            q: Probability in [0, 1].
+
+        Returns:
+            The value *x* such that SF(x) = *q*.
+        """
         ...
 
     # --- Statistical properties ----------------------------------------------
 
     fn median(self) -> Float64:
-        """Median of the distribution."""
+        """Computes the median of the distribution.
+
+        Returns:
+            The median value.
+        """
         ...
 
     fn mean(self) -> Float64:
-        """Mean of the distribution."""
+        """Computes the mean of the distribution.
+
+        Returns:
+            The mean value.
+        """
         ...
 
     fn variance(self) -> Float64:
-        """Variance of the distribution."""
+        """Computes the variance of the distribution.
+
+        Returns:
+            The variance value.
+        """
         ...
 
     fn std(self) -> Float64:
-        """Standard deviation of the distribution."""
+        """Computes the standard deviation of the distribution.
+
+        Returns:
+            The standard deviation value.
+        """
         ...
 
 
@@ -69,53 +141,125 @@ trait DiscretelyDistributed(Copyable, Movable):
     # --- Probability mass functions ------------------------------------------
 
     fn pmf(self, k: Int) -> Float64:
-        """Probability mass function at *k*."""
+        """Computes the probability mass function at *k*.
+
+        Args:
+            k: Point at which to evaluate the PMF.
+
+        Returns:
+            The PMF value at *k*.
+        """
         ...
 
     fn logpmf(self, k: Int) -> Float64:
-        """Natural logarithm of the probability mass function at *k*."""
+        """Computes the natural logarithm of the PMF at *k*.
+
+        Args:
+            k: Point at which to evaluate the log-PMF.
+
+        Returns:
+            The log-PMF value at *k*.
+        """
         ...
 
     # --- Distribution functions ----------------------------------------------
 
     fn cdf(self, k: Int) -> Float64:
-        """Cumulative distribution function P(X ≤ k)."""
+        """Computes the cumulative distribution function P(X ≤ k).
+
+        Args:
+            k: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *k*.
+        """
         ...
 
     fn logcdf(self, k: Int) -> Float64:
-        """Natural logarithm of the cumulative distribution function at *k*."""
+        """Computes the natural logarithm of the CDF at *k*.
+
+        Args:
+            k: Point at which to evaluate the log-CDF.
+
+        Returns:
+            The log-CDF value at *k*.
+        """
         ...
 
     fn sf(self, k: Int) -> Float64:
-        """Survival function (1 − CDF) at *k*."""
+        """Computes the survival function (1 − CDF) at *k*.
+
+        Args:
+            k: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *k*.
+        """
         ...
 
     fn logsf(self, k: Int) -> Float64:
-        """Natural logarithm of the survival function at *k*."""
+        """Computes the natural logarithm of the survival function at *k*.
+
+        Args:
+            k: Point at which to evaluate the log-SF.
+
+        Returns:
+            The log-SF value at *k*.
+        """
         ...
 
     fn ppf(self, q: Float64) -> Int:
-        """Percent point function (inverse of CDF) at *q*."""
+        """Computes the percent point function (inverse of CDF) at *q*.
+
+        Args:
+            q: Probability in [0, 1].
+
+        Returns:
+            The smallest integer k such that CDF(k) ≥ q.
+        """
         ...
 
     fn isf(self, q: Float64) -> Int:
-        """Inverse survival function (inverse of SF) at *q*."""
+        """Computes the inverse survival function (inverse of SF) at *q*.
+
+        Args:
+            q: Probability in [0, 1].
+
+        Returns:
+            The smallest integer k such that SF(k) ≤ q.
+        """
         ...
 
     # --- Statistical properties ----------------------------------------------
 
     fn median(self) -> UInt:
-        """Median of the distribution."""
+        """Computes the median of the distribution.
+
+        Returns:
+            The median value.
+        """
         ...
 
     fn mean(self) -> Float64:
-        """Mean of the distribution."""
+        """Computes the mean of the distribution.
+
+        Returns:
+            The mean value.
+        """
         ...
 
     fn variance(self) -> Float64:
-        """Variance of the distribution."""
+        """Computes the variance of the distribution.
+
+        Returns:
+            The variance value.
+        """
         ...
 
     fn std(self) -> Float64:
-        """Standard deviation of the distribution."""
+        """Computes the standard deviation of the distribution.
+
+        Returns:
+            The standard deviation value.
+        """
         ...

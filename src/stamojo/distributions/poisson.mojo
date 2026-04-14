@@ -48,14 +48,20 @@ struct Poisson(DiscretelyDistributed):
     """
 
     var mu: Float64
+    """Rate parameter (mean number of events). Must be positive."""
 
     def __init__(out self, mu: Float64):
+        """Constructs a Poisson distribution with the given rate.
+
+        Args:
+            mu: Rate parameter (mean number of events). Must be positive.
+        """
         self.mu = mu
 
     # --- Probability functions ------------------------------------------------
 
     def pmf(self, k: Int) -> Float64:
-        """Probability mass function at *k*.
+        """Computes the probability mass function at *k*.
 
         Args:
             k: Number of events (must be >= 0).
@@ -66,7 +72,7 @@ struct Poisson(DiscretelyDistributed):
         return exp(self.logpmf(k))
 
     def logpmf(self, k: Int) -> Float64:
-        """Natural logarithm of the PMF at *k*.
+        """Computes the natural logarithm of the PMF at *k*.
 
         Args:
             k: Number of events (must be >= 0).
@@ -81,7 +87,7 @@ struct Poisson(DiscretelyDistributed):
         return Float64(k) * log(self.mu) - self.mu - lgamma(Float64(k) + 1.0)
 
     def cdf(self, k: Int) -> Float64:
-        """Cumulative distribution function P(X ≤ k).
+        """Computes the cumulative distribution function P(X ≤ k).
 
         Args:
             k: Number of events.
@@ -97,7 +103,7 @@ struct Poisson(DiscretelyDistributed):
         return gammaincc(Float64(k + 1), self.mu)
 
     def logcdf(self, k: Int) -> Float64:
-        """Natural logarithm of the CDF at *k*.
+        """Computes the natural logarithm of the CDF at *k*.
 
         Args:
             k: Number of events.
@@ -111,7 +117,7 @@ struct Poisson(DiscretelyDistributed):
         return log(c)
 
     def sf(self, k: Int) -> Float64:
-        """Survival function (1 − CDF) at *k*.
+        """Computes the survival function (1 − CDF) at *k*.
 
         Args:
             k: Number of events.
@@ -126,7 +132,7 @@ struct Poisson(DiscretelyDistributed):
         return 1.0 - self.cdf(k)
 
     def logsf(self, k: Int) -> Float64:
-        """Natural logarithm of the survival function at *k*.
+        """Computes the natural logarithm of the survival function at *k*.
 
         Args:
             k: Number of events.
@@ -150,7 +156,7 @@ struct Poisson(DiscretelyDistributed):
             q: Probability in [0, 1].
 
         Returns:
-            Smallest integer k such that CDF(k) ≥ q.
+            The smallest integer k such that CDF(k) ≥ q.
         """
         if q <= 0.0:
             return 0
@@ -178,35 +184,50 @@ struct Poisson(DiscretelyDistributed):
         return lo
 
     def isf(self, q: Float64) -> Int:
-        """Inverse survival function (inverse SF).
+        """Computes the inverse survival function (inverse SF).
 
         Args:
             q: Probability in [0, 1].
 
         Returns:
-            Smallest integer k such that SF(k) ≤ q.
+            The smallest integer k such that SF(k) ≤ q.
         """
         return self.ppf(1.0 - q)
 
     # --- Summary statistics --------------------------------------------------
 
     def median(self) -> UInt:
-        """Median of the distribution (approximation).
+        """Computes the median of the distribution (approximation).
 
         Uses the approximation: floor(μ + 1/3 - 0.02/μ).
+
+        Returns:
+            The median of the distribution.
         """
         if self.mu == 0.0:
             return 0
         return UInt(floor(self.mu + 1.0 / 3.0 - 0.02 / self.mu))
 
     def mean(self) -> Float64:
-        """Distribution mean = μ."""
+        """Computes the distribution mean = μ.
+
+        Returns:
+            The mean of the distribution.
+        """
         return self.mu
 
     def variance(self) -> Float64:
-        """Distribution variance = μ."""
+        """Computes the distribution variance = μ.
+
+        Returns:
+            The variance of the distribution.
+        """
         return self.mu
 
     def std(self) -> Float64:
-        """Distribution standard deviation = √μ."""
+        """Computes the distribution standard deviation = √μ.
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return sqrt(self.mu)

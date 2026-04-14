@@ -40,7 +40,7 @@ comptime _FPMIN = 1.0e-30
 
 
 fn lbeta(a: Float64, b: Float64) -> Float64:
-    """Natural logarithm of the beta function.
+    """Computes the natural logarithm of the beta function.
 
     Computes ln(B(a, b)) = ln(Γ(a)) + ln(Γ(b)) - ln(Γ(a+b)).
 
@@ -55,7 +55,7 @@ fn lbeta(a: Float64, b: Float64) -> Float64:
 
 
 fn beta(a: Float64, b: Float64) -> Float64:
-    """Beta function B(a, b) = Γ(a)Γ(b) / Γ(a+b).
+    """Computes the beta function B(a, b) = Γ(a)Γ(b) / Γ(a+b).
 
     Args:
         a: First parameter. Must be positive.
@@ -68,7 +68,7 @@ fn beta(a: Float64, b: Float64) -> Float64:
 
 
 fn betainc(a: Float64, b: Float64, x: Float64) -> Float64:
-    """Regularized incomplete beta function I_x(a, b).
+    """Computes the regularized incomplete beta function I_x(a, b).
 
     Computes I_x(a, b) = B(x; a, b) / B(a, b), where B(x; a, b) is the
     incomplete beta function.
@@ -110,7 +110,7 @@ fn betainc(a: Float64, b: Float64, x: Float64) -> Float64:
 fn _betainc_cf(
     a: Float64, b: Float64, x: Float64, lbeta_ab: Float64
 ) -> Float64:
-    """Evaluate the regularized incomplete beta function using Lentz's
+    """Evaluates the regularized incomplete beta function using Lentz's
     continued fraction method.
 
     Computes:

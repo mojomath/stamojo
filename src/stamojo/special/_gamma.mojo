@@ -48,7 +48,7 @@ comptime _FPMIN = 1.0e-30  # Near smallest representable floating-point number.
 
 
 fn _is_near_integer(a: Float64) -> Bool:
-    """Return True if `a` is within 1e-12 of a positive integer.
+    """Returns True if `a` is within 1e-12 of a positive integer.
 
     When a is (close to) an integer, the continued-fraction expansion
     has a zero numerator coefficient at step i == a, which causes
@@ -67,7 +67,7 @@ fn _is_near_integer(a: Float64) -> Bool:
 
 
 fn gammainc(a: Float64, x: Float64) -> Float64:
-    """Regularized lower incomplete gamma function P(a, x).
+    """Computes the regularized lower incomplete gamma function P(a, x).
 
     Computes P(a, x) = γ(a, x) / Γ(a), where γ(a, x) is the lower
     incomplete gamma integral from 0 to x.
@@ -94,7 +94,7 @@ fn gammainc(a: Float64, x: Float64) -> Float64:
 
 
 fn gammaincc(a: Float64, x: Float64) -> Float64:
-    """Regularized upper incomplete gamma function Q(a, x).
+    """Computes the regularized upper incomplete gamma function Q(a, x).
 
     Computes Q(a, x) = 1 - P(a, x) = Γ(a, x) / Γ(a), where Γ(a, x)
     is the upper incomplete gamma integral from x to infinity.
@@ -127,7 +127,7 @@ fn gammaincc(a: Float64, x: Float64) -> Float64:
 
 
 fn _gamma_series(a: Float64, x: Float64) -> Float64:
-    """Evaluate the regularized lower incomplete gamma function P(a, x)
+    """Evaluates the regularized lower incomplete gamma function P(a, x)
     by its series representation.
 
     P(a, x) = e^{-x} x^a / Γ(a) * Σ_{n=0}^{∞} x^n / (a(a+1)...(a+n))
@@ -152,7 +152,7 @@ fn _gamma_series(a: Float64, x: Float64) -> Float64:
 
 
 fn _gamma_cf(a: Float64, x: Float64) -> Float64:
-    """Evaluate the regularized upper incomplete gamma function Q(a, x)
+    """Evaluates the regularized upper incomplete gamma function Q(a, x)
     by its continued fraction representation (modified Lentz's method).
 
     This converges quickly for x >= a + 1 when a is **not** near an

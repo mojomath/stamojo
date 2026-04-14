@@ -40,18 +40,35 @@ struct Gamma(Copyable, Movable):
     """
 
     var a: Float64
+    """Shape parameter. Must be positive."""
+
     var scale: Float64
+    """Scale parameter (θ). Must be positive."""
 
     # --- Density functions ---------------------------------------------------
 
     def pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*."""
+        """Computes the probability density function at *x*.
+
+        Args:
+            x: Point at which to evaluate the PDF.
+
+        Returns:
+            The PDF value at *x*.
+        """
         if x <= 0.0:
             return 0.0
         return exp(self.logpdf(x))
 
     def logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the probability density function at *x*."""
+        """Computes the natural logarithm of the PDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-PDF.
+
+        Returns:
+            The log-PDF value at *x*.
+        """
         if x <= 0.0:
             return -inf[DType.float64]()
         return (
@@ -64,16 +81,29 @@ struct Gamma(Copyable, Movable):
     # --- Distribution functions ----------------------------------------------
 
     def cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x).
+        """Computes the cumulative distribution function P(X ≤ x).
 
         CDF(x; a, θ) = P(a, x/θ) (regularized lower incomplete gamma).
+
+        Args:
+            x: Point at which to evaluate the CDF.
+
+        Returns:
+            The CDF value at *x*.
         """
         if x <= 0.0:
             return 0.0
         return gammainc(self.a, x / self.scale)
 
     def logcdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the CDF at *x*."""
+        """Computes the natural logarithm of the CDF at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-CDF.
+
+        Returns:
+            The log-CDF value at *x*.
+        """
         if x <= 0.0:
             return -inf[DType.float64]()
         var c = self.cdf(x)
@@ -82,13 +112,27 @@ struct Gamma(Copyable, Movable):
         return log(c)
 
     def sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*."""
+        """Computes the survival function (1 − CDF) at *x*.
+
+        Args:
+            x: Point at which to evaluate the survival function.
+
+        Returns:
+            The survival function value at *x*.
+        """
         if x <= 0.0:
             return 1.0
         return gammaincc(self.a, x / self.scale)
 
     def logsf(self, x: Float64) -> Float64:
-        """Natural logarithm of the survival function at *x*."""
+        """Computes the natural logarithm of the survival function at *x*.
+
+        Args:
+            x: Point at which to evaluate the log-SF.
+
+        Returns:
+            The log-SF value at *x*.
+        """
         if x <= 0.0:
             return 0.0
         var s = self.sf(x)
@@ -97,7 +141,7 @@ struct Gamma(Copyable, Movable):
         return log(s)
 
     def ppf(self, p: Float64) -> Float64:
-        """Percent-point function (quantile / inverse CDF).
+        """Computes the percent-point function (quantile / inverse CDF).
 
         Uses Newton-Raphson with bisection fallback.
 
@@ -162,7 +206,7 @@ struct Gamma(Copyable, Movable):
         return x
 
     def isf(self, q: Float64) -> Float64:
-        """Inverse survival function (inverse SF).
+        """Computes the inverse survival function (inverse SF).
 
         Args:
             q: Probability in [0, 1].
@@ -175,10 +219,13 @@ struct Gamma(Copyable, Movable):
     # --- Summary statistics --------------------------------------------------
 
     def median(self) -> Float64:
-        """Median of the distribution (approximation).
+        """Computes the median of the distribution (approximation).
 
         Uses the approximation: scale * a * (1 - 1/(9a))^3 for a >= 1,
         and scale * a * 2^(-1/a) for a < 1.
+
+        Returns:
+            The median of the distribution.
         """
         if self.a >= 1.0:
             return self.scale * self.a * pow(1.0 - 1.0 / (9.0 * self.a), 3)
@@ -186,24 +233,39 @@ struct Gamma(Copyable, Movable):
             return self.scale * self.a * pow(2.0, -1.0 / self.a)
 
     def mean(self) -> Float64:
-        """Distribution mean = a * θ."""
+        """Computes the distribution mean = a * θ.
+
+        Returns:
+            The mean of the distribution.
+        """
         return self.a * self.scale
 
     def variance(self) -> Float64:
-        """Distribution variance = a * θ²."""
+        """Computes the distribution variance = a * θ².
+
+        Returns:
+            The variance of the distribution.
+        """
         return self.a * self.scale * self.scale
 
     def std(self) -> Float64:
-        """Distribution standard deviation = √(a) * θ."""
+        """Computes the distribution standard deviation = √(a) * θ.
+
+        Returns:
+            The standard deviation of the distribution.
+        """
         return sqrt(self.a) * self.scale
 
     def entropy(self) -> Float64:
-        """Differential entropy of the distribution.
+        """Computes the differential entropy of the distribution.
 
         H = a + ln(θ) + ln(Γ(a)) + (1 - a) * ψ(a)
         where ψ is the digamma function (approximated here).
         For simplicity: H ≈ a + ln(θ) + ln(Γ(a)) - (a-1)*ψ(a)
         Using approximation ψ(a) ≈ ln(a) - 1/(2a) for large a.
+
+        Returns:
+            The differential entropy.
         """
         # H = a + ln(scale) + ln(Gamma(a)) + (1-a)*digamma(a)
         # Approximate digamma(a) ≈ ln(a) - 1/(2a) - 1/(12a²)

@@ -37,4 +37,4 @@ c = "clear && pixi run clean"
 clean = "rm -f tests/stamojo.mojopkg"
 
 # doc
-doc = "clear && pixi run mojo doc -o docs/doc.json --diagnose-missing-doc-strings --validate-doc-strings src/stamojo"
+doc = "pixi run mojo doc --diagnose-missing-doc-strings src/stamojo > /dev/null"

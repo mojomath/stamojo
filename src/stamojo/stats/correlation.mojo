@@ -26,7 +26,7 @@ from stamojo.stats.descriptive import mean
 
 
 fn _rank_data(data: List[Float64]) -> List[Float64]:
-    """Assign ranks to data, handling ties by averaging.
+    """Assigns ranks to data, handling ties by averaging.
 
     Returns a list of ranks (1-based) with the same length as *data*.
     """
@@ -73,7 +73,7 @@ fn _rank_data(data: List[Float64]) -> List[Float64]:
 
 
 fn pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
-    """Pearson product-moment correlation coefficient and p-value.
+    """Computes the Pearson product-moment correlation coefficient and p-value.
 
     The p-value is two-sided and tests H₀: ρ = 0 using the t-distribution
     with n − 2 degrees of freedom.
@@ -123,7 +123,7 @@ fn pearsonr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
 
 
 fn spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
-    """Spearman rank-order correlation coefficient and p-value.
+    """Computes the Spearman rank-order correlation coefficient and p-value.
 
     Computes the Pearson correlation of the rank-transformed data.
     The p-value is two-sided using the t-distribution approximation.
@@ -146,7 +146,7 @@ fn spearmanr(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
 
 
 fn kendalltau(x: List[Float64], y: List[Float64]) -> Tuple[Float64, Float64]:
-    """Kendall's tau-b rank correlation coefficient and p-value.
+    """Computes Kendall's tau-b rank correlation coefficient and p-value.
 
     Tau-b adjusts for ties. The p-value is two-sided based on the
     normal approximation for large samples.

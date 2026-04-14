@@ -51,13 +51,19 @@ struct Exponential(ContinuouslyDistributed):
     # --- Initialization -------------------------------------------------------
 
     fn __init__(out self, loc: Float64 = 0.0, scale: Float64 = 1.0):
+        """Constructs an Exponential distribution.
+
+        Args:
+            loc: Location (shift) parameter. Defaults to 0.0.
+            scale: Scale parameter (must be > 0). Defaults to 1.0.
+        """
         self.loc = loc
         self.scale = scale
 
     # --- Density functions ---------------------------------------------------
 
     fn pdf(self, x: Float64) -> Float64:
-        """Probability density function at *x*.
+        """Computes the probability density function at *x*.
 
         Args:
             x: Point at which to evaluate the PDF.
@@ -71,7 +77,7 @@ struct Exponential(ContinuouslyDistributed):
         return exp(-y) / self.scale
 
     fn logpdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the PDF at *x*.
+        """Computes the natural logarithm of the PDF at *x*.
 
         Args:
             x: Point at which to evaluate the log-PDF.
@@ -86,7 +92,7 @@ struct Exponential(ContinuouslyDistributed):
 
     # --- Distribution functions ----------------------------------------------
     fn cdf(self, x: Float64) -> Float64:
-        """Cumulative distribution function P(X ≤ x).
+        """Computes the cumulative distribution function P(X ≤ x).
 
         Args:
             x: Value at which to evaluate the CDF.
@@ -100,7 +106,7 @@ struct Exponential(ContinuouslyDistributed):
         return -expm1(-y)
 
     fn logcdf(self, x: Float64) -> Float64:
-        """Natural logarithm of the CDF at *x*.
+        """Computes the natural logarithm of the CDF at *x*.
 
         Uses ``log(-expm1(-y))`` instead of ``log1p(-exp(-y))`` for better
         numerical stability when *x* is close to *loc*.
@@ -117,7 +123,7 @@ struct Exponential(ContinuouslyDistributed):
         return log(-expm1(-y))
 
     fn sf(self, x: Float64) -> Float64:
-        """Survival function (1 − CDF) at *x*.
+        """Computes the survival function (1 − CDF) at *x*.
 
         Args:
             x: Value at which to evaluate the survival function.
@@ -131,7 +137,7 @@ struct Exponential(ContinuouslyDistributed):
         return exp(-y)
 
     fn logsf(self, x: Float64) -> Float64:
-        """Natural logarithm of the survival function at *x*.
+        """Computes the natural logarithm of the survival function at *x*.
 
         Args:
             x: Value at which to evaluate the log-SF.
@@ -145,7 +151,7 @@ struct Exponential(ContinuouslyDistributed):
         return -y
 
     fn ppf(self, q: Float64) -> Float64:
-        """Percent-point (quantile) function (inverse CDF).
+        """Computes the percent-point (quantile) function (inverse CDF).
 
         Args:
             q: Probability in [0, 1].
@@ -168,7 +174,7 @@ struct Exponential(ContinuouslyDistributed):
         return self.loc - self.scale * log1p(-q)
 
     fn isf(self, q: Float64) -> Float64:
-        """Inverse survival function (inverse SF).
+        """Computes the inverse survival function (inverse SF).
 
         Args:
             q: Probability in [0, 1].
@@ -192,7 +198,7 @@ struct Exponential(ContinuouslyDistributed):
 
     # --- Summary statistics --------------------------------------------------
     fn median(self) -> Float64:
-        """Median of the distribution: loc + scale * ln(2).
+        """Computes the median of the distribution: loc + scale * ln(2).
 
         Returns:
             The median of the distribution.
@@ -200,7 +206,7 @@ struct Exponential(ContinuouslyDistributed):
         return self.loc + self.scale * log(2.0)
 
     fn mean(self) -> Float64:
-        """Distribution mean: loc + scale.
+        """Computes the distribution mean: loc + scale.
 
         Returns:
             The mean of the distribution.
@@ -208,7 +214,7 @@ struct Exponential(ContinuouslyDistributed):
         return self.loc + self.scale
 
     fn variance(self) -> Float64:
-        """Distribution variance: scale².
+        """Computes the distribution variance: scale².
 
         Returns:
             The variance of the distribution.
@@ -216,7 +222,7 @@ struct Exponential(ContinuouslyDistributed):
         return self.scale * self.scale
 
     fn std(self) -> Float64:
-        """Distribution standard deviation: scale.
+        """Computes the distribution standard deviation: scale.
 
         Returns:
             The standard deviation of the distribution.
