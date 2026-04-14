@@ -136,12 +136,10 @@ fn jn[n: Int](x: Float64) -> Float64:
         Jₙ(x).
     """
 
-    @parameter
-    if n == 0:
+    comptime if n == 0:
         return j0(x)
 
-    @parameter
-    if n == 1:
+    comptime if n == 1:
         return j1(x)
 
     comptime m = n if n >= 0 else -n
