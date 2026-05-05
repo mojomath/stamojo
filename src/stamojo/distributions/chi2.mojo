@@ -44,7 +44,7 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -64,7 +64,7 @@ struct ChiSquared(Copyable, Movable):
                 return 0.0
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -85,7 +85,7 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         CDF(x; k) = P(k/2, x/2) (regularized lower incomplete gamma).
@@ -100,7 +100,7 @@ struct ChiSquared(Copyable, Movable):
             return 0.0
         return gammainc(self.df / 2.0, x / 2.0)
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -113,7 +113,7 @@ struct ChiSquared(Copyable, Movable):
             return 1.0
         return gammaincc(self.df / 2.0, x / 2.0)
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Computes the percent-point function (quantile / inverse CDF).
 
         Uses the Wilson-Hilferty initial approximation refined by
@@ -180,7 +180,7 @@ struct ChiSquared(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean = k.
 
         Returns:
@@ -188,7 +188,7 @@ struct ChiSquared(Copyable, Movable):
         """
         return self.df
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance = 2k.
 
         Returns:
@@ -196,7 +196,7 @@ struct ChiSquared(Copyable, Movable):
         """
         return 2.0 * self.df
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation = √(2k).
 
         Returns:

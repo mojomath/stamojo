@@ -44,7 +44,7 @@ struct StudentT(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -55,7 +55,7 @@ struct StudentT(Copyable, Movable):
         """
         return exp(self.logpdf(x))
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -75,7 +75,7 @@ struct StudentT(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         Uses the regularized incomplete beta function:
@@ -97,7 +97,7 @@ struct StudentT(Copyable, Movable):
         else:
             return 0.5 * ib
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -114,7 +114,7 @@ struct StudentT(Copyable, Movable):
         else:
             return 1.0 - 0.5 * ib
 
-    fn ppf(self, p: Float64) -> Float64:
+    def ppf(self, p: Float64) -> Float64:
         """Computes the percent-point function (quantile / inverse CDF).
 
         Computed via Newton-Raphson with bisection fallback.
@@ -168,7 +168,7 @@ struct StudentT(Copyable, Movable):
 
     # --- Summary statistics --------------------------------------------------
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the distribution mean.  Defined for df > 1.
 
         Returns:
@@ -178,7 +178,7 @@ struct StudentT(Copyable, Movable):
             return 0.0
         return nan[DType.float64]()
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the distribution variance.  Defined for df > 2; infinite for 1 < df ≤ 2.
 
         Returns:
@@ -190,7 +190,7 @@ struct StudentT(Copyable, Movable):
             return inf[DType.float64]()
         return nan[DType.float64]()
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the distribution standard deviation.
 
         Returns:

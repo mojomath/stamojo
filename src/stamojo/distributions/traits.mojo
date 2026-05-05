@@ -10,7 +10,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
 
     # --- Density functions ---------------------------------------------------
 
-    fn pdf(self, x: Float64) -> Float64:
+    def pdf(self, x: Float64) -> Float64:
         """Computes the probability density function at *x*.
 
         Args:
@@ -21,7 +21,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logpdf(self, x: Float64) -> Float64:
+    def logpdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the PDF at *x*.
 
         Args:
@@ -34,7 +34,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, x: Float64) -> Float64:
+    def cdf(self, x: Float64) -> Float64:
         """Computes the cumulative distribution function P(X ≤ x).
 
         Args:
@@ -45,7 +45,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logcdf(self, x: Float64) -> Float64:
+    def logcdf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the CDF at *x*.
 
         Args:
@@ -56,7 +56,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn sf(self, x: Float64) -> Float64:
+    def sf(self, x: Float64) -> Float64:
         """Computes the survival function (1 − CDF) at *x*.
 
         Args:
@@ -67,7 +67,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logsf(self, x: Float64) -> Float64:
+    def logsf(self, x: Float64) -> Float64:
         """Computes the natural logarithm of the survival function at *x*.
 
         Args:
@@ -78,7 +78,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn ppf(self, q: Float64) -> Float64:
+    def ppf(self, q: Float64) -> Float64:
         """Computes the percent point function (inverse of CDF) at *q*.
 
         Args:
@@ -89,7 +89,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn isf(self, q: Float64) -> Float64:
+    def isf(self, q: Float64) -> Float64:
         """Computes the inverse survival function (inverse of SF) at *q*.
 
         Args:
@@ -102,7 +102,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
 
     # --- Statistical properties ----------------------------------------------
 
-    fn median(self) -> Float64:
+    def median(self) -> Float64:
         """Computes the median of the distribution.
 
         Returns:
@@ -110,7 +110,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the mean of the distribution.
 
         Returns:
@@ -118,7 +118,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the variance of the distribution.
 
         Returns:
@@ -126,7 +126,7 @@ trait ContinuouslyDistributed(Copyable, Movable):
         """
         ...
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the standard deviation of the distribution.
 
         Returns:
@@ -140,7 +140,7 @@ trait DiscretelyDistributed(Copyable, Movable):
 
     # --- Probability mass functions ------------------------------------------
 
-    fn pmf(self, k: Int) -> Float64:
+    def pmf(self, k: Int) -> Float64:
         """Computes the probability mass function at *k*.
 
         Args:
@@ -151,7 +151,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logpmf(self, k: Int) -> Float64:
+    def logpmf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the PMF at *k*.
 
         Args:
@@ -164,7 +164,7 @@ trait DiscretelyDistributed(Copyable, Movable):
 
     # --- Distribution functions ----------------------------------------------
 
-    fn cdf(self, k: Int) -> Float64:
+    def cdf(self, k: Int) -> Float64:
         """Computes the cumulative distribution function P(X ≤ k).
 
         Args:
@@ -175,7 +175,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logcdf(self, k: Int) -> Float64:
+    def logcdf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the CDF at *k*.
 
         Args:
@@ -186,7 +186,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn sf(self, k: Int) -> Float64:
+    def sf(self, k: Int) -> Float64:
         """Computes the survival function (1 − CDF) at *k*.
 
         Args:
@@ -197,7 +197,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn logsf(self, k: Int) -> Float64:
+    def logsf(self, k: Int) -> Float64:
         """Computes the natural logarithm of the survival function at *k*.
 
         Args:
@@ -208,7 +208,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn ppf(self, q: Float64) -> Int:
+    def ppf(self, q: Float64) -> Int:
         """Computes the percent point function (inverse of CDF) at *q*.
 
         Args:
@@ -219,7 +219,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn isf(self, q: Float64) -> Int:
+    def isf(self, q: Float64) -> Int:
         """Computes the inverse survival function (inverse of SF) at *q*.
 
         Args:
@@ -232,7 +232,7 @@ trait DiscretelyDistributed(Copyable, Movable):
 
     # --- Statistical properties ----------------------------------------------
 
-    fn median(self) -> UInt:
+    def median(self) -> UInt:
         """Computes the median of the distribution.
 
         Returns:
@@ -240,7 +240,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn mean(self) -> Float64:
+    def mean(self) -> Float64:
         """Computes the mean of the distribution.
 
         Returns:
@@ -248,7 +248,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn variance(self) -> Float64:
+    def variance(self) -> Float64:
         """Computes the variance of the distribution.
 
         Returns:
@@ -256,7 +256,7 @@ trait DiscretelyDistributed(Copyable, Movable):
         """
         ...
 
-    fn std(self) -> Float64:
+    def std(self) -> Float64:
         """Computes the standard deviation of the distribution.
 
         Returns:
