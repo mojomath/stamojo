@@ -1,7 +1,7 @@
 # ===----------------------------------------------------------------------=== #
 # StaMojo — Usage examples (Part I)
 # ===----------------------------------------------------------------------=== #
-"""Run with:  mojo run -I src examples/examples.mojo"""
+"""Run with: `mojo run -I src examples/examples.mojo`."""
 
 from stamojo.special import (
     gammainc,
@@ -16,7 +16,7 @@ from stamojo.distributions import Normal, StudentT, ChiSquared, FDist
 from stamojo.stats import (
     mean,
     variance,
-    std,
+    stddev,
     median,
     quantile,
     skewness,
@@ -34,7 +34,7 @@ from stamojo.stats import (
 )
 
 
-fn main() raises:
+def main() raises:
     # --- Special functions ---------------------------------------------------
     print("gammainc(1, 2) =", gammainc(1.0, 2.0))  # 0.8646647167628346
     print("gammaincc(1, 2) =", gammaincc(1.0, 2.0))  # 0.13533528323716537
@@ -66,7 +66,7 @@ fn main() raises:
     var data: List[Float64] = [2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]
     print("mean    =", mean(data))  # 5.0
     print("variance=", variance(data, ddof=0))  # 4.0
-    print("std     =", std(data, ddof=0))  # 2.0
+    print("std     =", stddev(data, ddof=0))  # 2.0
     print("median  =", median(data))  # 4.5
     print("Q(0.25) =", quantile(data, 0.25))  # 4.0
     print("skewness=", skewness(data))  # 0.8184875533567997
