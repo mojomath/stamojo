@@ -52,8 +52,8 @@ jobs:
 
       - name: Build package
         run: |
-          pixi run mojo package src/stamojo
-          cp stamojo.mojopkg tests/
+          pixi run mojo precompile src/stamojo
+          cp stamojo.mojoc tests/
 
       - name: Run tests
         run: |

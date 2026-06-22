@@ -3,13 +3,17 @@
 This document tracks all notable changes to StaMojo, including new features,
 API changes, bug fixes, and documentation updates.
 
+## 20260622 (v0.3.0)
+
+StaMojo v0.3.0 updates the codebase to Mojo v1.0.0b2.
+
 ## 20260512 (v0.2.0)
 
 StaMojo v0.2.0 adds five new probability distributions
 (`Exponential`, `Binomial`, `Gamma`, `Beta`, `Poisson`) and the
 `DiscretelyDistributed` trait, a complete set of Bessel functions in
 `stamojo.special`, and geometric / harmonic means in `stamojo.stats`. The
-codebase is migrated to **v1.0.0b1**.
+codebase is migrated to Mojo v1.0.0b1.
 
 ### ⭐️ New in v0.2.0
 

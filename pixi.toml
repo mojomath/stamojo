@@ -6,10 +6,10 @@ license = "Apache-2.0"
 name = "stamojo"
 platforms = ["osx-arm64", "linux-64"]
 readme = "README.md"
-version = "0.2.0"
+version = "0.3.0"
 
 [dependencies]
-mojo = "==1.0.0b1"
+mojo = "==1.0.0b2"
 
 # ── Feature: test (adds scipy for reference-value benchmarks) ────────────────
 [feature.test.dependencies]
@@ -30,11 +30,14 @@ format = "pixi run mojo format ./src && pixi run mojo format ./tests && pixi run
 # compile the package
 p = "clear && pixi run package"
 package = "pixi run format && pixi run package_stamojo"
-package_stamojo = "pixi run mojo package src/stamojo && cp stamojo.mojopkg tests/ && rm stamojo.mojopkg"
+package_stamojo = "pixi run mojo precompile src/stamojo && cp stamojo.mojoc tests/ && rm stamojo.mojoc"
 
 # clean the package files in tests folder
 c = "clear && pixi run clean"
-clean = "rm -f tests/stamojo.mojopkg"
+clean = "rm -f tests/stamojo.mojoc"
 
 # doc
 doc = "pixi run mojo doc --diagnose-missing-doc-strings src/stamojo > /dev/null"
+
+# run everything
+all = "pixi run package && pixi run doc && pixi run test && pixi run clean"

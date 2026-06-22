@@ -3,10 +3,10 @@
 A statistical computing library for [Mojo](https://www.modular.com/mojo), inspired by `scipy.stats` and `statsmodels` in Python.
 
 [![Version](https://img.shields.io/github/v/tag/forfudan/argmojo?label=version&color=blue)](https://github.com/forfudan/argmojo/releases)
-[![Mojo](https://img.shields.io/badge/mojo-1.0.0b1-orange)](https://docs.modular.com/mojo/manual/)
+[![Mojo](https://img.shields.io/badge/mojo-1.0.0b2-orange)](https://docs.modular.com/mojo/manual/)
 [![pixi](https://img.shields.io/badge/pixi%20add-argmojo-brightgreen)](https://prefix.dev/channels/modular-community/packages/argmojo)
 [![Rrepo](https://img.shields.io/badge/Repo-red)](https://github.com/forfudan/decimo)
-[![Discord](https://img.shields.io/badge/Discord-darkblue)](https://discord.gg/z7VZUTn3)
+[![Discord](https://img.shields.io/badge/Discord-darkblue)](https://discord.gg/3rGH87uZTk)
 
 ## Overview
 
@@ -35,7 +35,7 @@ Placing `scipy.stats`-like functionality and `statsmodels`-like regression in **
 
 ## Status
 
-**v0.2** — Part I is complete and ready for use, now compatible with Mojo **v1.0.0b1**. The current release provides:
+**v0.3** — Part I is complete and ready for use, now compatible with Mojo **v1.0.0b2**. The current release provides:
 
 | Category          | Functions                                                                    |
 | ----------------- | ---------------------------------------------------------------------------- |
@@ -100,6 +100,7 @@ The following table summarizes the package versions and their corresponding Mojo
 | --------- | --------- | --------------- |
 | v0.1.0    | ==0.26.1  | pixi            |
 | v0.2.0    | ==1.0.0b1 | pixi            |
+| v0.3.0    | ==1.0.0b2 | pixi            |
 
 ## Examples
 

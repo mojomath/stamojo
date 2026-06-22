@@ -6,7 +6,8 @@
 .magic
 magic.lock
 
-# mojopkg files
+# mojo precompiled package files
+*.mojoc
 *.mojopkg
 
 # Editor environments
