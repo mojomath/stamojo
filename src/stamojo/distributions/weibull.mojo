@@ -23,7 +23,7 @@ from stamojo.distributions.traits import ContinuouslyDistributed
 # ===----------------------------------------------------------------------=== #
 
 comptime _EULER_MASCHERONI = 0.5772156649015328606065120900824024
-
+comptime _SQRT_2PI = sqrt(2.0 * 3.14159265358979323846)
 
 # ===----------------------------------------------------------------------=== #
 # Weibull distribution
@@ -257,8 +257,8 @@ def _gamma_approx(x: Float64) -> Float64:
     if x == 0.5:
         return 1.7724538509055160272981674833411451
 
-    var g = 7.0
-    var c: List[Float64] = [
+    comptime g = 7.0
+    comptime c: InlineArray[Float64, 9] = [
         0.99999999999980993,
         676.5203681218851,
         -1259.1392167224028,
@@ -272,8 +272,8 @@ def _gamma_approx(x: Float64) -> Float64:
 
     var t = x - 1.0
     var y = c[0]
-    for i in range(1, 9):
+    comptime for i in range(1, 9):
         y += c[i] / (t + Float64(i))
 
     var z = t + g + 0.5
-    return sqrt(2.0 * 3.14159265358979323846) * pow(z, t + 0.5) * exp(-z) * y
+    return _SQRT_2PI * pow(z, t + 0.5) * exp(-z) * y

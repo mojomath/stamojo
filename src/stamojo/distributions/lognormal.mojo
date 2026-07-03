@@ -242,8 +242,7 @@ struct LogNormal(ContinuouslyDistributed):
 
 
 def _ndtri(p: Float64) -> Float64:
-    """Inverse standard normal CDF (probit function).
-    """
+    """Inverse standard normal CDF (probit function)."""
     if p <= 0.0:
         return -inf[DType.float64]()
     if p >= 1.0:
