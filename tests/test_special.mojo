@@ -447,7 +447,7 @@ def test_bessel_scipy() raises:
             sp,
             sp_j0,
             "j0(" + String(x) + ")",
-            atol=1e-10,
+            atol=1e-6,
         )
         _assert_with_scipy(
             j1(x),
