@@ -9,7 +9,7 @@ readme = "README.md"
 version = "0.3.0"
 
 [dependencies]
-mojo = "==1.0.0b2"
+mojo = ">=1.0.0,<2"
 
 # ── Feature: test (adds scipy for reference-value benchmarks) ────────────────
 [feature.test.dependencies]
