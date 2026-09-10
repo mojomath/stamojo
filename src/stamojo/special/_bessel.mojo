@@ -301,7 +301,7 @@ comptime _QO_QS2_5: Float64 = -4.95949898822628210127e00
 
 # Cephes Chebyshev coefficients for exp(-x) * I0(x) on [0, 8]
 # Reverse order (T_N-1 first), zero-order T_0 doubled (last element).
-comptime _I0_A: InlineArray[Float64, 30] = [
+comptime _I0_A: Array[Float64, 30] = [
     -4.41534164647933937950e-18,
     3.33079451882223809783e-17,
     -2.43127984654795469359e-16,
@@ -336,7 +336,7 @@ comptime _I0_A: InlineArray[Float64, 30] = [
 
 # Cephes Chebyshev coefficients for exp(-x) * sqrt(x) * I0(x) on [8, inf]
 # Reverse order, zero-order T_0 doubled (last element).
-comptime _I0_B: InlineArray[Float64, 25] = [
+comptime _I0_B: Array[Float64, 25] = [
     -7.23318048787475395456e-18,
     -4.83050448594418207126e-18,
     4.46562142029675999901e-17,
@@ -366,7 +366,7 @@ comptime _I0_B: InlineArray[Float64, 25] = [
 
 # Cephes Chebyshev coefficients for exp(-x) * I1(x) / x on [0, 8]
 # Reverse order, zero-order T_0 doubled (last element).
-comptime _I1_A: InlineArray[Float64, 29] = [
+comptime _I1_A: Array[Float64, 29] = [
     2.77791411276104639959e-18,
     -2.11142121435816608115e-17,
     1.55363195773620046921e-16,
@@ -400,7 +400,7 @@ comptime _I1_A: InlineArray[Float64, 29] = [
 
 # Cephes Chebyshev coefficients for exp(-x) * sqrt(x) * I1(x) on [8, inf]
 # Reverse order, zero-order T_0 doubled (last element).
-comptime _I1_B: InlineArray[Float64, 25] = [
+comptime _I1_B: Array[Float64, 25] = [
     7.51729631084210481353e-18,
     4.41434832307170791151e-18,
     -4.65030536848935832153e-17,
@@ -698,7 +698,7 @@ def _qone(x: Float64) -> Float64:
     return (0.375 + r / s) / ix
 
 
-def _chbevl[N: Int](x: Float64, array: InlineArray[Float64, N]) -> Float64:
+def _chbevl[N: Int](x: Float64, array: Array[Float64, N]) -> Float64:
     """Evaluate Chebyshev series via Clenshaw's recurrence.
 
     Coefficients stored in reverse order (highest degree first).
@@ -915,9 +915,11 @@ def i0(x: Float64) -> Float64:
 
     if ax <= 8.0:
         var y = ax / 2.0 - 2.0
-        return exp(ax) * _chbevl(y, _I0_A)
+        return exp(ax) * _chbevl(y, materialize[_I0_A]())
     else:
-        return exp(ax) * _chbevl(32.0 / ax - 2.0, _I0_B) / sqrt(ax)
+        return (
+            exp(ax) * _chbevl(32.0 / ax - 2.0, materialize[_I0_B]()) / sqrt(ax)
+        )
 
 
 def i1(x: Float64) -> Float64:
@@ -945,9 +947,14 @@ def i1(x: Float64) -> Float64:
 
     if ax <= 8.0:
         var y = ax / 2.0 - 2.0
-        return sign * _chbevl(y, _I1_A) * ax * exp(ax)
+        return sign * _chbevl(y, materialize[_I1_A]()) * ax * exp(ax)
     else:
-        return sign * exp(ax) * _chbevl(32.0 / ax - 2.0, _I1_B) / sqrt(ax)
+        return (
+            sign
+            * exp(ax)
+            * _chbevl(32.0 / ax - 2.0, materialize[_I1_B]())
+            / sqrt(ax)
+        )
 
 
 def i0e(x: Float64) -> Float64:
@@ -973,9 +980,9 @@ def i0e(x: Float64) -> Float64:
 
     if ax <= 8.0:
         var y = ax / 2.0 - 2.0
-        return _chbevl(y, _I0_A)
+        return _chbevl(y, materialize[_I0_A]())
     else:
-        return _chbevl(32.0 / ax - 2.0, _I0_B) / sqrt(ax)
+        return _chbevl(32.0 / ax - 2.0, materialize[_I0_B]()) / sqrt(ax)
 
 
 def i1e(x: Float64) -> Float64:
@@ -1002,9 +1009,9 @@ def i1e(x: Float64) -> Float64:
 
     if ax <= 8.0:
         var y = ax / 2.0 - 2.0
-        return sign * _chbevl(y, _I1_A) * ax
+        return sign * _chbevl(y, materialize[_I1_A]()) * ax
     else:
-        return sign * _chbevl(32.0 / ax - 2.0, _I1_B) / sqrt(ax)
+        return sign * _chbevl(32.0 / ax - 2.0, materialize[_I1_B]()) / sqrt(ax)
 
 
 # ===----------------------------------------------------------------------=== #

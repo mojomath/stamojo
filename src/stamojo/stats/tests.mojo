@@ -31,14 +31,7 @@ from stamojo.stats.descriptive import mean, variance
 def _sorted_copy(data: List[Float64]) -> List[Float64]:
     """Returns a sorted copy of *data* (ascending, insertion sort)."""
     var result = data.copy()
-    var n = len(result)
-    for i in range(1, n):
-        var key = result[i]
-        var j = i - 1
-        while j >= 0 and result[j] > key:
-            result[j + 1] = result[j]
-            j -= 1
-        result[j + 1] = key
+    sort(result)
     return result^
 
 

@@ -258,7 +258,7 @@ def _gamma_approx(x: Float64) -> Float64:
         return 1.7724538509055160272981674833411451
 
     comptime g = 7.0
-    comptime c: InlineArray[Float64, 9] = [
+    comptime c: Array[Float64, 9] = [
         0.99999999999980993,
         676.5203681218851,
         -1259.1392167224028,
@@ -271,9 +271,10 @@ def _gamma_approx(x: Float64) -> Float64:
     ]
 
     var t = x - 1.0
-    var y = c[0]
+    var c_vals = materialize[c]()
+    var y = c_vals[0]
     comptime for i in range(1, 9):
-        y += c[i] / (t + Float64(i))
+        y += c_vals[i] / (t + Float64(i))
 
     var z = t + g + 0.5
     return _SQRT_2PI * pow(z, t + 0.5) * exp(-z) * y

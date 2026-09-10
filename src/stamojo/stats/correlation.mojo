@@ -32,20 +32,16 @@ def _rank_data(data: List[Float64]) -> List[Float64]:
     """
     var n = len(data)
 
-    # Build (value, original_index) pairs and sort by value (insertion sort).
+    # Build original indices and sort them by data[index].
     var indices = List[Int](capacity=n)
     for i in range(n):
         indices.append(i)
 
-    # Sort indices by data[index] (insertion sort to keep it simple).
-    for i in range(1, n):
-        var key_idx = indices[i]
-        var key_val = data[key_idx]
-        var j = i - 1
-        while j >= 0 and data[indices[j]] > key_val:
-            indices[j + 1] = indices[j]
-            j -= 1
-        indices[j + 1] = key_idx
+    @parameter
+    def _cmp_fn(a: Int, b: Int) -> Bool:
+        return data[a] < data[b]
+
+    sort[_cmp_fn](indices)
 
     # Assign ranks with tie averaging.
     var ranks = List[Float64](capacity=n)
