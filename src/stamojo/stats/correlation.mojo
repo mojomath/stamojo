@@ -37,11 +37,10 @@ def _rank_data(data: List[Float64]) -> List[Float64]:
     for i in range(n):
         indices.append(i)
 
-    @parameter
-    def _cmp_fn(a: Int, b: Int) -> Bool:
+    def _cmp_fn(a: Int, b: Int) {data} -> Bool:
         return data[a] < data[b]
 
-    sort[_cmp_fn](indices)
+    sort(indices, cmp_fn=_cmp_fn)
 
     # Assign ranks with tie averaging.
     var ranks = List[Float64](capacity=n)
