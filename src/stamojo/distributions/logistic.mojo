@@ -16,14 +16,7 @@ from std.math import sqrt, log, exp, nan, inf, pow, log1p, expm1
 from std.random import random_float64
 
 from stamojo.distributions.traits import ContinuouslyDistributed
-
-
-# ===----------------------------------------------------------------------=== #
-# Constants
-# ===----------------------------------------------------------------------=== #
-
-comptime _PI = 3.1415926535897932384626433832795029
-comptime _SQRT_3 = 1.7320508075688772935274463415058724
+from stamojo.distributions._constants import PI as _PI, SQRT3 as _SQRT_3
 
 
 # ===----------------------------------------------------------------------=== #

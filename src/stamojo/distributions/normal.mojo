@@ -22,16 +22,12 @@ from std.math import sqrt, log, cos, exp, erf, erfc, nan, inf
 from std.random import random_float64
 
 from stamojo.special import ndtri
-
-
-# ===----------------------------------------------------------------------=== #
-# Constants
-# ===----------------------------------------------------------------------=== #
-
-comptime _INV_SQRT_2PI = 0.3989422804014326779399460599343819
-comptime _LN_SQRT_2PI = 0.9189385332046727417803297364056176
-comptime _SQRT2 = 1.4142135623730950488016887242096981
-comptime _2PI = 6.283185307179586476925286766559006
+from stamojo.distributions._constants import (
+    INV_SQRT_2PI as _INV_SQRT_2PI,
+    LN_SQRT_2PI as _LN_SQRT_2PI,
+    SQRT2 as _SQRT2,
+    TWO_PI as _2PI,
+)
 
 
 # ===----------------------------------------------------------------------=== #
