@@ -17,6 +17,20 @@ Distributions provided:
 - `Gamma`         — Gamma distribution
 - `Beta`          — Beta distribution
 - `Poisson`       — Poisson distribution
+- `Uniform`       — Continuous uniform distribution
+- `LogNormal`     — Lognormal distribution
+- `Weibull`       — Weibull distribution
+- `Cauchy`        — Cauchy distribution
+- `Laplace`       — Laplace (double exponential) distribution
+- `Logistic`      — Logistic distribution
+- `Pareto`        — Pareto distribution
+- `Rayleigh`      — Rayleigh distribution
+- `HalfNormal`    — Half-normal distribution
+- `HalfCauchy`    — Half-Cauchy distribution
+- `Gumbel`        — Gumbel (extreme value, maximum) distribution
+- `Triangular`    — Triangular distribution
+- `VonMises`      — Von Mises (circular) distribution
+- `TruncNorm`     — Truncated normal distribution
 """
 
 from .normal import Normal
@@ -28,3 +42,17 @@ from .binomial import Binomial
 from .gamma import Gamma
 from .beta import Beta
 from .poisson import Poisson
+from .uniform import Uniform
+from .lognormal import LogNormal
+from .weibull import Weibull
+from .cauchy import Cauchy
+from .laplace import Laplace
+from .logistic import Logistic
+from .pareto import Pareto
+from .rayleigh import Rayleigh
+from .halfnormal import HalfNormal
+from .halfcauchy import HalfCauchy
+from .gumbel import Gumbel
+from .triangular import Triangular
+from .vonmises import VonMises
+from .truncnorm import TruncNorm

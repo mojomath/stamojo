@@ -26,6 +26,20 @@ from stamojo.distributions import (
     Gamma,
     Beta,
     Poisson,
+    Uniform,
+    LogNormal,
+    Weibull,
+    Cauchy,
+    Laplace,
+    Logistic,
+    Pareto,
+    Rayleigh,
+    HalfNormal,
+    HalfCauchy,
+    Gumbel,
+    Triangular,
+    VonMises,
+    TruncNorm,
 )
 
 
@@ -770,6 +784,666 @@ def test_poisson_ppf_large_mu() raises:
     # Round-trip: CDF(ppf(q)) >= q
     assert_true(p.cdf(k) >= 0.5, "CDF(ppf(0.5)) must be >= 0.5")
     assert_true(p.cdf(k - 1) < 0.5, "CDF(ppf(0.5)-1) must be < 0.5")
+
+
+# ===----------------------------------------------------------------------=== #
+# Uniform distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_uniform_pdf_cdf() raises:
+    """Tests Uniform PDF/CDF at known values."""
+    var u = Uniform(0.0, 2.0)
+    assert_almost_equal(u.pdf(1.0), 0.5, atol=1e-15)
+    assert_almost_equal(u.pdf(-1.0), 0.0, atol=1e-15)
+    assert_almost_equal(u.pdf(3.0), 0.0, atol=1e-15)
+    assert_almost_equal(u.cdf(0.0), 0.0, atol=1e-15)
+    assert_almost_equal(u.cdf(1.0), 0.5, atol=1e-15)
+    assert_almost_equal(u.cdf(2.0), 1.0, atol=1e-15)
+
+
+def test_uniform_ppf_roundtrip() raises:
+    """Tests Uniform PPF round-trip."""
+    var u = Uniform(-3.0, 5.0)
+    assert_almost_equal(u.cdf(u.ppf(0.25)), 0.25, atol=1e-12)
+    assert_almost_equal(u.cdf(u.ppf(0.75)), 0.75, atol=1e-12)
+
+
+def test_uniform_stats() raises:
+    """Tests Uniform distribution statistics."""
+    var u = Uniform(0.0, 4.0)
+    assert_almost_equal(u.mean(), 2.0, atol=1e-15)
+    assert_almost_equal(u.variance(), 16.0 / 12.0, atol=1e-12)
+
+
+def test_uniform_scipy() raises:
+    """Tests Uniform distribution against scipy.stats.uniform."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_uniform_scipy skipped (scipy not available)")
+        return
+
+    var u = Uniform(-2.0, 3.0)
+    var xs: List[Float64] = [-2.0, -1.0, 0.0, 1.5, 3.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        # scipy.stats.uniform is parameterized as (loc, scale) with scale = b - a.
+        var sp_pdf = _py_f64(sp.uniform.pdf(x, loc=-2.0, scale=5.0))
+        var sp_cdf = _py_f64(sp.uniform.cdf(x, loc=-2.0, scale=5.0))
+        assert_almost_equal(u.pdf(x), sp_pdf, atol=1e-12)
+        assert_almost_equal(u.cdf(x), sp_cdf, atol=1e-12)
+
+
+# ===----------------------------------------------------------------------=== #
+# LogNormal distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_lognormal_pdf_cdf() raises:
+    """Tests LogNormal PDF/CDF at known values."""
+    var ln = LogNormal(0.0, 1.0)
+    assert_almost_equal(ln.pdf(-1.0), 0.0, atol=1e-15)
+    assert_almost_equal(ln.cdf(0.0), 0.0, atol=1e-15)
+    # median = exp(mu) = 1
+    assert_almost_equal(ln.cdf(1.0), 0.5, atol=1e-10)
+
+
+def test_lognormal_ppf_roundtrip() raises:
+    """Tests LogNormal PPF round-trip."""
+    var ln = LogNormal(0.5, 0.75)
+    assert_almost_equal(ln.cdf(ln.ppf(0.3)), 0.3, atol=1e-8)
+    assert_almost_equal(ln.cdf(ln.ppf(0.7)), 0.7, atol=1e-8)
+
+
+def test_lognormal_stats() raises:
+    """Tests LogNormal distribution statistics."""
+    var ln = LogNormal(0.0, 1.0)
+    assert_almost_equal(ln.median(), 1.0, atol=1e-12)
+    assert_almost_equal(ln.mean(), exp(0.5), atol=1e-12)
+
+
+def test_lognormal_scipy() raises:
+    """Tests LogNormal distribution against scipy.stats.lognorm."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_lognormal_scipy skipped (scipy not available)")
+        return
+
+    var ln = LogNormal(0.2, 0.8)
+    var xs: List[Float64] = [0.5, 1.0, 2.0, 5.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        # scipy.stats.lognorm(s, scale=exp(mu)) matches our (mu, sigma).
+        var sp_pdf = _py_f64(sp.lognorm.pdf(x, 0.8, scale=exp(0.2)))
+        var sp_cdf = _py_f64(sp.lognorm.cdf(x, 0.8, scale=exp(0.2)))
+        assert_almost_equal(ln.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(ln.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Weibull distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_weibull_pdf_cdf() raises:
+    """Tests Weibull PDF/CDF at known values."""
+    var w = Weibull(1.0, 1.0)
+    # Weibull(1,1) = Exponential(1).
+    assert_almost_equal(w.pdf(1.0), exp(-1.0), atol=1e-12)
+    assert_almost_equal(w.cdf(1.0), 1.0 - exp(-1.0), atol=1e-12)
+    assert_almost_equal(w.pdf(-1.0), 0.0, atol=1e-15)
+
+
+def test_weibull_ppf_roundtrip() raises:
+    """Tests Weibull PPF round-trip."""
+    var w = Weibull(2.0, 3.0)
+    assert_almost_equal(w.cdf(w.ppf(0.4)), 0.4, atol=1e-10)
+    assert_almost_equal(w.cdf(w.ppf(0.9)), 0.9, atol=1e-10)
+
+
+def test_weibull_stats() raises:
+    """Tests Weibull distribution statistics."""
+    var w = Weibull(1.0, 2.0)
+    # Weibull(k=1, lam) = Exponential(1/lam): mean = lam.
+    assert_almost_equal(w.mean(), 2.0, atol=1e-8)
+
+
+def test_weibull_scipy() raises:
+    """Tests Weibull distribution against scipy.stats.weibull_min."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_weibull_scipy skipped (scipy not available)")
+        return
+
+    var w = Weibull(1.5, 2.0)
+    var xs: List[Float64] = [0.5, 1.0, 2.0, 4.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.weibull_min.pdf(x, 1.5, scale=2.0))
+        var sp_cdf = _py_f64(sp.weibull_min.cdf(x, 1.5, scale=2.0))
+        assert_almost_equal(w.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(w.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Cauchy distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_cauchy_pdf_cdf() raises:
+    """Tests Cauchy PDF/CDF at known values."""
+    var c = Cauchy(0.0, 1.0)
+    # PDF at 0 for standard Cauchy = 1/π.
+    assert_almost_equal(c.pdf(0.0), 1.0 / 3.1415926535897932, atol=1e-12)
+    assert_almost_equal(c.cdf(0.0), 0.5, atol=1e-12)
+    # Symmetric about loc.
+    assert_almost_equal(c.pdf(1.0), c.pdf(-1.0), atol=1e-15)
+
+
+def test_cauchy_ppf_roundtrip() raises:
+    """Tests Cauchy PPF round-trip."""
+    var c = Cauchy(2.0, 1.5)
+    assert_almost_equal(c.cdf(c.ppf(0.2)), 0.2, atol=1e-10)
+    assert_almost_equal(c.cdf(c.ppf(0.8)), 0.8, atol=1e-10)
+
+
+def test_cauchy_undefined_moments() raises:
+    """Tests that Cauchy mean/variance are undefined (NaN)."""
+    var c = Cauchy(0.0, 1.0)
+    assert_true(c.mean() != c.mean(), "Cauchy mean should be NaN")
+    assert_true(c.variance() != c.variance(), "Cauchy variance should be NaN")
+    assert_almost_equal(c.median(), 0.0, atol=1e-15)
+
+
+def test_cauchy_scipy() raises:
+    """Tests Cauchy distribution against scipy.stats.cauchy."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_cauchy_scipy skipped (scipy not available)")
+        return
+
+    var c = Cauchy(1.0, 2.0)
+    var xs: List[Float64] = [-3.0, -1.0, 1.0, 3.0, 6.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.cauchy.pdf(x, loc=1.0, scale=2.0))
+        var sp_cdf = _py_f64(sp.cauchy.cdf(x, loc=1.0, scale=2.0))
+        assert_almost_equal(c.pdf(x), sp_pdf, atol=1e-12)
+        assert_almost_equal(c.cdf(x), sp_cdf, atol=1e-12)
+
+
+# ===----------------------------------------------------------------------=== #
+# Laplace distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_laplace_pdf_cdf() raises:
+    """Tests Laplace PDF/CDF at known values."""
+    var l = Laplace(0.0, 1.0)
+    assert_almost_equal(l.pdf(0.0), 0.5, atol=1e-15)
+    assert_almost_equal(l.cdf(0.0), 0.5, atol=1e-15)
+    assert_almost_equal(l.pdf(1.0), l.pdf(-1.0), atol=1e-15)
+
+
+def test_laplace_ppf_roundtrip() raises:
+    """Tests Laplace PPF round-trip."""
+    var l = Laplace(1.0, 2.0)
+    assert_almost_equal(l.cdf(l.ppf(0.3)), 0.3, atol=1e-12)
+    assert_almost_equal(l.cdf(l.ppf(0.7)), 0.7, atol=1e-12)
+
+
+def test_laplace_stats() raises:
+    """Tests Laplace distribution statistics."""
+    var l = Laplace(2.0, 3.0)
+    assert_almost_equal(l.mean(), 2.0, atol=1e-15)
+    assert_almost_equal(l.variance(), 18.0, atol=1e-12)
+
+
+def test_laplace_scipy() raises:
+    """Tests Laplace distribution against scipy.stats.laplace."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_laplace_scipy skipped (scipy not available)")
+        return
+
+    var l = Laplace(0.5, 1.5)
+    var xs: List[Float64] = [-2.0, -0.5, 0.5, 2.0, 4.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.laplace.pdf(x, loc=0.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.laplace.cdf(x, loc=0.5, scale=1.5))
+        assert_almost_equal(l.pdf(x), sp_pdf, atol=1e-12)
+        assert_almost_equal(l.cdf(x), sp_cdf, atol=1e-12)
+
+
+# ===----------------------------------------------------------------------=== #
+# Logistic distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_logistic_pdf_cdf() raises:
+    """Tests Logistic PDF/CDF at known values."""
+    var lg = Logistic(0.0, 1.0)
+    assert_almost_equal(lg.pdf(0.0), 0.25, atol=1e-15)
+    assert_almost_equal(lg.cdf(0.0), 0.5, atol=1e-15)
+    assert_almost_equal(lg.pdf(1.0), lg.pdf(-1.0), atol=1e-15)
+
+
+def test_logistic_ppf_roundtrip() raises:
+    """Tests Logistic PPF round-trip."""
+    var lg = Logistic(1.0, 2.0)
+    assert_almost_equal(lg.cdf(lg.ppf(0.25)), 0.25, atol=1e-12)
+    assert_almost_equal(lg.cdf(lg.ppf(0.85)), 0.85, atol=1e-12)
+
+
+def test_logistic_stats() raises:
+    """Tests Logistic distribution statistics."""
+    var lg = Logistic(0.0, 1.0)
+    assert_almost_equal(lg.mean(), 0.0, atol=1e-15)
+    # variance = pi^2/3
+    assert_almost_equal(lg.variance(), 3.28986813369645, atol=1e-10)
+
+
+def test_logistic_scipy() raises:
+    """Tests Logistic distribution against scipy.stats.logistic."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_logistic_scipy skipped (scipy not available)")
+        return
+
+    var lg = Logistic(-1.0, 2.0)
+    var xs: List[Float64] = [-4.0, -1.0, 0.0, 2.0, 5.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.logistic.pdf(x, loc=-1.0, scale=2.0))
+        var sp_cdf = _py_f64(sp.logistic.cdf(x, loc=-1.0, scale=2.0))
+        assert_almost_equal(lg.pdf(x), sp_pdf, atol=1e-12)
+        assert_almost_equal(lg.cdf(x), sp_cdf, atol=1e-12)
+
+
+# ===----------------------------------------------------------------------=== #
+# Pareto distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_pareto_pdf_cdf() raises:
+    """Tests Pareto PDF/CDF at known values."""
+    var p = Pareto(2.0, 1.0)
+    assert_almost_equal(p.pdf(1.0), 2.0, atol=1e-12)
+    assert_almost_equal(p.pdf(0.5), 0.0, atol=1e-15)
+    assert_almost_equal(p.cdf(1.0), 0.0, atol=1e-15)
+
+
+def test_pareto_ppf_roundtrip() raises:
+    """Tests Pareto PPF round-trip."""
+    var p = Pareto(3.0, 2.0)
+    assert_almost_equal(p.cdf(p.ppf(0.4)), 0.4, atol=1e-10)
+    assert_almost_equal(p.cdf(p.ppf(0.9)), 0.9, atol=1e-10)
+
+
+def test_pareto_stats() raises:
+    """Tests Pareto distribution statistics."""
+    var p = Pareto(3.0, 2.0)
+    # mean = alpha*x_m/(alpha-1) = 3*2/2 = 3
+    assert_almost_equal(p.mean(), 3.0, atol=1e-12)
+
+
+def test_pareto_scipy() raises:
+    """Tests Pareto distribution against scipy.stats.pareto."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_pareto_scipy skipped (scipy not available)")
+        return
+
+    var p = Pareto(2.5, 1.0)
+    var xs: List[Float64] = [1.0, 1.5, 3.0, 8.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        # scipy.stats.pareto(b, scale=x_m) matches our (alpha, x_m).
+        var sp_pdf = _py_f64(sp.pareto.pdf(x, 2.5, scale=1.0))
+        var sp_cdf = _py_f64(sp.pareto.cdf(x, 2.5, scale=1.0))
+        assert_almost_equal(p.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(p.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Rayleigh distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_rayleigh_pdf_cdf() raises:
+    """Tests Rayleigh PDF/CDF at known values."""
+    var r = Rayleigh(1.0)
+    assert_almost_equal(r.pdf(-1.0), 0.0, atol=1e-15)
+    assert_almost_equal(r.cdf(0.0), 0.0, atol=1e-15)
+    # PDF at x=1, sigma=1: 1 * exp(-0.5) = exp(-0.5)
+    assert_almost_equal(r.pdf(1.0), exp(-0.5), atol=1e-12)
+
+
+def test_rayleigh_ppf_roundtrip() raises:
+    """Tests Rayleigh PPF round-trip."""
+    var r = Rayleigh(2.0)
+    assert_almost_equal(r.cdf(r.ppf(0.3)), 0.3, atol=1e-10)
+    assert_almost_equal(r.cdf(r.ppf(0.8)), 0.8, atol=1e-10)
+
+
+def test_rayleigh_stats() raises:
+    """Tests Rayleigh distribution statistics."""
+    var r = Rayleigh(1.0)
+    # mean = sigma * sqrt(pi/2)
+    assert_almost_equal(r.mean(), sqrt(3.1415926535897932 / 2.0), atol=1e-10)
+
+
+def test_rayleigh_scipy() raises:
+    """Tests Rayleigh distribution against scipy.stats.rayleigh."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_rayleigh_scipy skipped (scipy not available)")
+        return
+
+    var r = Rayleigh(2.0)
+    var xs: List[Float64] = [0.5, 1.0, 3.0, 5.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.rayleigh.pdf(x, scale=2.0))
+        var sp_cdf = _py_f64(sp.rayleigh.cdf(x, scale=2.0))
+        assert_almost_equal(r.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(r.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# HalfNormal distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_halfnormal_pdf_cdf() raises:
+    """Tests HalfNormal PDF/CDF at known values."""
+    var h = HalfNormal(0.0, 1.0)
+    assert_almost_equal(h.pdf(-1.0), 0.0, atol=1e-15)
+    assert_almost_equal(h.cdf(0.0), 0.0, atol=1e-15)
+    # PDF at 0: sqrt(2/pi)
+    assert_almost_equal(h.pdf(0.0), 0.7978845608028654, atol=1e-12)
+
+
+def test_halfnormal_ppf_roundtrip() raises:
+    """Tests HalfNormal PPF round-trip."""
+    var h = HalfNormal(1.0, 2.0)
+    assert_almost_equal(h.cdf(h.ppf(0.25)), 0.25, atol=1e-10)
+    assert_almost_equal(h.cdf(h.ppf(0.9)), 0.9, atol=1e-10)
+
+
+def test_halfnormal_stats() raises:
+    """Tests HalfNormal distribution statistics."""
+    var h = HalfNormal(0.0, 1.0)
+    # mean = sqrt(2/pi)
+    assert_almost_equal(h.mean(), 0.7978845608028654, atol=1e-12)
+
+
+def test_halfnormal_scipy() raises:
+    """Tests HalfNormal distribution against scipy.stats.halfnorm."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_halfnormal_scipy skipped (scipy not available)")
+        return
+
+    var h = HalfNormal(0.5, 1.5)
+    var xs: List[Float64] = [0.5, 1.0, 2.0, 4.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.halfnorm.pdf(x, loc=0.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.halfnorm.cdf(x, loc=0.5, scale=1.5))
+        assert_almost_equal(h.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(h.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# HalfCauchy distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_halfcauchy_pdf_cdf() raises:
+    """Tests HalfCauchy PDF/CDF at known values."""
+    var h = HalfCauchy(0.0, 1.0)
+    assert_almost_equal(h.pdf(-1.0), 0.0, atol=1e-15)
+    assert_almost_equal(h.cdf(0.0), 0.0, atol=1e-15)
+    # PDF at 0: 2/pi
+    assert_almost_equal(h.pdf(0.0), 2.0 / 3.1415926535897932, atol=1e-12)
+
+
+def test_halfcauchy_ppf_roundtrip() raises:
+    """Tests HalfCauchy PPF round-trip."""
+    var h = HalfCauchy(1.0, 2.0)
+    assert_almost_equal(h.cdf(h.ppf(0.3)), 0.3, atol=1e-10)
+    assert_almost_equal(h.cdf(h.ppf(0.7)), 0.7, atol=1e-10)
+
+
+def test_halfcauchy_undefined_moments() raises:
+    """Tests that HalfCauchy mean/variance are undefined (NaN)."""
+    var h = HalfCauchy(0.0, 1.0)
+    assert_true(h.mean() != h.mean(), "HalfCauchy mean should be NaN")
+    assert_true(
+        h.variance() != h.variance(), "HalfCauchy variance should be NaN"
+    )
+
+
+def test_halfcauchy_scipy() raises:
+    """Tests HalfCauchy distribution against scipy.stats.halfcauchy."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_halfcauchy_scipy skipped (scipy not available)")
+        return
+
+    var h = HalfCauchy(0.5, 1.5)
+    var xs: List[Float64] = [0.5, 1.0, 3.0, 8.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.halfcauchy.pdf(x, loc=0.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.halfcauchy.cdf(x, loc=0.5, scale=1.5))
+        assert_almost_equal(h.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(h.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Gumbel distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_gumbel_pdf_cdf() raises:
+    """Tests Gumbel PDF/CDF at known values."""
+    var g = Gumbel(0.0, 1.0)
+    # CDF at 0: exp(-1)
+    assert_almost_equal(g.cdf(0.0), exp(-1.0), atol=1e-12)
+
+
+def test_gumbel_ppf_roundtrip() raises:
+    """Tests Gumbel PPF round-trip."""
+    var g = Gumbel(1.0, 2.0)
+    assert_almost_equal(g.cdf(g.ppf(0.2)), 0.2, atol=1e-10)
+    assert_almost_equal(g.cdf(g.ppf(0.9)), 0.9, atol=1e-10)
+
+
+def test_gumbel_stats() raises:
+    """Tests Gumbel distribution statistics."""
+    var g = Gumbel(0.0, 1.0)
+    # mean = Euler-Mascheroni constant
+    assert_almost_equal(g.mean(), 0.5772156649015329, atol=1e-12)
+
+
+def test_gumbel_scipy() raises:
+    """Tests Gumbel distribution against scipy.stats.gumbel_r."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_gumbel_scipy skipped (scipy not available)")
+        return
+
+    var g = Gumbel(0.5, 1.5)
+    var xs: List[Float64] = [-2.0, 0.0, 1.0, 3.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.gumbel_r.pdf(x, loc=0.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.gumbel_r.cdf(x, loc=0.5, scale=1.5))
+        assert_almost_equal(g.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(g.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# Triangular distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_triangular_pdf_cdf() raises:
+    """Tests Triangular PDF/CDF at known values."""
+    var t = Triangular(0.0, 1.0, 0.5)
+    assert_almost_equal(t.pdf(-0.1), 0.0, atol=1e-15)
+    assert_almost_equal(t.pdf(1.1), 0.0, atol=1e-15)
+    # peak at mode: 2 / (b - a) = 2
+    assert_almost_equal(t.pdf(0.5), 2.0, atol=1e-12)
+    assert_almost_equal(t.cdf(0.0), 0.0, atol=1e-15)
+    assert_almost_equal(t.cdf(1.0), 1.0, atol=1e-15)
+    assert_almost_equal(t.cdf(0.5), 0.5, atol=1e-12)
+
+
+def test_triangular_ppf_roundtrip() raises:
+    """Tests Triangular PPF round-trip."""
+    var t = Triangular(0.0, 10.0, 3.0)
+    assert_almost_equal(t.cdf(t.ppf(0.2)), 0.2, atol=1e-10)
+    assert_almost_equal(t.cdf(t.ppf(0.7)), 0.7, atol=1e-10)
+
+
+def test_triangular_stats() raises:
+    """Tests Triangular distribution statistics."""
+    var t = Triangular(0.0, 1.0, 0.5)
+    # mean = (a+b+c)/3
+    assert_almost_equal(t.mean(), 0.5, atol=1e-12)
+
+
+def test_triangular_scipy() raises:
+    """Tests Triangular distribution against scipy.stats.triang."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_triangular_scipy skipped (scipy not available)")
+        return
+
+    var a = 0.0
+    var b = 10.0
+    var c = 3.0
+    var t = Triangular(a, b, c)
+    var xs: List[Float64] = [1.0, 3.0, 5.0, 9.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        # scipy.stats.triang(c_frac, loc=a, scale=b-a), c_frac=(c-a)/(b-a).
+        var sp_pdf = _py_f64(
+            sp.triang.pdf(x, (c - a) / (b - a), loc=a, scale=b - a)
+        )
+        var sp_cdf = _py_f64(
+            sp.triang.cdf(x, (c - a) / (b - a), loc=a, scale=b - a)
+        )
+        assert_almost_equal(t.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(t.cdf(x), sp_cdf, atol=1e-10)
+
+
+# ===----------------------------------------------------------------------=== #
+# VonMises distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_vonmises_pdf_symmetry() raises:
+    """Tests VonMises PDF is symmetric about mu."""
+    var v = VonMises(0.0, 2.0)
+    assert_almost_equal(v.pdf(0.5), v.pdf(-0.5), atol=1e-12)
+
+
+def test_vonmises_cdf_bounds() raises:
+    """Tests VonMises CDF at principal-branch boundaries."""
+    var v = VonMises(0.0, 1.5)
+    assert_almost_equal(v.cdf(0.0 - 3.1415926535897932), 0.0, atol=1e-8)
+    assert_almost_equal(v.cdf(0.0 + 3.1415926535897932), 1.0, atol=1e-8)
+    assert_almost_equal(v.cdf(0.0), 0.5, atol=1e-6)
+
+
+def test_vonmises_ppf_roundtrip() raises:
+    """Tests VonMises PPF round-trip."""
+    var v = VonMises(0.3, 2.5)
+    assert_almost_equal(v.cdf(v.ppf(0.25)), 0.25, atol=1e-6)
+    assert_almost_equal(v.cdf(v.ppf(0.75)), 0.75, atol=1e-6)
+
+
+def test_vonmises_scipy() raises:
+    """Tests VonMises distribution against scipy.stats.vonmises."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_vonmises_scipy skipped (scipy not available)")
+        return
+
+    var v = VonMises(0.2, 3.0)
+    var xs: List[Float64] = [-1.0, 0.0, 0.5, 1.5]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.vonmises.pdf(x, 3.0, loc=0.2))
+        var sp_cdf = _py_f64(sp.vonmises.cdf(x, 3.0, loc=0.2))
+        assert_almost_equal(v.pdf(x), sp_pdf, atol=1e-8)
+        assert_almost_equal(v.cdf(x), sp_cdf, atol=1e-5)
+
+
+# ===----------------------------------------------------------------------=== #
+# TruncNorm distribution tests
+# ===----------------------------------------------------------------------=== #
+
+
+def test_truncnorm_pdf_cdf() raises:
+    """Tests TruncNorm PDF/CDF at known values."""
+    var t = TruncNorm(-1.0, 1.0, 0.0, 1.0)
+    assert_almost_equal(t.pdf(-2.0), 0.0, atol=1e-15)
+    assert_almost_equal(t.pdf(2.0), 0.0, atol=1e-15)
+    assert_almost_equal(t.cdf(-1.0), 0.0, atol=1e-10)
+    assert_almost_equal(t.cdf(1.0), 1.0, atol=1e-10)
+    # Symmetric about 0.
+    assert_almost_equal(t.pdf(0.5), t.pdf(-0.5), atol=1e-12)
+
+
+def test_truncnorm_ppf_roundtrip() raises:
+    """Tests TruncNorm PPF round-trip."""
+    var t = TruncNorm(-2.0, 2.0, 1.0, 2.0)
+    assert_almost_equal(t.cdf(t.ppf(0.3)), 0.3, atol=1e-8)
+    assert_almost_equal(t.cdf(t.ppf(0.7)), 0.7, atol=1e-8)
+
+
+def test_truncnorm_stats() raises:
+    """Tests TruncNorm distribution statistics (symmetric case)."""
+    var t = TruncNorm(-1.0, 1.0, 0.0, 1.0)
+    # Symmetric truncation about loc => mean == loc.
+    assert_almost_equal(t.mean(), 0.0, atol=1e-10)
+
+
+def test_truncnorm_scipy() raises:
+    """Tests TruncNorm distribution against scipy.stats.truncnorm."""
+    var sp = _load_scipy_stats()
+    if sp is None:
+        print("test_truncnorm_scipy skipped (scipy not available)")
+        return
+
+    var t = TruncNorm(-1.5, 2.0, 0.5, 1.5)
+    var xs: List[Float64] = [-1.5, -0.5, 0.5, 2.0, 3.0]
+
+    for i in range(len(xs)):
+        var x = xs[i]
+        var sp_pdf = _py_f64(sp.truncnorm.pdf(x, -1.5, 2.0, loc=0.5, scale=1.5))
+        var sp_cdf = _py_f64(sp.truncnorm.cdf(x, -1.5, 2.0, loc=0.5, scale=1.5))
+        assert_almost_equal(t.pdf(x), sp_pdf, atol=1e-10)
+        assert_almost_equal(t.cdf(x), sp_cdf, atol=1e-10)
 
 
 # ===----------------------------------------------------------------------=== #

@@ -16,14 +16,16 @@ from std.math import sqrt, log, exp, nan, inf, pow, log1p, expm1
 from std.random import random_float64
 
 from stamojo.distributions.traits import ContinuouslyDistributed
-
+from stamojo.distributions._constants import (
+    PI as _PI,
+    EULER_MASCHERONI as _EULER_MASCHERONI,
+)
 
 # ===----------------------------------------------------------------------=== #
 # Constants
 # ===----------------------------------------------------------------------=== #
 
-comptime _EULER_MASCHERONI = 0.5772156649015328606065120900824024
-comptime _SQRT_2PI = sqrt(2.0 * 3.14159265358979323846)
+comptime _SQRT_2PI = sqrt(2.0 * _PI)
 
 # ===----------------------------------------------------------------------=== #
 # Weibull distribution
